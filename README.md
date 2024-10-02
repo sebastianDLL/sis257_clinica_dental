@@ -1,85 +1,82 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Proyecto Clínica Dental
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Este proyecto corresponde a una **clínica dental** desarrollada para gestionar de manera eficiente la administración de odontólogos, clientes, servicios, citas y más. La aplicación está diseñada para facilitar la organización y automatización de los procesos clínicos, mejorando la experiencia tanto para los profesionales como para los pacientes.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Funcionalidades principales
 
-## Description
+- **Gestión de odontólogos**: Registro, edición y eliminación de odontólogos, incluyendo sus especialidades y servicios ofrecidos.
+- **Gestión de clientes**: Administración de los datos de los pacientes, con historial de citas y tratamientos.
+- **Agendamiento de citas**: Sistema automatizado de horarios y citas entre clientes y odontólogos.
+- **Control de servicios**: Registro de los servicios ofrecidos por la clínica dental, asignación a odontólogos y tarifas.
+- **Gestión de roles**: Administración de usuarios del sistema con distintos niveles de acceso (administradores, odontólogos, recepcionistas, etc.).
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Entidades del Sistema
 
-## Project setup
+### 1. **Odontólogos**
+Esta entidad almacena la información relacionada con los profesionales que trabajan en la clínica dental.
 
-```bash
-$ npm install
-```
+**Campos:**
+- `id`: Identificador único.
+- `nombre`: Nombre del odontólogo.
+- `apellido`: Apellido del odontólogo.
+- `email`: Correo electrónico del odontólogo.
+- `teléfono`: Número de contacto.
+- `dirección`: Dirección física o clínica.
+- `especialidad`: Especialización dental (ej. Ortodoncia, Periodoncia).
 
-## Compile and run the project
+### 2. **Clientes**
+Esta entidad gestiona la información de los pacientes que asisten a la clínica dental.
 
-```bash
-# development
-$ npm run start
+**Campos:**
+- `id`: Identificador único.
+- `nombre_completo`: Nombre completo del cliente.
+- `email`: Correo electrónico.
+- `password`: Contraseña del cliente.
+- `teléfono`: Número de contacto.
+- `dirección`: Dirección del paciente.
 
-# watch mode
-$ npm run start:dev
+### 3. **Servicios**
+Registro de los diferentes tratamientos y servicios que se ofrecen en la clínica.
 
-# production mode
-$ npm run start:prod
-```
+**Campos:**
+- `id`: Identificador único.
+- `nombre_servicio`: Nombre del servicio (ej. Limpieza dental, Implante).
+- `descripción`: Detalles del servicio.
+- `precio`: Costo del servicio.
+- `duración`: Duración del servicio en minutos.
 
-## Run tests
+### 4. **Roles**
+Entidades para gestionar los roles de los usuarios en el sistema.
 
-```bash
-# unit tests
-$ npm run test
+**Campos:**
+- `id`: Identificador único.
+- `nombre_rol`: Nombre del rol (Administrador, Odontólogo, Recepcionista).
 
-# e2e tests
-$ npm run test:e2e
+### 5. **Odontólogos_Servicios**
+Tabla intermedia para relacionar los odontólogos con los servicios que ofrecen.
 
-# test coverage
-$ npm run test:cov
-```
+**Campos:**
+- `id`: Identificador único.
+- `odontologo_id`: Identificador del odontólogo.
+- `servicio_id`: Identificador del servicio.
 
-## Resources
+### 6. **Horarios_Citas**
+Gestiona los horarios disponibles para la programación de citas de los odontólogos.
 
-Check out a few resources that may come in handy when working with NestJS:
+**Campos:**
+- `id`: Identificador único.
+- `odontologo_id`: Identificador del odontólogo.
+- `fecha`: Fecha del horario.
+- `hora`: Hora del horario .
+- `disponible`: Disponibilidad.
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+### 7. **Citas**
+Registro de las citas que se programan entre los clientes y los odontólogos.
 
-## Support
+**Campos:**
+- `id`: Identificador único.
+- `cliente_id`: Identificador del cliente.
+- `odontologos_servicios_id`: Identificador de la relacion de odontologo con servicio.
+- `fecha_hora_cita`: Fecha y hora de la cita.
+- `estado`: Estado de la cita (Programada, Cancelada, Completada).
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
