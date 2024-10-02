@@ -18,8 +18,6 @@ async function bootstrap() {
       'Api Rest de la materia Desarrollo de Aplicaciones Int/Internet II',
     )
     .setVersion('1.0')
-    .addTag('cliente')
-    .addTag('horas_citas')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('apidoc', app, document);
