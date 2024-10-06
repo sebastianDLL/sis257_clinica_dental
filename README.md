@@ -79,4 +79,10 @@ Registro de las citas que se programan entre los clientes y los odontólogos.
 - `odontologos_servicios_id`: Identificador de la relacion de odontologo con servicio.
 - `fecha_hora_cita`: Fecha y hora de la cita.
 - `estado`: Estado de la cita (Programada, Cancelada, Completada).
+  
+## Diagrama de Entidades y Relaciones de la Clínica Dental
 
+A continuación, se presenta el diagrama de entidades y relaciones (ERD) que muestra la estructura de la base de datos utilizada en este sistema.
+
+
+![Diagrama de Entidades y Relaciones](docs/Clinical_Dental.png)
