@@ -1,3 +1,4 @@
+import { Cita } from 'src/citas/entities/cita.entity';
 import { Rol } from 'src/roles/entities/role.entity';
 import {
   Column,
@@ -6,6 +7,7 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -45,4 +47,7 @@ export class Cliente {
   @ManyToOne(() => Rol, (rol) => rol.clientes)
   @JoinColumn({ name: 'rol_id', referencedColumnName: 'id' })
   rol: Rol;
+
+  @OneToMany(() => Cita, (cita) => cita.cliente)
+  citas: Cita[];
 }

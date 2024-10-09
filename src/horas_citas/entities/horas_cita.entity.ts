@@ -1,8 +1,10 @@
+import { Cita } from 'src/citas/entities/cita.entity';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -29,4 +31,8 @@ export class HorasCita {
 
   @DeleteDateColumn({ name: 'fecha_eliminacion', select: false })
   fechaEliminacion: Date;
+
+  @OneToMany(() => Cita, (cita) => cita.hora_cita)
+  citas: Cita[];
+
 }
