@@ -72,7 +72,7 @@ export class OdontologoServiciosService {
     return this.odontologoServicioRepository.save(odontologoServicioUpdate);
   }
 
-  async remove(id: number) {
+  async remove(id: number): Promise<OdontologoServicio> {
     const odontologoServicio =
       await this.odontologoServicioRepository.findOneBy({ id });
     if (!odontologoServicio)

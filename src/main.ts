@@ -12,7 +12,7 @@ async function bootstrap() {
   app.enableCors();
 
   const config = new DocumentBuilder()
-    .setTitle('Api Rest sis257')
+    .setTitle('Api Rest Laboratorio sis257')
 
     .setDescription(
       'Api Rest de la materia Desarrollo de Aplicaciones Int/Internet II',
@@ -26,12 +26,3 @@ async function bootstrap() {
   console.log(`App corriendo: ${await app.getUrl()}/apidoc`);
 }
 bootstrap();
-
-/*import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
-
-async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  await app.listen(3000);
-}
-bootstrap();*/

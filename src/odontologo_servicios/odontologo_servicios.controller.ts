@@ -10,7 +10,9 @@ import {
 import { OdontologoServiciosService } from './odontologo_servicios.service';
 import { CreateOdontologoServicioDto } from './dto/create-odontologo_servicio.dto';
 import { UpdateOdontologoServicioDto } from './dto/update-odontologo_servicio.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Odontologo_Servicios')
 @Controller('odontologo_servicios')
 export class OdontologoServiciosController {
   constructor(

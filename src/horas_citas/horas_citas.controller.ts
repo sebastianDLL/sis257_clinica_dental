@@ -12,7 +12,7 @@ import { CreateHorasCitaDto } from './dto/create-horas_cita.dto';
 import { UpdateHorasCitaDto } from './dto/update-horas_cita.dto';
 import { ApiTags } from '@nestjs/swagger';
 
-@ApiTags('HorasCitas')
+@ApiTags('Horas_Citas')
 @Controller('horas_citas')
 export class HorasCitasController {
   constructor(private readonly horasCitasService: HorasCitasService) {}
