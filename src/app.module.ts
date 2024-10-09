@@ -7,6 +7,8 @@ import { ClientesModule } from './clientes/clientes.module';
 import { HorasCitasModule } from './horas_citas/horas_citas.module';
 import { OdontologosModule } from './odontologos/odontologos.module';
 import { ServiciosModule } from './servicios/servicios.module';
+import { RolesModule } from './roles/roles.module';
+import { OdontologoServiciosModule } from './odontologo_servicios/odontologo_servicios.module';
 
 @Module({
   imports: [
@@ -26,6 +28,8 @@ import { ServiciosModule } from './servicios/servicios.module';
     HorasCitasModule,
     OdontologosModule,
     ServiciosModule,
+    RolesModule,
+    OdontologoServiciosModule,
   ],
   controllers: [AppController],
   providers: [AppService],

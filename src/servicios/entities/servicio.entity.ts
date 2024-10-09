@@ -1,8 +1,10 @@
+import { OdontologoServicio } from 'src/odontologo_servicios/entities/odontologo_servicio.entity';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -32,4 +34,10 @@ export class Servicio {
 
   @DeleteDateColumn({ name: 'fecha_eliminacion', select: false })
   fechaEliminacion: Date;
+
+  @OneToMany(
+    () => OdontologoServicio,
+    (odontologo_servicio) => odontologo_servicio.servicio,
+  )
+  odontologo_servicios: OdontologoServicio[];
 }

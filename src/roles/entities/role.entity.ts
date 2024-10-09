@@ -1,25 +1,22 @@
+import { Cliente } from 'src/clientes/entities/cliente.entity';
+import { Odontologo } from 'src/odontologos/entities/odontologo.entity';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity('horas_citas')
-export class HorasCita {
+@Entity('roles')
+export class Rol {
   @PrimaryGeneratedColumn('identity')
   id: number;
 
-  @Column({ type: 'date' })
-  fecha: Date;
-
-  @Column({ type: 'time' })
-  hora: string;
-
-  @Column({ type: 'boolean', default: true })
-  disponible: boolean;
+  @Column('varchar', { length: 15 })
+  nombre_rol: string;
 
   @CreateDateColumn({ name: 'fecha_creacion' })
   fechaCreacion: Date;
@@ -29,4 +26,10 @@ export class HorasCita {
 
   @DeleteDateColumn({ name: 'fecha_eliminacion', select: false })
   fechaEliminacion: Date;
+
+  @OneToMany(() => Cliente, (cliente) => cliente.rol)
+  clientes: Cliente[];
+
+  @OneToMany(() => Odontologo, (odontologo) => odontologo.rol)
+  odontologos: Odontologo[];
 }

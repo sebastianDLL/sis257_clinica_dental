@@ -42,7 +42,10 @@ export class HorasCitasService {
     return horascita;
   }
 
-  async update(id: number, updateHorasCitaDto: UpdateHorasCitaDto): Promise<HorasCita> {
+  async update(
+    id: number,
+    updateHorasCitaDto: UpdateHorasCitaDto,
+  ): Promise<HorasCita> {
     const horascita = await this.findOne(id);
     const horascitaUpdate = Object.assign(horascita, updateHorasCitaDto);
     return this.horasCitasRepository.save(horascitaUpdate);

@@ -19,19 +19,23 @@ export class OdontologosService {
         nombre: createOdontologoDto.nombre,
       },
     });
-  
-    if (buscarRepetidos) throw new ConflictException('El odontólogo con ese email y nombre ya existe');
-  
+
+    if (buscarRepetidos)
+      throw new ConflictException(
+        'El odontólogo con ese email y nombre ya existe',
+      );
+
     const odontologo = new Odontologo();
     odontologo.nombre = createOdontologoDto.nombre.trim();
+    odontologo.apellido = createOdontologoDto.apellido.trim();
     odontologo.email = createOdontologoDto.email.trim();
     odontologo.telefono = createOdontologoDto.telefono.trim();
     odontologo.direccion = createOdontologoDto.direccion.trim();
     odontologo.especialidad = createOdontologoDto.especialidad.trim();
-  
+
     return this.odontologosRepository.save(odontologo);
   }
-  
+
   async findAll(): Promise<Odontologo[]> {
     return this.odontologosRepository.find();
   }

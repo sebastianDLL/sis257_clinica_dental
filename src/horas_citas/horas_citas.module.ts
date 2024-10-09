@@ -5,7 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { HorasCita } from './entities/horas_cita.entity';
 
 @Module({
-  imports:[TypeOrmModule.forFeature([HorasCita])],
+  imports: [TypeOrmModule.forFeature([HorasCita])],
   controllers: [HorasCitasController],
   providers: [HorasCitasService],
 })

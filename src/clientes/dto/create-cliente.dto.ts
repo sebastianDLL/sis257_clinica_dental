@@ -42,5 +42,4 @@ export class CreateClienteDto {
     message: 'El campo direccion debe tener un máximo de 100 caracteres',
   })
   readonly direccion: string;
-
 }
