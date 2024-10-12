@@ -85,7 +85,7 @@ Registro de las citas que se programan entre los clientes y los odontólogos.
 - `montoTotal`: Monto total de la cita.
 - `estado`: Estado de la cita (Programada, Cancelada, Completada).
 
-### 7. **Servicio_citas**
+### 8. **Servicio_citas**
 Registro de los servicios asociados a las citas programadas entre los clientes y los odontólogos.
 
 **Campos:**
