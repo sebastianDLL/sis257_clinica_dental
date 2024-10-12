@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsNotEmpty, IsString, MaxLength } from 'class-validator';
+import { IsDefined, IsEmail, IsNotEmpty, IsNumber, IsString, MaxLength } from 'class-validator';
 
 export class CreateOdontologoDto {
   @ApiProperty()
@@ -11,12 +11,20 @@ export class CreateOdontologoDto {
   readonly nombre: string;
 
   @ApiProperty()
-  @IsNotEmpty({ message: 'El campo apellido es obligatorio' })
-  @IsString({ message: 'El campo apellido debe ser un string o cadena' })
+  @IsNotEmpty({ message: 'El campo primer apellido es obligatorio' })
+  @IsString({ message: 'El campo primer apellido debe ser un string o cadena' })
   @MaxLength(50, {
-    message: 'El campo apellido debe tener un máximo de 50 caracteres',
+    message: 'El campo primer apellido debe tener un máximo de 50 caracteres',
   })
-  readonly apellido: string;
+  readonly primerApellido: string;
+
+  @ApiProperty()
+  @IsNotEmpty({ message: 'El campo segundo apellido es obligatorio' })
+  @IsString({ message: 'El campo segundo apellido debe ser un string o cadena' })
+  @MaxLength(50, {
+    message: 'El campo segundo apellido debe tener un máximo de 50 caracteres',
+  })
+  readonly segundoApellido: string;
 
   @ApiProperty()
   @IsNotEmpty({ message: 'El campo email es obligatorio' })
@@ -50,4 +58,9 @@ export class CreateOdontologoDto {
     message: 'El campo especialidad debe tener un máximo de 50 caracteres',
   })
   readonly especialidad: string;
+
+  @ApiProperty()
+  @IsDefined({ message: 'El campo rol_id es obligatorio' })
+  @IsNumber({}, { message: 'El campo rol_id debe ser de tipo number' })
+  readonly rolId: number;
 }

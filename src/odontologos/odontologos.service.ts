@@ -27,11 +27,13 @@ export class OdontologosService {
 
     const odontologo = new Odontologo();
     odontologo.nombre = createOdontologoDto.nombre.trim();
-    odontologo.apellido = createOdontologoDto.apellido.trim();
+    odontologo.primerApellido = createOdontologoDto.primerApellido.trim();
+    odontologo.segundoApellido = createOdontologoDto.segundoApellido.trim();
     odontologo.email = createOdontologoDto.email.trim();
     odontologo.telefono = createOdontologoDto.telefono.trim();
     odontologo.direccion = createOdontologoDto.direccion.trim();
     odontologo.especialidad = createOdontologoDto.especialidad.trim();
+    odontologo.rol_id = createOdontologoDto.rolId;
 
     return this.odontologosRepository.save(odontologo);
   }

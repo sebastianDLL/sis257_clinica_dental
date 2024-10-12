@@ -40,7 +40,4 @@ export class OdontologoServicio {
   @ManyToOne(() => Servicio, (servicio) => servicio.odontologo_servicios)
   @JoinColumn({ name: 'servicio_id', referencedColumnName: 'id' })
   servicio: Servicio;
-
-  @OneToMany(() => Cita, (cita) => cita.odontologo_servicio)
-  citas: Cita[];
 }

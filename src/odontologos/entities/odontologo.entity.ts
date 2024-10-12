@@ -1,3 +1,4 @@
+import { Cita } from 'src/citas/entities/cita.entity';
 import { OdontologoServicio } from 'src/odontologo_servicios/entities/odontologo_servicio.entity';
 import { Rol } from 'src/roles/entities/role.entity';
 import {
@@ -20,8 +21,11 @@ export class Odontologo {
   @Column('varchar', { length: 50 })
   nombre: string;
 
-  @Column('varchar', { length: 50 })
-  apellido: string;
+  @Column('varchar', { length: 50, name: 'primer_apellido' })
+  primerApellido: string;
+
+  @Column('varchar', { length: 50, name: 'segundo_apellido' })
+  segundoApellido: string;
 
   @Column('varchar', { length: 50 })
   email: string;
@@ -56,4 +60,7 @@ export class Odontologo {
   @ManyToOne(() => Rol, (rol) => rol.odontologos)
   @JoinColumn({ name: 'rol_id', referencedColumnName: 'id' })
   rol: Rol;
+
+  @OneToMany(() => Cita, (cita) => cita.odontologo)
+  citas: Cita[];
 }

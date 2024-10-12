@@ -20,6 +20,12 @@ export class Cliente {
   @Column('varchar', { length: 50 })
   nombre: string;
 
+  @Column('varchar', { length: 50, name: 'primer_apellido' })
+  primerApellido: string;
+
+  @Column('varchar', { length: 50, name: 'segundo_apellido' })
+  segundoApellido: string;
+
   @Column('varchar', { length: 50 })
   email: string;
 

@@ -22,10 +22,13 @@ export class ClientesService {
 
     const cliente = new Cliente();
     cliente.nombre = createClienteDto.nombre.trim();
+    cliente.primerApellido = createClienteDto.primerApellido.trim();
+    cliente.segundoApellido = createClienteDto.segundoApellido.trim();
     cliente.email = createClienteDto.email.trim();
     cliente.password = createClienteDto.password.trim();
     cliente.telefono = createClienteDto.telefono.trim();
     cliente.direccion = createClienteDto.direccion.trim();
+    cliente.rol_id = createClienteDto.rolId;
 
     return this.clientesRepository.save(cliente);
   }

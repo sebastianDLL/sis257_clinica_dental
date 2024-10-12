@@ -13,17 +13,19 @@ export class CitasService {
   ) {}
 
   async create(createCitaDto: CreateCitaDto): Promise<Cita> {
-    const { odontologoServicioId, clienteId, horaCitaId } = createCitaDto;
+    const { clienteId, odontologoId } = createCitaDto;
 
     const citaExistente = await this.citasRepository.findOne({
       where: {
-        odontologo_servicio_id: odontologoServicioId, 
-        cliente_id: clienteId,
-        hora_cita_id: horaCitaId,
+        clienteId: clienteId,
+        odontologoId: odontologoId,
       },
     });
 
-    if (citaExistente) throw new ConflictException('Ya existe una cita en este horario para el odontólogo y cliente');
+    if (citaExistente)
+      throw new ConflictException(
+        'Ya existe una cita en este horario para el odontólogo y cliente',
+      );
 
     const nuevaCita = this.citasRepository.create(createCitaDto);
     return this.citasRepository.save(nuevaCita);
@@ -31,14 +33,14 @@ export class CitasService {
 
   async findAll(): Promise<Cita[]> {
     return this.citasRepository.find({
-      relations: ['cliente', 'odontologo_servicio', 'hora_cita']
+      relations: ['cliente', 'odontologo'],
     });
   }
 
   async findOne(id: number): Promise<Cita> {
     const cita = await this.citasRepository.findOne({
       where: { id },
-      relations: ['cliente', 'odontologo_servicio', 'hora_cita']
+      relations: ['cliente', 'odontologo'],
     });
 
     if (!cita) throw new ConflictException('La cita no existe');
@@ -46,7 +48,6 @@ export class CitasService {
   }
 
   async update(id: number, updateCitaDto: UpdateCitaDto): Promise<Cita> {
-
     const cita = await this.citasRepository.findOneBy({ id });
 
     if (!cita) throw new ConflictException('La cita no existe');

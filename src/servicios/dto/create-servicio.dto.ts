@@ -24,12 +24,18 @@ export class CreateServicioDto {
   })
   readonly descripcion: string;
 
-  @ApiProperty()
-  @IsNotEmpty({ message: 'El campo precio es obligatorio' })
-  @IsDefined({ message: 'El campo precio debe estar definido' })
+  @ApiProperty({
+    example: 0.0,
+    description: 'precio del servicio, puede tener hasta 2 decimales',
+    type: 'number',
+  })
+  @IsDefined({ message: 'El campo precio es obligatorio' })
   @IsNumber(
     { maxDecimalPlaces: 2 },
-    { message: 'El campo precio debe ser tipo numérico' },
+    {
+      message:
+        'El campo precio debe ser un número decimal con hasta 2 decimales',
+    },
   )
   readonly precio: number;
 
