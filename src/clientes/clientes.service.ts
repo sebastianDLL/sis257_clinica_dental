@@ -28,7 +28,6 @@ export class ClientesService {
     cliente.password = createClienteDto.password.trim();
     cliente.telefono = createClienteDto.telefono.trim();
     cliente.direccion = createClienteDto.direccion.trim();
-    cliente.rol_id = createClienteDto.rolId;
 
     return this.clientesRepository.save(cliente);
   }

@@ -33,7 +33,6 @@ export class OdontologosService {
     odontologo.telefono = createOdontologoDto.telefono.trim();
     odontologo.direccion = createOdontologoDto.direccion.trim();
     odontologo.especialidad = createOdontologoDto.especialidad.trim();
-    odontologo.rol_id = createOdontologoDto.rolId;
 
     return this.odontologosRepository.save(odontologo);
   }

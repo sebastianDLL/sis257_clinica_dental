@@ -58,9 +58,4 @@ export class CreateOdontologoDto {
     message: 'El campo especialidad debe tener un máximo de 50 caracteres',
   })
   readonly especialidad: string;
-
-  @ApiProperty()
-  @IsDefined({ message: 'El campo rol_id es obligatorio' })
-  @IsNumber({}, { message: 'El campo rol_id debe ser de tipo number' })
-  readonly rolId: number;
 }

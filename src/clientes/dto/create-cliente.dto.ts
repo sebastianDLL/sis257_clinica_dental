@@ -58,9 +58,4 @@ export class CreateClienteDto {
     message: 'El campo direccion debe tener un máximo de 100 caracteres',
   })
   readonly direccion: string;
-
-  @ApiProperty()
-  @IsDefined({ message: 'El campo rol_id es obligatorio' })
-  @IsNumber({}, { message: 'El campo rol_id debe ser de tipo number' })
-  readonly rolId: number;
 }
