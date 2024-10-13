@@ -1,4 +1,5 @@
 import { Cita } from 'src/citas/entities/cita.entity';
+import { Horario } from 'src/horarios/entities/horario.entity';
 import { OdontologoServicio } from 'src/odontologo_servicios/entities/odontologo_servicio.entity';
 import { Rol } from 'src/roles/entities/role.entity';
 import {
@@ -39,7 +40,7 @@ export class Odontologo {
   @Column('varchar', { length: 50 })
   especialidad: string;
 
-  @Column('integer', { name: 'rol_id', default: 1  })
+  @Column('integer', { name: 'rol_id', default: 1 })
   rol_id: number;
 
   @CreateDateColumn({ name: 'fecha_creacion' })
@@ -63,4 +64,7 @@ export class Odontologo {
 
   @OneToMany(() => Cita, (cita) => cita.odontologo)
   citas: Cita[];
+
+  @OneToMany(() => Horario, (horario) => horario.odontologo)
+  horarios: Horario[];
 }

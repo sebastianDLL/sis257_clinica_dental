@@ -38,7 +38,7 @@ export class Cliente {
   @Column('varchar', { length: 100 })
   direccion: string;
 
-  @Column('integer', {name : 'rol_id', default: 2 })
+  @Column('integer', { name: 'rol_id', default: 2 })
   rol_id: number;
 
   @CreateDateColumn({ name: 'fecha_creacion' })

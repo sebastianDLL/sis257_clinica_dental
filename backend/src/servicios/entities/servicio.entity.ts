@@ -1,4 +1,5 @@
 import { OdontologoServicio } from 'src/odontologo_servicios/entities/odontologo_servicio.entity';
+import { ServiciosCita } from 'src/servicios_citas/entities/servicios_cita.entity';
 import {
   Column,
   CreateDateColumn,
@@ -40,4 +41,7 @@ export class Servicio {
     (odontologo_servicio) => odontologo_servicio.servicio,
   )
   odontologo_servicios: OdontologoServicio[];
+
+  @OneToMany(() => ServiciosCita, (serviciosCita) => serviciosCita.servicio)
+  servicios_citas: ServiciosCita[];
 }

@@ -9,6 +9,8 @@ import { ServiciosModule } from './servicios/servicios.module';
 import { RolesModule } from './roles/roles.module';
 import { OdontologoServiciosModule } from './odontologo_servicios/odontologo_servicios.module';
 import { CitasModule } from './citas/citas.module';
+import { HorariosModule } from './horarios/horarios.module';
+import { ServiciosCitasModule } from './servicios_citas/servicios_citas.module';
 
 @Module({
   imports: [
@@ -30,6 +32,8 @@ import { CitasModule } from './citas/citas.module';
     RolesModule,
     OdontologoServiciosModule,
     CitasModule,
+    HorariosModule,
+    ServiciosCitasModule,
   ],
   controllers: [AppController],
   providers: [AppService],
