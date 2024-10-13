@@ -8,7 +8,7 @@ Este proyecto corresponde a una **clínica dental** desarrollada para gestionar 
 - **Gestión de clientes**: Administración de los datos de los pacientes, con historial de citas y tratamientos.
 - **Agendamiento de citas**: Sistema automatizado de horarios y citas entre clientes y odontólogos.
 - **Control de servicios**: Registro de los servicios ofrecidos por la clínica dental, asignación a odontólogos y tarifas.
-- **Gestión de roles**: Administración de usuarios del sistema con distintos niveles de acceso (administradores, odontólogos, recepcionistas, etc.).
+- **Gestión de roles**: Administración de usuarios del sistema con niveles de acceso para odontólogos y clientes.
 
 ## Entidades del Sistema
 
@@ -85,7 +85,7 @@ Registro de las citas que se programan entre los clientes y los odontólogos.
 - `montoTotal`: Monto total de la cita.
 - `estado`: Estado de la cita (Programada, Cancelada, Completada).
 
-### 7. **Servicio_citas**
+### 8. **Servicio_citas**
 Registro de los servicios asociados a las citas programadas entre los clientes y los odontólogos.
 
 **Campos:**
