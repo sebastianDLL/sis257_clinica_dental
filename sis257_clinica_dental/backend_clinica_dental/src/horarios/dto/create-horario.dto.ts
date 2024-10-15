@@ -25,8 +25,8 @@ export class CreateHorarioDto {
   @ApiProperty()
   @IsNotEmpty({ message: 'El campo hora es obligatorio' })
   @IsString({ message: 'El campo hora debe ser una cadena de texto' })
-  @MaxLength(6, {
-    message: 'El campo hora debe tener una longitud máxima de 6 caracteres',
+  @MaxLength(25, {
+    message: 'El campo hora debe tener una longitud máxima de 25 caracteres',
   })
   readonly hora: string;
 
