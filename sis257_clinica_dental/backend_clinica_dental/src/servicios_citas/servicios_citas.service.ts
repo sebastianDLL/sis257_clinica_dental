@@ -75,6 +75,7 @@ export class ServiciosCitasService {
     if (!serviciosCita) {
       throw new ConflictException('El servicio no está asociado con esta cita');
     }
+
     return serviciosCita;
   }
 
