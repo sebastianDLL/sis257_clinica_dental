@@ -65,21 +65,18 @@ export class ServiciosCitasService {
       relations: ['servicio', 'cita', 'cita.cliente', 'cita.odontologo'],
     });
   }
-  
 
   async findOne(id: number): Promise<ServiciosCita> {
     const serviciosCita = await this.serviciosCitaRepository.findOne({
       where: { id },
       relations: ['servicio', 'cita', 'cita.cliente', 'cita.odontologo'],
     });
-  
+
     if (!serviciosCita) {
       throw new ConflictException('El servicio no está asociado con esta cita');
     }
-  
     return serviciosCita;
   }
-  
 
   async update(
     id: number,
