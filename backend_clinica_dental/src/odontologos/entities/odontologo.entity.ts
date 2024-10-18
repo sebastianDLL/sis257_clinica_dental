@@ -3,6 +3,8 @@ import { Horario } from 'src/horarios/entities/horario.entity';
 import { OdontologoServicio } from 'src/odontologo_servicios/entities/odontologo_servicio.entity';
 import { Rol } from 'src/roles/entities/role.entity';
 import {
+  BeforeInsert,
+  BeforeUpdate,
   Column,
   CreateDateColumn,
   DeleteDateColumn,
@@ -13,6 +15,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import * as bcrypt from 'bcrypt';
 
 @Entity('odontologos')
 export class Odontologo {
@@ -30,6 +33,9 @@ export class Odontologo {
 
   @Column('varchar', { length: 50 })
   email: string;
+
+  @Column('varchar', { length: 150 , select: false })
+  password: string;
 
   @Column('varchar', { length: 15 })
   telefono: string;
@@ -51,6 +57,17 @@ export class Odontologo {
 
   @DeleteDateColumn({ name: 'fecha_eliminacion', select: false })
   fechaEliminacion: Date;
+
+  @BeforeInsert()
+  @BeforeUpdate()
+  async hashPassword() {
+    const salt = await bcrypt.genSalt();
+    this.password = await bcrypt.hash(this.password, salt);
+  }
+
+  async validatePassword(plainPassword: string): Promise<boolean> {
+    return bcrypt.compare(plainPassword, this.password);
+  }
 
   @OneToMany(
     () => OdontologoServicio,

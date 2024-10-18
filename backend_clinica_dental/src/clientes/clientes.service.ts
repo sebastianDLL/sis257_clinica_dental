@@ -1,4 +1,4 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { CreateClienteDto } from './dto/create-cliente.dto';
 import { UpdateClienteDto } from './dto/update-cliente.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -25,7 +25,7 @@ export class ClientesService {
     cliente.primerApellido = createClienteDto.primerApellido.trim();
     cliente.segundoApellido = createClienteDto.segundoApellido.trim();
     cliente.email = createClienteDto.email.trim();
-    cliente.password = createClienteDto.password.trim();
+    cliente.password = process.env.DEFAULT_PASSWORD;
     cliente.telefono = createClienteDto.telefono.trim();
     cliente.direccion = createClienteDto.direccion.trim();
 
@@ -56,5 +56,20 @@ export class ClientesService {
   async remove(id: number) {
     const cliente = await this.findOne(id);
     return this.clientesRepository.softRemove(cliente);
+  }
+
+  async validate(email: string, clave: string): Promise<Cliente> {
+    const emailOk = await this.clientesRepository.findOne({
+      where: { email },
+      select: ['id', 'nombre', 'email', 'password'],
+    });
+
+    if (!emailOk) throw new NotFoundException('Usuario inexistente');
+
+    if (!(await emailOk?.validatePassword(clave))) {
+      throw new UnauthorizedException('Clave incorrecta');
+    }
+    
+    return emailOk;
   }
 }

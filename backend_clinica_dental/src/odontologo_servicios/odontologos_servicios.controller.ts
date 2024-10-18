@@ -7,16 +7,16 @@ import {
   Param,
   Delete,
 } from '@nestjs/common';
-import { OdontologoServiciosService } from './odontologo_servicios.service';
+import { OdontologosServiciosService } from './odontologos_servicios.service';
 import { CreateOdontologoServicioDto } from './dto/create-odontologo_servicio.dto';
 import { UpdateOdontologoServicioDto } from './dto/update-odontologo_servicio.dto';
 import { ApiTags } from '@nestjs/swagger';
 
-@ApiTags('Odontologo_Servicios')
-@Controller('odontologo_servicios')
-export class OdontologoServiciosController {
+@ApiTags('Odontologos_Servicios')
+@Controller('odontologos_servicios')
+export class OdontologosServiciosController {
   constructor(
-    private readonly odontologoServiciosService: OdontologoServiciosService,
+    private readonly odontologoServiciosService: OdontologosServiciosService,
   ) {}
 
   @Post()

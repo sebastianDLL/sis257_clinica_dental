@@ -7,7 +7,7 @@ import { ClientesModule } from './clientes/clientes.module';
 import { OdontologosModule } from './odontologos/odontologos.module';
 import { ServiciosModule } from './servicios/servicios.module';
 import { RolesModule } from './roles/roles.module';
-import { OdontologoServiciosModule } from './odontologo_servicios/odontologo_servicios.module';
+import { OdontologosServiciosModule } from './odontologo_servicios/odontologos_servicios.module';
 import { CitasModule } from './citas/citas.module';
 import { HorariosModule } from './horarios/horarios.module';
 import { ServiciosCitasModule } from './servicios_citas/servicios_citas.module';
@@ -30,7 +30,7 @@ import { ServiciosCitasModule } from './servicios_citas/servicios_citas.module';
     OdontologosModule,
     ServiciosModule,
     RolesModule,
-    OdontologoServiciosModule,
+    OdontologosServiciosModule,
     CitasModule,
     HorariosModule,
     ServiciosCitasModule,

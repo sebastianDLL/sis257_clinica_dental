@@ -12,7 +12,7 @@ export class CreateClienteDto {
   @ApiProperty()
   @IsNotEmpty({ message: 'El campo nombre es obligatorio' })
   @IsString({ message: 'El campo nombre debe ser un string o cadena' })
-  @MaxLength(50, {
+  @MaxLength(150, {
     message: 'El campo nombre debe tener un máximo de 50 caracteres',
   })
   readonly nombre: string;
@@ -20,7 +20,7 @@ export class CreateClienteDto {
   @ApiProperty()
   @IsNotEmpty({ message: 'El campo primer apellido es obligatorio' })
   @IsString({ message: 'El campo primer apellido debe ser un string o cadena' })
-  @MaxLength(50, {
+  @MaxLength(150, {
     message: 'El campo primer apellido debe tener un máximo de 50 caracteres',
   })
   readonly primerApellido: string;
@@ -30,7 +30,7 @@ export class CreateClienteDto {
   @IsString({
     message: 'El campo segundo apellido debe ser un string o cadena',
   })
-  @MaxLength(50, {
+  @MaxLength(150, {
     message: 'El campo segundo apellido debe tener un máximo de 50 caracteres',
   })
   readonly segundoApellido: string;
@@ -38,19 +38,19 @@ export class CreateClienteDto {
   @ApiProperty()
   @IsNotEmpty({ message: 'El campo email es obligatorio' })
   @IsString({ message: 'El campo email debe ser un string o cadena' })
-  @MaxLength(50, {
+  @MaxLength(150, {
     message: 'El campo email debe tener un máximo de 50 caracteres',
   })
   @IsEmail({}, { message: 'El campo debe ser un email' })
   readonly email: string;
 
-  @ApiProperty()
-  @IsNotEmpty({ message: 'El campo password es obligatorio' })
-  @IsString({ message: 'El campo password debe ser un string o cadena' })
-  @MaxLength(50, {
-    message: 'El campo password debe tener un máximo de 50 caracteres',
-  })
-  readonly password: string;
+  // @ApiProperty()
+  // @IsNotEmpty({ message: 'El campo password es obligatorio' })
+  // @IsString({ message: 'El campo password debe ser un string o cadena' })
+  // @MaxLength(50, {
+  //   message: 'El campo password debe tener un máximo de 50 caracteres',
+  // })
+  // readonly password?: string;
 
   @ApiProperty()
   @IsNotEmpty({ message: 'El campo telefono es obligatorio' })
@@ -63,7 +63,7 @@ export class CreateClienteDto {
   @ApiProperty()
   @IsNotEmpty({ message: 'El campo direccion es obligatorio' })
   @IsString({ message: 'El campo direccion debe ser un string o cadena' })
-  @MaxLength(100, {
+  @MaxLength(150, {
     message: 'El campo direccion debe tener un máximo de 100 caracteres',
   })
   readonly direccion: string;

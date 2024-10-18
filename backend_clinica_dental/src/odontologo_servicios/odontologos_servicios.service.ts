@@ -6,7 +6,7 @@ import { OdontologoServicio } from './entities/odontologo_servicio.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
-export class OdontologoServiciosService {
+export class OdontologosServiciosService {
   constructor(
     @InjectRepository(OdontologoServicio)
     private odontologoServicioRepository: Repository<OdontologoServicio>,

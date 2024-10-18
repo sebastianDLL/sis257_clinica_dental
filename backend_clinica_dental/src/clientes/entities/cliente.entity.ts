@@ -1,6 +1,8 @@
 import { Cita } from 'src/citas/entities/cita.entity';
 import { Rol } from 'src/roles/entities/role.entity';
 import {
+  BeforeInsert,
+  BeforeUpdate,
   Column,
   CreateDateColumn,
   DeleteDateColumn,
@@ -11,31 +13,32 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import * as bcrypt from 'bcrypt';
 
 @Entity('clientes')
 export class Cliente {
   @PrimaryGeneratedColumn('identity')
   id: number;
 
-  @Column('varchar', { length: 50 })
+  @Column('varchar', { length: 150 })
   nombre: string;
 
-  @Column('varchar', { length: 50, name: 'primer_apellido' })
+  @Column('varchar', { length: 150, name: 'primer_apellido' })
   primerApellido: string;
 
-  @Column('varchar', { length: 50, name: 'segundo_apellido' })
+  @Column('varchar', { length: 150, name: 'segundo_apellido' })
   segundoApellido: string;
 
-  @Column('varchar', { length: 50 })
+  @Column('varchar', { length: 150 })
   email: string;
 
-  @Column('varchar', { length: 50 })
+  @Column('varchar', { length: 150 , select: false })
   password: string;
 
   @Column('varchar', { length: 15 })
   telefono: string;
 
-  @Column('varchar', { length: 100 })
+  @Column('varchar', { length: 150 })
   direccion: string;
 
   @Column('integer', { name: 'rol_id', default: 2 })
@@ -49,6 +52,17 @@ export class Cliente {
 
   @DeleteDateColumn({ name: 'fecha_eliminacion', select: false })
   fechaEliminacion: Date;
+
+  @BeforeInsert()
+  @BeforeUpdate()
+  async hashPassword() {
+    const salt = await bcrypt.genSalt();
+    this.password = await bcrypt.hash(this.password, salt);
+  }
+
+  async validatePassword(plainPassword: string): Promise<boolean> {
+    return bcrypt.compare(plainPassword, this.password);
+  }
 
   @ManyToOne(() => Rol, (rol) => rol.clientes)
   @JoinColumn({ name: 'rol_id', referencedColumnName: 'id' })

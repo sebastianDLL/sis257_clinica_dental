@@ -1,4 +1,4 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { CreateOdontologoDto } from './dto/create-odontologo.dto';
 import { UpdateOdontologoDto } from './dto/update-odontologo.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -30,6 +30,7 @@ export class OdontologosService {
     odontologo.primerApellido = createOdontologoDto.primerApellido.trim();
     odontologo.segundoApellido = createOdontologoDto.segundoApellido.trim();
     odontologo.email = createOdontologoDto.email.trim();
+    odontologo.password = process.env.DEFAULT_PASSWORD;
     odontologo.telefono = createOdontologoDto.telefono.trim();
     odontologo.direccion = createOdontologoDto.direccion.trim();
     odontologo.especialidad = createOdontologoDto.especialidad.trim();
@@ -60,5 +61,20 @@ export class OdontologosService {
   async remove(id: number): Promise<Odontologo> {
     const odontologo = await this.findOne(id);
     return this.odontologosRepository.softRemove(odontologo);
+  }
+
+  async validate(email: string, clave: string): Promise<Odontologo> {
+    const emailOk = await this.odontologosRepository.findOne({
+      where: { email },
+      select: ['id', 'nombre', 'email', 'password'],
+    });
+
+    if (!emailOk) throw new NotFoundException('Usuario inexistente');
+
+    if (!(await emailOk?.validatePassword(clave))) {
+      throw new UnauthorizedException('Clave incorrecta');
+    }
+    
+    return emailOk;
   }
 }
