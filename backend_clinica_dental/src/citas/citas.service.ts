@@ -1,20 +1,39 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateCitaDto } from './dto/create-cita.dto';
 import { UpdateCitaDto } from './dto/update-cita.dto';
 import { Cita } from './entities/cita.entity';
+import { Cliente } from 'src/clientes/entities/cliente.entity';
+import { Odontologo } from 'src/odontologos/entities/odontologo.entity';
 
 @Injectable()
 export class CitasService {
   constructor(
     @InjectRepository(Cita)
     private citasRepository: Repository<Cita>,
+    @InjectRepository(Cliente)
+    private clientesRepository: Repository<Cliente>,
+    @InjectRepository(Odontologo)
+    private odontologosRepository: Repository<Odontologo>,
   ) {}
 
   async create(createCitaDto: CreateCitaDto): Promise<Cita> {
     const { clienteId, odontologoId } = createCitaDto;
 
+    // Verificar si el cliente existe
+    const clienteExistente = await this.clientesRepository.findOneBy({ id: clienteId });
+    if (!clienteExistente) {
+      throw new NotFoundException(`El cliente con ID ${clienteId} no existe`);
+    }
+
+    // Verificar si el odontólogo existe
+    const odontologoExistente = await this.odontologosRepository.findOneBy({ id: odontologoId });
+    if (!odontologoExistente) {
+      throw new NotFoundException(`El odontólogo con ID ${odontologoId} no existe`);
+    }
+
+    // Verificar si ya existe una cita para el mismo cliente y odontólogo
     const citaExistente = await this.citasRepository.findOne({
       where: {
         clienteId: clienteId,
@@ -22,10 +41,9 @@ export class CitasService {
       },
     });
 
-    if (citaExistente)
-      throw new ConflictException(
-        'Ya existe una cita en este horario para el odontólogo y cliente',
-      );
+    if (citaExistente) {
+      throw new ConflictException('Ya existe una cita en este horario para el odontólogo y cliente');
+    }
 
     const nuevaCita = this.citasRepository.create(createCitaDto);
     return this.citasRepository.save(nuevaCita);

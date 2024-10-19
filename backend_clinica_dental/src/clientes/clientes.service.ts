@@ -1,4 +1,9 @@
-import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { CreateClienteDto } from './dto/create-cliente.dto';
 import { UpdateClienteDto } from './dto/update-cliente.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -33,7 +38,7 @@ export class ClientesService {
   }
 
   async findAll(): Promise<Cliente[]> {
-    return this.clientesRepository.find();
+    return this.clientesRepository.find({ relations: ['rol'] });
   }
 
   async findOne(id: number): Promise<Cliente> {
@@ -69,7 +74,7 @@ export class ClientesService {
     if (!(await emailOk?.validatePassword(clave))) {
       throw new UnauthorizedException('Clave incorrecta');
     }
-    
+
     return emailOk;
   }
 }

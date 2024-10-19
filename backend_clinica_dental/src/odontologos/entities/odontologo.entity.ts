@@ -34,7 +34,7 @@ export class Odontologo {
   @Column('varchar', { length: 50 })
   email: string;
 
-  @Column('varchar', { length: 150 , select: false })
+  @Column('varchar', { length: 150, select: false })
   password: string;
 
   @Column('varchar', { length: 15 })

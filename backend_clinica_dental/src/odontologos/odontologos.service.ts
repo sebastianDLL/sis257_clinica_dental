@@ -1,4 +1,9 @@
-import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { CreateOdontologoDto } from './dto/create-odontologo.dto';
 import { UpdateOdontologoDto } from './dto/update-odontologo.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -39,7 +44,7 @@ export class OdontologosService {
   }
 
   async findAll(): Promise<Odontologo[]> {
-    return this.odontologosRepository.find();
+    return this.odontologosRepository.find({ relations: ['rol']});
   }
 
   async findOne(id: number): Promise<Odontologo> {
@@ -74,7 +79,7 @@ export class OdontologosService {
     if (!(await emailOk?.validatePassword(clave))) {
       throw new UnauthorizedException('Clave incorrecta');
     }
-    
+
     return emailOk;
   }
 }

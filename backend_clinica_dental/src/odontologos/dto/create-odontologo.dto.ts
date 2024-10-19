@@ -44,13 +44,13 @@ export class CreateOdontologoDto {
   @IsEmail({}, { message: 'El campo debe ser un email' })
   readonly email: string;
 
-    // @ApiProperty()
-  // @IsNotEmpty({ message: 'El campo password es obligatorio' })
-  // @IsString({ message: 'El campo password debe ser un string o cadena' })
-  // @MaxLength(50, {
-  //   message: 'El campo password debe tener un máximo de 50 caracteres',
-  // })
-  // readonly password?: string;
+  @ApiProperty()
+  @IsNotEmpty({ message: 'El campo password es obligatorio' })
+  @IsString({ message: 'El campo password debe ser un string o cadena' })
+  @MaxLength(50, {
+    message: 'El campo password debe tener un máximo de 50 caracteres',
+  })
+  readonly password?: string;
 
   @ApiProperty()
   @IsNotEmpty({ message: 'El campo telefono es obligatorio' })
