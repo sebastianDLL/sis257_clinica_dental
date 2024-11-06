@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import '@/assets/js/main.js'
+//import '@/assets/js/main.js'
 </script>
 
 <template>
@@ -852,8 +852,7 @@ import '@/assets/js/main.js'
       <!--  Result Content Wrapper Start -->
       <div class="result-content-wrapper">
         <div
-          class="result-img d-flex align-items-center bg-cover"
-          style="background-image: url(@/assets/images/result.png)"
+          class="result-img d-flex align-items-center bg-cover home-background"
         >
           <div class="container">
             <div class="result-item-wrapper">
@@ -1159,5 +1158,8 @@ import '@/assets/js/main.js'
 /* Agrega el estilo de fondo usando una clase específica */
 .slider-background {
   background-image: url('@/assets/images/slider/slider-1.png');
+}
+.home-background {
+  background-image: url('@/assets/images/result.png');
 }
 </style>
