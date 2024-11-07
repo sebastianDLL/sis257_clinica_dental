@@ -19,6 +19,9 @@ import HelloWorld from './components/HelloWorld.vue'
       <nav>
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/about">About</RouterLink>
+        <RouterLink to="/clientes">Clientes</RouterLink>
+        <RouterLink to="/odontologos">Odontologos</RouterLink>
+        <RouterLink to="/servicios">Servicios</RouterLink>
       </nav>
     </div>
   </header>
@@ -30,8 +33,8 @@ import HelloWorld from './components/HelloWorld.vue'
 header {
   line-height: 1.5;
   max-height: 100vh;
+  max-width: 50vw;
 }
-
 .logo {
   display: block;
   margin: 0 auto 2rem;
