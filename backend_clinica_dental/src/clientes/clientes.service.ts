@@ -63,18 +63,21 @@ export class ClientesService {
     return this.clientesRepository.softRemove(cliente);
   }
 
+  // aqui se valida el email y la clave
   async validate(email: string, clave: string): Promise<Cliente> {
     const emailOk = await this.clientesRepository.findOne({
       where: { email },
       select: ['id', 'nombre', 'email', 'password'],
-    });
+    })as Cliente;
 
     if (!emailOk) throw new NotFoundException('Usuario inexistente');
 
-    if (!(await emailOk?.validatePassword(clave))) {
+    // Validamos la contraseña
+    const isPasswordValid = await emailOk.validatePassword(clave);
+    if (!isPasswordValid) {
       throw new UnauthorizedException('Clave incorrecta');
     }
-
+  
     return emailOk;
   }
 }

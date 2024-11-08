@@ -4,6 +4,7 @@ import {
   IsNotEmpty,
   IsNumber,
   IsString,
+  Matches,
   MaxLength,
 } from 'class-validator';
 
@@ -24,20 +25,19 @@ export class CreateServicioDto {
   })
   readonly descripcion: string;
 
+
+
   @ApiProperty({
     example: 0.0,
-    description: 'precio del servicio, puede tener hasta 2 decimales',
+    description: 'Precio del servicio, puede tener hasta 2 decimales',
     type: 'number',
   })
   @IsDefined({ message: 'El campo precio es obligatorio' })
-  @IsNumber(
-    { maxDecimalPlaces: 2 },
-    {
-      message:
-        'El campo precio debe ser un número decimal con hasta 2 decimales',
-    },
-  )
+  @IsNumber({}, { message: 'El campo precio debe ser un número' })
   readonly precio: number;
+
+
+
 
   @ApiProperty()
   @IsNotEmpty({ message: 'El campo duracion es obligatorio' })
