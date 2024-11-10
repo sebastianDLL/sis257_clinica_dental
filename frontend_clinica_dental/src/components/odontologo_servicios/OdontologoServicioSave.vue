@@ -8,6 +8,9 @@ import Button from 'primevue/button'
 import type { Odontologo_servicio } from '../../models/Odontologo_servicio'
 import type { Odontologo } from '../../models/Odontologo'
 import type { Servicios } from '../../models/Servicios'
+import { useOdontologoSeleccionado } from '@/stores/useOdontologoSeleccionado'
+
+const store = useOdontologoSeleccionado()
 
 const props = defineProps({
   mostrar: Boolean,
@@ -34,6 +37,8 @@ const relacion = ref({
   servicio_ids: [] as number[], // Array temporal para múltiples IDs
 })
 
+const serviciosAsignados = ref<number[]>([]) // Aquí se almacenan los servicios ya asignados al odontólogo
+
 // Sincronizar el objeto `relacion` con `props.relacion`
 watch(
   () => props.relacion,
@@ -41,7 +46,15 @@ watch(
     relacion.value = {
       id: newVal.id,
       odontologo_id: newVal.odontologo_id,
-      servicio_ids: newVal.servicio_id !== 0 ? [newVal.servicio_id] : [], // Solo incluir si es diferente de 0
+      servicio_ids: newVal.servicio_id !== 0 ? [newVal.servicio_id] : [],
+    }
+
+    // Actualizamos el store.nombreBusqueda con el nombre del odontólogo seleccionado
+    const odontologoSeleccionado = odontologos.value.find(
+      o => o.id === newVal.odontologo_id,
+    )
+    if (odontologoSeleccionado) {
+      store.nombreBusqueda = odontologoSeleccionado.nombre
     }
   },
   { immediate: true },
@@ -55,6 +68,19 @@ async function cargarDatos() {
   ])
   odontologos.value = odontologoResponse.data
   servicios.value = servicioResponse.data
+}
+
+// Cargar los servicios ya asignados para el odontólogo seleccionado
+async function cargarServiciosAsignados() {
+  const response = await http.get(
+    `odontologos_servicios/${relacion.value.odontologo_id}`,
+  )
+  serviciosAsignados.value = response.data.map((item: any) => item.servicio_id) // Asumimos que la respuesta contiene los IDs de los servicios
+}
+
+// Verificar si un servicio ya está asignado al odontólogo
+function isServicioAsignado(servicioId: number) {
+  return serviciosAsignados.value.includes(servicioId)
 }
 
 async function handleSave() {
@@ -79,12 +105,17 @@ async function handleSave() {
     // Espera a que todas las solicitudes se completen
     await Promise.all(requests)
 
+    // Emitir evento para que LIST recargue la lista
     emit('guardar')
+
     dialogVisible.value = false
   } catch (error: any) {
     console.error(error)
     const errorMessage = error?.response?.data?.message || 'Error desconocido'
     alert(errorMessage)
+
+    // Emitir evento para que LIST recargue la lista también si hay error
+    emit('guardar')
   }
 }
 
@@ -107,6 +138,7 @@ onMounted(() => {
         option-label="nombre"
         option-value="id"
         class="w-full"
+        @change="cargarServiciosAsignados()"
       />
     </div>
     <div class="mb-4">
@@ -116,7 +148,11 @@ onMounted(() => {
         :key="servicio.id"
         class="flex items-center"
       >
-        <Checkbox v-model="relacion.servicio_ids" :value="servicio.id" />
+        <Checkbox
+          v-model="relacion.servicio_ids"
+          :value="servicio.id"
+          :disabled="isServicioAsignado(servicio.id)"
+        />
         <span class="ml-2">{{ servicio.nombre }}</span>
       </div>
     </div>

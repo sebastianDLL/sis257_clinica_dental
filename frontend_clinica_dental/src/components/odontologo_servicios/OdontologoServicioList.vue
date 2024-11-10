@@ -6,6 +6,9 @@ import type { Odontologo } from '../../models/Odontologo'
 import type { Servicios } from '../../models/Servicios'
 import Button from 'primevue/button'
 import Dialog from 'primevue/dialog'
+import { useOdontologoSeleccionado } from '@/stores/useOdontologoSeleccionado'
+
+const store = useOdontologoSeleccionado()
 
 // Interfaz para definir el tipo de odontologo con sus servicios
 interface OdontologoConServicios extends Odontologo {
@@ -78,21 +81,21 @@ async function eliminar() {
       'Eliminando la relación entre OdontologoID:',
       odontologo_serviciosDelete.value.odontologo_id,
       'y ServicioID:',
-      odontologo_serviciosDelete.value.servicio_id
-    );
+      odontologo_serviciosDelete.value.servicio_id,
+    )
 
     try {
       // Llamada al nuevo endpoint para eliminar la relación
       const response = await http.delete(
-        `${ENDPOINT_DELETE}/eliminar-relacion/${odontologo_serviciosDelete.value.odontologo_id}/${odontologo_serviciosDelete.value.servicio_id}`
-      );
+        `${ENDPOINT_DELETE}/eliminar-relacion/${odontologo_serviciosDelete.value.odontologo_id}/${odontologo_serviciosDelete.value.servicio_id}`,
+      )
 
-      console.log('Respuesta del servidor:', response);
-      obtenerLista(); // Vuelve a cargar los odontólogos después de eliminar
-      mostrarConfirmDialog.value = false;
+      console.log('Respuesta del servidor:', response)
+      obtenerLista() // Vuelve a cargar los odontólogos después de eliminar
+      mostrarConfirmDialog.value = false
     } catch (error) {
-      console.error('Error al eliminar:', error);
-      alert('Hubo un problema al eliminar la relación.');
+      console.error('Error al eliminar:', error)
+      alert('Hubo un problema al eliminar la relación.')
     }
   }
 }
@@ -144,12 +147,12 @@ defineExpose({ obtenerLista })
             <td>{{ servicio.precio }}</td>
             <td>{{ servicio.duracion }}</td>
             <td>
-              <Button
+              <!-- <Button
                 icon="pi pi-pencil"
                 aria-label="Editar"
                 text
                 @click="emitirEdicion(odontologo.id, servicio.id)"
-              />
+              />-->
               <Button
                 icon="pi pi-trash"
                 aria-label="Eliminar"

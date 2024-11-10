@@ -89,18 +89,17 @@ export class OdontologosServiciosService {
     id: number,
     updateOdontologoServicioDto: UpdateOdontologoServicioDto,
   ): Promise<OdontologoServicio> {
-    const odontologoServicio =
-      await this.odontologoServicioRepository.findOneBy({ id });
-    if (!odontologoServicio)
-      throw new ConflictException(
-        'El odontólogo no está asociado con este servicio',
-      );
-
-    const odontologoServicioUpdate = Object.assign(
-      odontologoServicio,
-      updateOdontologoServicioDto,
-    );
-    return this.odontologoServicioRepository.save(odontologoServicioUpdate);
+    const odontologoServicio = await this.odontologoServicioRepository.findOneBy({ id });
+    
+    if (!odontologoServicio) {
+      throw new NotFoundException('La relación no existe para este odontólogo y servicio');
+    }
+  
+    // Actualizar el servicioId
+    odontologoServicio.servicioId = updateOdontologoServicioDto.servicioId;
+  
+    // Guardar los cambios
+    return this.odontologoServicioRepository.save(odontologoServicio);
   }
 
   async remove(id: number): Promise<OdontologoServicio> {
@@ -113,15 +112,14 @@ export class OdontologosServiciosService {
     return this.odontologoServicioRepository.softRemove(odontologoServicio);
   }
 
-
   async findAllWithServices(): Promise<any> {
     const odontologoServicios = await this.odontologoServicioRepository.find({
       relations: ['odontologo', 'servicio'],
     });
-  
+
     const groupedResult = odontologoServicios.reduce((result, item) => {
       const odontologoId = item.odontologo.id;
-  
+
       if (!result[odontologoId]) {
         result[odontologoId] = {
           id: odontologoId,
@@ -135,7 +133,7 @@ export class OdontologosServiciosService {
           servicios: [],
         };
       }
-  
+
       result[odontologoId].servicios.push({
         id: item.servicio.id,
         nombre: item.servicio.nombre,
@@ -143,15 +141,17 @@ export class OdontologosServiciosService {
         precio: item.servicio.precio,
         duracion: item.servicio.duracion,
       });
-  
+
       return result;
     }, {});
-  
+
     return Object.values(groupedResult);
   }
-  
 
-  async eliminarRelacion(odontologoId: number, servicioId: number): Promise<boolean> {
+  async eliminarRelacion(
+    odontologoId: number,
+    servicioId: number,
+  ): Promise<boolean> {
     try {
       // Buscar la relación entre odontólogo y servicio en la tabla de relaciones
       const relacion = await this.odontologoServicioRepository.findOne({
@@ -171,5 +171,4 @@ export class OdontologosServiciosService {
       return false;
     }
   }
-
 }
