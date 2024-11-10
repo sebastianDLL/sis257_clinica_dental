@@ -6,6 +6,7 @@ import Dialog from 'primevue/dialog'
 import InputText from 'primevue/inputtext'
 import InputNumber from 'primevue/inputnumber'
 import { computed, ref, watch } from 'vue'
+import { Textarea } from 'primevue'
 
 const ENDPOINT = 'servicios'
 const props = defineProps({
@@ -27,9 +28,21 @@ const dialogVisible = computed({
 
 const servicio = ref<Servicios>({ ...props.servicio })
 watch(
-  () => props.servicio,
+  () => props.mostrar,
   newVal => {
-    servicio.value = { ...newVal }
+    if (newVal) {
+      servicio.value = props.modoEdicion
+        ? {
+            ...props.servicio,
+            precio: Math.round(props.servicio.precio * 100) / 100,
+          }
+        : ({
+            nombre: '',
+            descripcion: '',
+            precio: 0,
+            duracion: '',
+          } as Servicios)
+    }
   },
 )
 
@@ -53,10 +66,6 @@ async function handleSave() {
     alert(error?.response?.data?.message)
   }
 }
-
-
-
-
 </script>
 
 <template>
@@ -67,7 +76,7 @@ async function handleSave() {
       style="width: 25rem"
     >
       <div class="flex items-center gap-4 mb-4">
-        <label for="nombre" class="font-semibold w-24">Nombre</label>
+        <label for="nombre" class="font-semibold w-4">Nombre</label>
         <InputText
           id="nombre"
           v-model="servicio.nombre"
@@ -77,16 +86,19 @@ async function handleSave() {
         />
       </div>
       <div class="flex items-center gap-4 mb-4">
-        <label for="descripcion" class="font-semibold w-24">Descripción</label>
-        <InputText
+        <label for="descripcion" class="font-semibold w-4">Descripción</label>
+        <Textarea
           id="descripcion"
           v-model="servicio.descripcion"
+          autoResize
+          rows="5"
+          cols="30"
           class="flex-auto"
           autocomplete="off"
         />
       </div>
       <div class="flex items-center gap-4 mb-4">
-        <label for="precio" class="font-semibold w-24">Precio</label>
+        <label for="precio" class="font-semibold w-4">Precio</label>
         <InputNumber
           id="precio"
           v-model="servicio.precio"
@@ -95,13 +107,14 @@ async function handleSave() {
           :step="0.01"
           :min="0"
           :mode="'decimal'"
-          :locale="'es'"
-          :currency="'USD'"
+          :locale="'es-BO'"
+          :decimalSeparator="'.'"
+          :useGrouping="false"
         />
       </div>
       <div class="flex items-center gap-4 mb-4">
-        <label for="duracion" class="font-semibold w-24">Duración</label>
-        <InputNumber
+        <label for="duracion" class="font-semibold w-4">Duración</label>
+        <InputText
           id="duracion"
           v-model="servicio.duracion"
           class="flex-auto"

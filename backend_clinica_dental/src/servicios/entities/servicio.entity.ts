@@ -24,8 +24,8 @@ export class Servicio {
   @Column('decimal', { precision: 10, scale: 2 })
   precio: number;
 
-  @Column('int')
-  duracion: number;
+  @Column('varchar', { length: 50 })
+  duracion: string;
 
   @CreateDateColumn({ name: 'fecha_creacion' })
   fechaCreacion: Date;

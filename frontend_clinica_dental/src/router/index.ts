@@ -29,6 +29,11 @@ const router = createRouter({
       name: 'servicios',
       component: () => import('../views/ServiciosView.vue'),
     },
+    {
+      path: '/odontologo_servicios',
+      name: 'odontologo_servicios',
+      component: () => import('../views/OdontologoServiciosView.vue'),
+    },
   ],
 })
 

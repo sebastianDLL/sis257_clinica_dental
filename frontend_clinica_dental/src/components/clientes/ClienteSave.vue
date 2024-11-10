@@ -8,93 +8,147 @@ import { computed, ref, watch } from 'vue'
 
 const ENDPOINT = 'clientes'
 const props = defineProps({
-    mostrar: Boolean,
-    cliente: {
-        type: Object as () => Cliente,
-        default: () => ({}) as Cliente
-    },
-    modoEdicion: Boolean
+  mostrar: Boolean,
+  cliente: {
+    type: Object as () => Cliente,
+    default: () => ({}) as Cliente,
+  },
+  modoEdicion: Boolean,
 })
 const emit = defineEmits(['guardar', 'close'])
 
 const dialogVisible = computed({
-    get: () => props.mostrar,
-    set: (value) => {
-        if (!value) emit('close')
-    }
+  get: () => props.mostrar,
+  set: value => {
+    if (!value) emit('close')
+  },
 })
 
 const cliente = ref<Cliente>({ ...props.cliente })
 watch(
-    () => props.cliente,
-    (newVal) => {
-        cliente.value = { ...newVal }
-    }
+  () => props.cliente,
+  newVal => {
+    cliente.value = { ...newVal }
+  },
 )
 
 async function handleSave() {
-    try {
-        const body = {
-            nombre: cliente.value.nombre,
-            primerApellido: cliente.value.primerApellido,
-            segundoApellido: cliente.value.segundoApellido,
-            password: cliente.value.password,
-            email: cliente.value.email,
-            telefono: cliente.value.telefono,
-            direccion: cliente.value.direccion
-        }
-        if (props.modoEdicion) {
-            await http.patch(`${ENDPOINT}/${cliente.value.id}`, body)
-        } else {
-            await http.post(ENDPOINT, body)
-        }
-        emit('guardar')
-        cliente.value = {} as Cliente
-        dialogVisible.value = false
-    } catch (error: any) {
-        alert(error?.response?.data?.message)
+  try {
+    const body = {
+      nombre: cliente.value.nombre,
+      primerApellido: cliente.value.primerApellido,
+      segundoApellido: cliente.value.segundoApellido,
+      password: cliente.value.password,
+      email: cliente.value.email,
+      telefono: cliente.value.telefono,
+      direccion: cliente.value.direccion,
     }
+    if (props.modoEdicion) {
+      await http.patch(`${ENDPOINT}/${cliente.value.id}`, body)
+    } else {
+      await http.post(ENDPOINT, body)
+    }
+    emit('guardar')
+    cliente.value = {} as Cliente
+    dialogVisible.value = false
+  } catch (error: any) {
+    alert(error?.response?.data?.message)
+  }
 }
 </script>
 
 <template>
-    <div class="card flex justify-center">
-        <Dialog v-model:visible="dialogVisible" :header="props.modoEdicion ? 'Editar' : 'Crear'" style="width: 25rem">
-            <div class="flex items-center gap-4 mb-4">
-                <label for="nombre" class="font-semibold w-24">Nombre</label>
-                <InputText id="nombre" v-model="cliente.nombre" class="flex-auto" autocomplete="off" autofocus />
-            </div>
-            <div class="flex items-center gap-4 mb-4">
-                <label for="primer_apellido" class="font-semibold w-24">Primer Apellido</label>
-                <InputText id="primer_apellido" v-model="cliente.primerApellido" class="flex-auto" autocomplete="off" />
-            </div>
-            <div class="flex items-center gap-4 mb-4">
-                <label for="segundo_apellido" class="font-semibold w-24">Segundo Apellido</label>
-                <InputText id="segundo_apellido" v-model="cliente.segundoApellido" class="flex-auto" autocomplete="off" />
-            </div>
-            <div class="flex items-center gap-4 mb-4">
-                <label for="password" class="font-semibold w-24">Contraseña</label>
-                <InputText id="password" v-model="cliente.password" class="flex-auto" autocomplete="off" />
-            </div>
-            <div class="flex items-center gap-4 mb-4">
-                <label for="email" class="font-semibold w-24">Correo</label>
-                <InputText id="email" v-model="cliente.email" class="flex-auto" autocomplete="off" />
-            </div>
-            <div class="flex items-center gap-4 mb-4">
-                <label for="telefono" class="font-semibold w-24">Teléfono</label>
-                <InputText id="telefono" v-model="cliente.telefono" class="flex-auto" autocomplete="off" />
-            </div>
-            <div class="flex items-center gap-4 mb-4">
-                <label for="direccion" class="font-semibold w-24">Dirección</label>
-                <InputText id="direccion" v-model="cliente.direccion" class="flex-auto" autocomplete="off" />
-            </div>
-            <div class="flex justify-end gap-2">
-                <Button type="button" label="Cancelar" icon="pi pi-times" severity="secondary"
-                    @click="dialogVisible = false"></Button>
-                <Button type="button" label="Guardar" icon="pi pi-save" @click="handleSave"></Button>
-            </div>
-        </Dialog>
-    </div>
+  <div class="card flex justify-center">
+    <Dialog
+      v-model:visible="dialogVisible"
+      :header="props.modoEdicion ? 'Editar' : 'Crear'"
+      style="width: 25rem"
+    >
+      <div class="flex items-center gap-4 mb-4">
+        <label for="nombre" class="font-semibold w-24">Nombre</label>
+        <InputText
+          id="nombre"
+          v-model="cliente.nombre"
+          class="flex-auto"
+          autocomplete="off"
+          autofocus
+        />
+      </div>
+      <div class="flex items-center gap-4 mb-4">
+        <label for="primer_apellido" class="font-semibold w-24"
+          >Primer Apellido</label
+        >
+        <InputText
+          id="primer_apellido"
+          v-model="cliente.primerApellido"
+          class="flex-auto"
+          autocomplete="off"
+        />
+      </div>
+      <div class="flex items-center gap-4 mb-4">
+        <label for="segundo_apellido" class="font-semibold w-24"
+          >Segundo Apellido</label
+        >
+        <InputText
+          id="segundo_apellido"
+          v-model="cliente.segundoApellido"
+          class="flex-auto"
+          autocomplete="off"
+        />
+      </div>
+      <div class="flex items-center gap-4 mb-4">
+        <label for="password" class="font-semibold w-24">Contraseña</label>
+        <InputText
+          id="password"
+          v-model="cliente.password"
+          class="flex-auto"
+          autocomplete="off"
+        />
+      </div>
+      <div class="flex items-center gap-4 mb-4">
+        <label for="email" class="font-semibold w-24">Correo</label>
+        <InputText
+          id="email"
+          v-model="cliente.email"
+          class="flex-auto"
+          autocomplete="off"
+        />
+      </div>
+      <div class="flex items-center gap-4 mb-4">
+        <label for="telefono" class="font-semibold w-24">Teléfono</label>
+        <InputText
+          id="telefono"
+          v-model="cliente.telefono"
+          class="flex-auto"
+          autocomplete="off"
+        />
+      </div>
+      <div class="flex items-center gap-4 mb-4">
+        <label for="direccion" class="font-semibold w-24">Dirección</label>
+        <InputText
+          id="direccion"
+          v-model="cliente.direccion"
+          class="flex-auto"
+          autocomplete="off"
+        />
+      </div>
+      <div class="flex justify-end gap-2">
+        <Button
+          type="button"
+          label="Cancelar"
+          icon="pi pi-times"
+          severity="secondary"
+          @click="dialogVisible = false"
+        ></Button>
+        <Button
+          type="button"
+          label="Guardar"
+          icon="pi pi-save"
+          @click="handleSave"
+        ></Button>
+      </div>
+    </Dialog>
+  </div>
 </template>
 
 <style scoped></style>

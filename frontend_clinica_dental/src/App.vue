@@ -4,37 +4,52 @@ import HelloWorld from './components/HelloWorld.vue'
 </script>
 
 <template>
-  <header>
-    <img
-      alt="Vue logo"
-      class="logo"
-      src="@/assets/logo.svg"
-      width="125"
-      height="125"
-    />
+  <div class="container">
+    <header>
+      <img
+        alt="Vue logo"
+        class="logo"
+        src="@/assets/logo.svg"
+        width="125"
+        height="125"
+      />
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
+      <div class="wrapper">
+        <HelloWorld msg="You did it!" />
 
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-        <RouterLink to="/clientes">Clientes</RouterLink>
-        <RouterLink to="/odontologos">Odontologos</RouterLink>
-        <RouterLink to="/servicios">Servicios</RouterLink>
-      </nav>
-    </div>
-  </header>
-
-  <RouterView />
+        <nav>
+          <RouterLink to="/">Home</RouterLink>
+          <RouterLink to="/about">About</RouterLink>
+          <RouterLink to="/clientes">Clientes</RouterLink>
+          <RouterLink to="/odontologos">Odontologos</RouterLink>
+          <RouterLink to="/servicios">Servicios</RouterLink>
+          <RouterLink to="/odontologo_servicios"
+            >Odontologo Servicios</RouterLink
+          >
+        </nav>
+      </div>
+    </header>
+    <main class="content">
+      <RouterView />
+    </main>
+  </div>
 </template>
 
 <style scoped>
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
 header {
   line-height: 1.5;
-  max-height: 100vh;
-  max-width: 50vw;
+  width: 100%;
+  text-align: center;
 }
+
 .logo {
   display: block;
   margin: 0 auto 2rem;
@@ -42,17 +57,13 @@ header {
 
 nav {
   width: 100%;
-  font-size: 12px;
+  font-size: 14px;
   text-align: center;
-  margin-top: 2rem;
+  margin-top: 1rem;
 }
 
 nav a.router-link-exact-active {
   color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
 }
 
 nav a {
@@ -65,30 +76,25 @@ nav a:first-of-type {
   border: 0;
 }
 
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
+.content {
+  margin-top: 1rem; /* Añade espacio entre el encabezado y la tabla */
+  width: 100%;
+}
 
-  .logo {
-    margin: 0 2rem 0 0;
-  }
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
 
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
+header,
+.table-container {
+  max-width: 100%; /* Ajusta esto según el ancho que desees */
+  margin: 0 auto;
+}
 
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
+.table-container {
+  margin-top: 20px;
 }
 </style>

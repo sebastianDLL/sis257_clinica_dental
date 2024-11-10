@@ -1,4 +1,5 @@
 export interface Odontologo {
+  servicios: any
   id: number
   nombre: string
   primerApellido: string

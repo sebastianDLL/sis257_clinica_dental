@@ -13,7 +13,7 @@ const odontologoDelete = ref<Odontologo | null>(null)
 const mostrarConfirmDialog = ref<boolean>(false)
 
 async function obtenerLista() {
-  odontologos.value = await http.get(ENDPOINT).then((response) => response.data)
+  odontologos.value = await http.get(ENDPOINT).then(response => response.data)
 }
 
 function emitirEdicion(odontologo: Odontologo) {
@@ -62,17 +62,36 @@ defineExpose({ obtenerLista })
           <td>{{ odontologo.email }}</td>
           <td>{{ odontologo.telefono }}</td>
           <td>
-            <Button icon="pi pi-pencil" aria-label="Editar" text @click="emitirEdicion(odontologo)" />
-            <Button icon="pi pi-trash" aria-label="Eliminar" text @click="mostrarEliminarConfirm(odontologo)" />
+            <Button
+              icon="pi pi-pencil"
+              aria-label="Editar"
+              text
+              @click="emitirEdicion(odontologo)"
+            />
+            <Button
+              icon="pi pi-trash"
+              aria-label="Eliminar"
+              text
+              @click="mostrarEliminarConfirm(odontologo)"
+            />
           </td>
         </tr>
       </tbody>
     </table>
 
-    <Dialog v-model:visible="mostrarConfirmDialog" header="Confirmar Eliminación" :style="{ width: '25rem' }">
+    <Dialog
+      v-model:visible="mostrarConfirmDialog"
+      header="Confirmar Eliminación"
+      :style="{ width: '25rem' }"
+    >
       <p>¿Estás seguro de que deseas eliminar este registro?</p>
       <div class="flex justify-end gap-2">
-        <Button type="button" label="Cancelar" severity="secondary" @click="mostrarConfirmDialog = false" />
+        <Button
+          type="button"
+          label="Cancelar"
+          severity="secondary"
+          @click="mostrarConfirmDialog = false"
+        />
         <Button type="button" label="Eliminar" @click="eliminar" />
       </div>
     </Dialog>

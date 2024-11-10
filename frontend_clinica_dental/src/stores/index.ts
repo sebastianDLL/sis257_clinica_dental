@@ -7,12 +7,12 @@ const useAuthStore = defineStore('auth', {
   state: () => ({
     user: localStorage.getItem('user') || '',
     token: getTokenFromLocalStorage(),
-    returnUrl: null || ''
+    returnUrl: null || '',
   }),
   getters: {},
   actions: {
     async login(usuario: string, clave: string) {
-      await http.post('auth/login', { usuario, clave }).then((response) => {
+      await http.post('auth/login', { usuario, clave }).then(response => {
         this.user = response.data.usuario
         this.token = response.data.access_token
 
@@ -26,8 +26,8 @@ const useAuthStore = defineStore('auth', {
       localStorage.clear()
       this.$reset()
       router.push('login')
-    }
-  }
+    },
+  },
 })
 
 export { useAuthStore }

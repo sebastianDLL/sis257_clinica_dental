@@ -26,7 +26,7 @@ export class ServiciosService {
     servicio.nombre = createServicioDto.nombre.trim();
     servicio.descripcion = createServicioDto.descripcion.trim();
     servicio.precio = createServicioDto.precio;
-    servicio.duracion = createServicioDto.duracion;
+    servicio.duracion = createServicioDto.duracion.trim();
 
     return this.serviciosRepository.save(servicio);
   }

@@ -12,8 +12,13 @@ const emit = defineEmits(['edit'])
 const servicioDelete = ref<Servicios | null>(null)
 const mostrarConfirmDialog = ref<boolean>(false)
 
-async function obtenerLista() {
+/*async function obtenerLista() {
   servicios.value = await http.get(ENDPOINT).then((response) => response.data)
+}*/
+
+async function obtenerLista() {
+  servicios.value = await http.get(ENDPOINT).then(response => response.data)
+  servicios.value.sort((a, b) => a.id - b.id) // Ordenar por ID
 }
 
 function emitirEdicion(servicio: Servicios) {
@@ -46,8 +51,11 @@ defineExpose({ obtenerLista })
           <th>Nro.</th>
           <th>Nombre</th>
           <th>Descripción</th>
-          <th>Precio</th>
-          <th>Duración</th>
+          <th>Precio <br />(Bs)</th>
+          <th>
+            Duración <br />
+            (minutos)
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -58,17 +66,36 @@ defineExpose({ obtenerLista })
           <td>{{ servicio.precio }}</td>
           <td>{{ servicio.duracion }}</td>
           <td>
-            <Button icon="pi pi-pencil" aria-label="Editar" text @click="emitirEdicion(servicio)" />
-            <Button icon="pi pi-trash" aria-label="Eliminar" text @click="mostrarEliminarConfirm(servicio)" />
+            <Button
+              icon="pi pi-pencil"
+              aria-label="Editar"
+              text
+              @click="emitirEdicion(servicio)"
+            />
+            <Button
+              icon="pi pi-trash"
+              aria-label="Eliminar"
+              text
+              @click="mostrarEliminarConfirm(servicio)"
+            />
           </td>
         </tr>
       </tbody>
     </table>
 
-    <Dialog v-model:visible="mostrarConfirmDialog" header="Confirmar Eliminación" :style="{ width: '25rem' }">
+    <Dialog
+      v-model:visible="mostrarConfirmDialog"
+      header="Confirmar Eliminación"
+      :style="{ width: '25rem' }"
+    >
       <p>¿Estás seguro de que deseas eliminar este registro?</p>
       <div class="flex justify-end gap-2">
-        <Button type="button" label="Cancelar" severity="secondary" @click="mostrarConfirmDialog = false" />
+        <Button
+          type="button"
+          label="Cancelar"
+          severity="secondary"
+          @click="mostrarConfirmDialog = false"
+        />
         <Button type="button" label="Eliminar" @click="eliminar" />
       </div>
     </Dialog>
