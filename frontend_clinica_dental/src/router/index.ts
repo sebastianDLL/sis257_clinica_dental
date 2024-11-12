@@ -14,6 +14,31 @@ const router = createRouter({
       name: 'about',
       component: () => import('../views/AboutView.vue'),
     },
+    {
+      path: '/citas',
+      name: 'citas',
+      component: () => import('../views/CitaView.vue'),
+    },
+    {
+      path: '/clientes',
+      name: 'clientes',
+      component: () => import('../views/ClienteView.vue'),
+    },
+    {
+      path: '/odontologos',
+      name: 'odontologos',
+      component: () => import('../views/OdontologoView.vue'),
+    },
+    {
+      path: '/servicios',
+      name: 'servicios',
+      component: () => import('../views/ServiciosView.vue'),
+    },
+    {
+      path: '/odontologo_servicios',
+      name: 'odontologo_servicios',
+      component: () => import('../views/OdontologoServiciosView.vue'),
+    },
   ],
 })
 

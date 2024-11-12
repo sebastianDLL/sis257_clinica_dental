@@ -53,14 +53,19 @@ export class Cliente {
   @DeleteDateColumn({ name: 'fecha_eliminacion', select: false })
   fechaEliminacion: Date;
 
+  //Bug correcion al actualizar, ahora se puede actualizar la contraseña
   @BeforeInsert()
   @BeforeUpdate()
   async hashPassword() {
-    const salt = await bcrypt.genSalt();
-    this.password = await bcrypt.hash(this.password, salt);
+    if (this.password) {
+      // Solo genera el hash si la contraseña está presente
+      const salt = await bcrypt.genSalt();
+      this.password = await bcrypt.hash(this.password, salt);
+    }
   }
 
-  async validatePassword(plainPassword: string): Promise<boolean> {
+   // Implementación de la validación de la contraseña
+   async validatePassword(plainPassword: string): Promise<boolean> {
     return bcrypt.compare(plainPassword, this.password);
   }
 

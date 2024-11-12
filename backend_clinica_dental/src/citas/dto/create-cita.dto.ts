@@ -16,20 +16,9 @@ export class CreateCitaDto {
   })
   readonly estado: string;
 
-  @ApiProperty({
-    example: 0.0,
-    description: 'Monto total de la cita, puede tener hasta 2 decimales',
-    type: 'number',
-  })
-  @IsDefined({ message: 'El campo Monto Total es obligatorio' })
-  @IsNumber(
-    { maxDecimalPlaces: 2 },
-    {
-      message:
-        'El campo montoTotal debe ser un número decimal con hasta 2 decimales',
-    },
-  )
-  readonly montoTotal: number;
+  @ApiProperty()
+  @IsDefined({ message: 'El campo fecha_hora_cita es obligatorio' })
+  readonly fechaHoraCita: Date;
 
   @ApiProperty()
   @IsDefined({ message: 'El campo cliente_id es obligatorio' })
@@ -40,4 +29,9 @@ export class CreateCitaDto {
   @IsDefined({ message: 'El campo odontologo_id es obligatorio' })
   @IsNumber({}, { message: 'El campo odontologo_id debe ser de tipo number' })
   readonly odontologoId: number;
+
+  @ApiProperty()
+  @IsDefined({ message: 'El campo servicio_id es obligatorio' })
+  @IsNumber({}, { message: 'El campo servicio_id debe ser de tipo number' })
+  readonly servicioId: number;
 }

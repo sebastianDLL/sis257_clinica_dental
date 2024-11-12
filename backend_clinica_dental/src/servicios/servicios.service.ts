@@ -26,7 +26,7 @@ export class ServiciosService {
     servicio.nombre = createServicioDto.nombre.trim();
     servicio.descripcion = createServicioDto.descripcion.trim();
     servicio.precio = createServicioDto.precio;
-    servicio.duracion = createServicioDto.duracion;
+    servicio.duracion = createServicioDto.duracion.trim();
 
     return this.serviciosRepository.save(servicio);
   }
@@ -40,6 +40,15 @@ export class ServiciosService {
     if (!servicio) throw new ConflictException('El servicio no existe');
 
     return servicio;
+  }
+
+  async findByOdontologo(idOdontologo: number): Promise<Servicio[]> {
+    return this.serviciosRepository
+      .createQueryBuilder('servicio')
+      .innerJoin('servicio.odontologo_servicios', 'odontologo_servicios')
+      .innerJoin('odontologo_servicios.odontologo', 'odontologo')
+      .where('odontologo.id = :idOdontologo', { idOdontologo })
+      .getMany();
   }
 
   async update(

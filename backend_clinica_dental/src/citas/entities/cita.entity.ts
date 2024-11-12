@@ -1,6 +1,7 @@
 import { Cliente } from 'src/clientes/entities/cliente.entity';
 import { Odontologo } from 'src/odontologos/entities/odontologo.entity';
-import { ServiciosCita } from 'src/servicios_citas/entities/servicios_cita.entity';
+import { Servicio } from 'src/servicios/entities/servicio.entity';
+
 import {
   Column,
   CreateDateColumn,
@@ -21,19 +22,17 @@ export class Cita {
   @Column('varchar', { length: 50 })
   estado: string;
 
-  @Column('decimal', {
-    precision: 10,
-    scale: 2,
-    name: 'monto_total',
-    default: 0.0,
-  })
-  montoTotal: number;
-
   @Column('integer', { name: 'cliente_id' })
   clienteId: number;
 
   @Column('integer', { name: 'odontologo_id' })
   odontologoId: number;
+
+  @Column('integer', { name: 'servicio_id' })
+  servicioId: number;
+
+  @Column('timestamp', { name: 'fecha_hora_cita' })
+  fechaHoraCita: Date;
 
   @CreateDateColumn({ name: 'fecha_creacion' })
   fechaCreacion: Date;
@@ -52,6 +51,8 @@ export class Cita {
   @JoinColumn({ name: 'odontologo_id', referencedColumnName: 'id' })
   odontologo: Odontologo;
 
-  @OneToMany(() => ServiciosCita, (serviciosCita) => serviciosCita.cita)
-  servicios_citas: ServiciosCita[];
+  @ManyToOne(() => Servicio, (servicio) => servicio.citas)
+  @JoinColumn({ name: 'servicio_id', referencedColumnName: 'id' })
+  servicio: Servicio;
+
 }

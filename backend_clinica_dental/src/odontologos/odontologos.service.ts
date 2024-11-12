@@ -19,17 +19,14 @@ export class OdontologosService {
 
   async create(createOdontologoDto: CreateOdontologoDto): Promise<Odontologo> {
     const buscarRepetidos = await this.odontologosRepository.findOne({
-      where: {
-        email: createOdontologoDto.email,
-        nombre: createOdontologoDto.nombre,
-      },
+      where: { email: createOdontologoDto.email },
     });
-
+  
     if (buscarRepetidos)
       throw new ConflictException(
-        'El odontólogo con ese email y nombre ya existe',
+        'El odontólogo con ese email ya existe',
       );
-
+  
     const odontologo = new Odontologo();
     odontologo.nombre = createOdontologoDto.nombre.trim();
     odontologo.primerApellido = createOdontologoDto.primerApellido.trim();
@@ -39,7 +36,7 @@ export class OdontologosService {
     odontologo.telefono = createOdontologoDto.telefono.trim();
     odontologo.direccion = createOdontologoDto.direccion.trim();
     odontologo.especialidad = createOdontologoDto.especialidad.trim();
-
+  
     return this.odontologosRepository.save(odontologo);
   }
 
@@ -68,18 +65,21 @@ export class OdontologosService {
     return this.odontologosRepository.softRemove(odontologo);
   }
 
+  // aqui se valida el email y la clave
   async validate(email: string, clave: string): Promise<Odontologo> {
     const emailOk = await this.odontologosRepository.findOne({
       where: { email },
       select: ['id', 'nombre', 'email', 'password'],
-    });
+    })as Odontologo;
 
     if (!emailOk) throw new NotFoundException('Usuario inexistente');
 
-    if (!(await emailOk?.validatePassword(clave))) {
+    // Validamos la contraseña
+    const isPasswordValid = await emailOk.validatePassword(clave);
+    if (!isPasswordValid) {
       throw new UnauthorizedException('Clave incorrecta');
     }
-
+  
     return emailOk;
   }
 }

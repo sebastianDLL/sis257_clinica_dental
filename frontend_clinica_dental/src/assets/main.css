@@ -1,10 +1,14 @@
 @import './base.css';
 
 #app {
-  max-width: 1280px;
+  width: 100%; /* Asegura que ocupe todo el ancho */
+  max-width: none; /* Elimina el límite de 1280px */
   margin: 0 auto;
   padding: 2rem;
   font-weight: normal;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centra el contenido dentro de #app */
 }
 
 a,
@@ -28,7 +32,7 @@ a,
   }
 
   #app {
-    display: grid;
+    display: flex; /* Cambia grid a flex para una sola columna */
     grid-template-columns: 1fr 1fr;
     padding: 0 2rem;
   }
