@@ -32,6 +32,11 @@ export class ServiciosController {
     return this.serviciosService.findOne(+id);
   }
 
+  @Get('odontologo/:idOdontologo')
+  findByOdontologo(@Param('idOdontologo') idOdontologo: string) {
+    return this.serviciosService.findByOdontologo(+idOdontologo);
+  }
+
   @Patch(':id')
   update(
     @Param('id') id: string,

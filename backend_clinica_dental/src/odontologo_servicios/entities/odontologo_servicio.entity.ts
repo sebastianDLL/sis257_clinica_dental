@@ -11,7 +11,6 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Cita } from 'src/citas/entities/cita.entity';
 
 @Entity('odontologo_servicios')
 export class OdontologoServicio {

@@ -7,6 +7,7 @@ export interface Cita {
   fechaHoraCita: Date
   clienteId: number
   odontologoId: number
+  servicioId: number
   cliente: Cliente
   odontologo: Odontologo
 }

@@ -42,6 +42,15 @@ export class ServiciosService {
     return servicio;
   }
 
+  async findByOdontologo(idOdontologo: number): Promise<Servicio[]> {
+    return this.serviciosRepository
+      .createQueryBuilder('servicio')
+      .innerJoin('servicio.odontologo_servicios', 'odontologo_servicios')
+      .innerJoin('odontologo_servicios.odontologo', 'odontologo')
+      .where('odontologo.id = :idOdontologo', { idOdontologo })
+      .getMany();
+  }
+
   async update(
     id: number,
     updateServicioDto: UpdateServicioDto,
