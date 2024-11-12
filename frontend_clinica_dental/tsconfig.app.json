@@ -9,6 +9,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    "types": ["node", "jquery"] // Agrega "jquery" aquí para incluir sus tipos
   }
 }

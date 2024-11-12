@@ -56,7 +56,9 @@
           <div class="header-bottom-wrapper">
             <!-- Header Logo Start -->
             <div class="header-logo">
-              <router-link to="/"><img src="@/assets/images/logo.png" alt="Logo" /></router-link>
+              <router-link to="/"
+                ><img src="@/assets/images/logo.png" alt="Logo"
+              /></router-link>
             </div>
             <!-- Header logo End -->
 
@@ -73,7 +75,9 @@
                   <router-link to="/odontologos"> Odontologos </router-link>
                 </li>
                 <li>
-                  <router-link to="/odontologo_servicios"> Servicios </router-link>
+                  <router-link to="/odontologo_servicios">
+                    Servicios
+                  </router-link>
                 </li>
                 <li>
                   <router-link to="/clientes"> Clientes </router-link>
@@ -91,15 +95,21 @@
             </div>
             <!-- Header Primary Menu End -->
 
-            <!-- Header Button Start -->
+            <!-- Header Button Start 
             <div class="header-btn d-none d-lg-block">
-              <router-link to="/citas" class="btn"> Reserva tu cita Ahora! </router-link>
-            </div>
+              <router-link to="/citas" class="btn">
+                Reserva tu cita Ahora!
+              </router-link>
+            </div>-->
             <!-- Header Button End -->
 
             <!-- Header Mobile Toggle Start -->
             <div class="header-toggle d-lg-none">
-              <button class="menu-toggle" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu">
+              <button
+                class="menu-toggle"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#offcanvasMenu"
+              >
                 <span></span>
                 <span></span>
                 <span></span>
@@ -117,8 +127,15 @@
     <!-- Mobile Menu End -->
     <div class="offcanvas offcanvas-start" id="offcanvasMenu">
       <div class="offcanvas-header">
-        <a class="logo" href="#"><img src="@/assets/images/logo.png" alt="Logo" /></a>
-        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        <a class="logo" href="#"
+          ><img src="@/assets/images/logo.png" alt="Logo"
+        /></a>
+        <button
+          type="button"
+          class="btn-close text-reset"
+          data-bs-dismiss="offcanvas"
+          aria-label="Close"
+        ></button>
       </div>
 
       <div class="offcanvas-body">
@@ -130,7 +147,8 @@
               <span>257 Calle Antofagasta Av. Germán Mendoza</span>
             </li>
             <li>
-              <i class="ri-mail-unread-fill"></i> <span>info@clinicadental.com</span>
+              <i class="ri-mail-unread-fill"></i>
+              <span>info@clinicadental.com</span>
             </li>
             <li><i class="ri-phone-fill"></i> +591 76543210</li>
           </ul>

@@ -63,17 +63,36 @@ defineExpose({ obtenerLista })
           <td>{{ cita.estado }}</td>
           <td>{{ new Date(cita.fechaHoraCita).toLocaleString() }}</td>
           <td>
-            <Button icon="pi pi-pencil" aria-label="Editar" text @click="emitirEdicion(cita)" />
-            <Button icon="pi pi-trash" aria-label="Eliminar" text @click="mostrarEliminarConfirm(cita)" />
+            <Button
+              icon="pi pi-pencil"
+              aria-label="Editar"
+              text
+              @click="emitirEdicion(cita)"
+            />
+            <Button
+              icon="pi pi-trash"
+              aria-label="Eliminar"
+              text
+              @click="mostrarEliminarConfirm(cita)"
+            />
           </td>
         </tr>
       </tbody>
     </table>
 
-    <Dialog v-model:visible="mostrarConfirmDialog" header="Confirmar Eliminación" :style="{ width: '25rem' }">
+    <Dialog
+      v-model:visible="mostrarConfirmDialog"
+      header="Confirmar Eliminación"
+      :style="{ width: '25rem' }"
+    >
       <p>¿Estás seguro de que deseas eliminar este registro?</p>
       <div class="flex justify-end gap-2">
-        <Button type="button" label="Cancelar" severity="secondary" @click="mostrarConfirmDialog = false" />
+        <Button
+          type="button"
+          label="Cancelar"
+          severity="secondary"
+          @click="mostrarConfirmDialog = false"
+        />
         <Button type="button" label="Eliminar" @click="eliminar" />
       </div>
     </Dialog>
@@ -110,7 +129,7 @@ tr:hover {
 }
 
 .action-buttons button {
-  background-color: #4CAF50;
+  background-color: #4caf50;
   border: none;
   color: white;
   padding: 6px 12px;
