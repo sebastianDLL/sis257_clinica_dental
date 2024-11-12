@@ -47,8 +47,10 @@ defineExpose({ obtenerLista })
           <th>Cliente</th>
           <th>Odontologo</th>
           <th>Servicio</th>
+          <th>Monto Total</th>
           <th>Estado</th>
           <th>Fecha y Hora</th>
+          <th>Acciones</th>
         </tr>
       </thead>
       <tbody>
@@ -57,43 +59,71 @@ defineExpose({ obtenerLista })
           <td>{{ cita.cliente.nombre }}</td>
           <td>{{ cita.odontologo.nombre }}</td>
           <td>{{ cita.servicio.nombre }}</td>
-          <td>{{ cita.estado }}</td>  
-          <td>{{ cita.fechaHoraCita }}</td>
+          <td>{{ cita.servicio.precio }} Bs.</td>
+          <td>{{ cita.estado }}</td>
+          <td>{{ new Date(cita.fechaHoraCita).toLocaleString() }}</td>
           <td>
-            <Button
-              icon="pi pi-pencil"
-              aria-label="Editar"
-              text
-              @click="emitirEdicion(cita)"
-            />
-            <Button
-              icon="pi pi-trash"
-              aria-label="Eliminar"
-              text
-              @click="mostrarEliminarConfirm(cita)"
-            />
+            <Button icon="pi pi-pencil" aria-label="Editar" text @click="emitirEdicion(cita)" />
+            <Button icon="pi pi-trash" aria-label="Eliminar" text @click="mostrarEliminarConfirm(cita)" />
           </td>
         </tr>
       </tbody>
     </table>
 
-    <Dialog
-      v-model:visible="mostrarConfirmDialog"
-      header="Confirmar Eliminación"
-      :style="{ width: '25rem' }"
-    >
+    <Dialog v-model:visible="mostrarConfirmDialog" header="Confirmar Eliminación" :style="{ width: '25rem' }">
       <p>¿Estás seguro de que deseas eliminar este registro?</p>
       <div class="flex justify-end gap-2">
-        <Button
-          type="button"
-          label="Cancelar"
-          severity="secondary"
-          @click="mostrarConfirmDialog = false"
-        />
+        <Button type="button" label="Cancelar" severity="secondary" @click="mostrarConfirmDialog = false" />
         <Button type="button" label="Eliminar" @click="eliminar" />
       </div>
     </Dialog>
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: Arial, sans-serif;
+}
+
+th,
+td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+tr:hover {
+  background-color: #f5f5f5;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.action-buttons button {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 6px 12px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.action-buttons button.delete {
+  background-color: #f44336;
+}
+</style>
