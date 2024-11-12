@@ -18,6 +18,8 @@ async function bootstrap() {
       'Api Rest de la materia Desarrollo de Aplicaciones Int/Internet II',
     )
     .setVersion('1.0')
+    .addTag('citas, clientes, horarios, odontlogo_servicios, odontologos,roles,servicios, auth') //se añade una etiqueta a la documentación
+    .addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'JWT', in: 'header' })
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('apidoc', app, document);
@@ -26,3 +28,7 @@ async function bootstrap() {
   console.log(`App corriendo: ${await app.getUrl()}/apidoc`);
 }
 bootstrap();
+function addBearerAuth(arg0: { type: string; scheme: string; bearerFormat: string; in: string; }) {
+  throw new Error('Function not implemented.');
+}
+

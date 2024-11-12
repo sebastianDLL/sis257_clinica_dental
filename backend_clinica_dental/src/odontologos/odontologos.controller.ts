@@ -6,13 +6,17 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { OdontologosService } from './odontologos.service';
 import { CreateOdontologoDto } from './dto/create-odontologo.dto';
 import { UpdateOdontologoDto } from './dto/update-odontologo.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @ApiTags('Odontologos')
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 @Controller('odontologos')
 export class OdontologosController {
   constructor(private readonly odontologosService: OdontologosService) {}

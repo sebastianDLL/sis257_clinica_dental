@@ -7,15 +7,19 @@ import {
   Param,
   Delete,
   BadRequestException,
+  UseGuards,
 } from '@nestjs/common';
 import { OdontologosServiciosService } from './odontologos_servicios.service';
 import { CreateOdontologoServicioDto } from './dto/create-odontologo_servicio.dto';
 import { UpdateOdontologoServicioDto } from './dto/update-odontologo_servicio.dto';
-import { ApiParam, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger';
 import { Odontologo } from 'src/odontologos/entities/odontologo.entity';
 import { OdontologoServicio } from './entities/odontologo_servicio.entity';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @ApiTags('Odontologos_Servicios')
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 @Controller('odontologos_servicios')
 export class OdontologosServiciosController {
   constructor(
