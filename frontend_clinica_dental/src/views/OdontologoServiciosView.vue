@@ -64,8 +64,8 @@ function handleGuardar() {
       :mostrar="mostrarDialogEdit"
       :relacion="relacionEdit || { id: 0, odontologo_id: 0, servicio_id: 0 }"
       @guardar="handleGuardar"
-      @close="handleCloseDialog"-->
-    />
+      @close="handleCloseDialog"/> -->
+
   </div>
 </template>
 

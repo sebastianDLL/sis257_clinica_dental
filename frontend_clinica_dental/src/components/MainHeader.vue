@@ -14,13 +14,13 @@
               <ul>
                 <li>
                   <i class="ri-map-pin-add-line"></i>
-                  <span>751 North Berkshire Rd. Auburndale</span>
+                  <span>257 Calle Antofagasta Av. Germán Mendoza</span>
                 </li>
                 <li>
                   <i class="ri-mail-unread-fill"></i>
-                  <span>info@example.com</span>
+                  <span>info@clinicadental.com</span>
                 </li>
-                <li><i class="ri-phone-fill"></i> +123 4567 7899</li>
+                <li><i class="ri-phone-fill"></i> +591 76543210</li>
               </ul>
             </div>
             <!-- Header Info End -->
@@ -56,9 +56,7 @@
           <div class="header-bottom-wrapper">
             <!-- Header Logo Start -->
             <div class="header-logo">
-              <a href="index.html"
-                ><img src="@/assets/images/logo.png" alt="Logo"
-              /></a>
+              <router-link to="/"><img src="@/assets/images/logo.png" alt="Logo" /></router-link>
             </div>
             <!-- Header logo End -->
 
@@ -66,46 +64,42 @@
             <div class="header-primary-menu d-none d-lg-block">
               <ul class="nav-menu">
                 <li>
-                  <a class="active" href="index.html">Home</a>
-                  <ul class="sub-menu">
-                    <li><a class="active" href="index.html">Home 01</a></li>
-                  </ul>
-                </li>
-                <li><a href="about.html">About</a></li>
-                <li><a href="doctor.html">Doctors</a></li>
-                <li>
-                  <a href="blog.html">Blog</a>
-                  <ul class="sub-menu">
-                    <li><a href="blog.html">Blog 3 Column</a></li>
-                    <li><a href="blog-standard.html">Blog Standard</a></li>
-                    <li><a href="blog-details.html">Blog Details</a></li>
-                  </ul>
+                  <router-link to="/" class="active"> Inicio </router-link>
                 </li>
                 <li>
-                  <a href="service.html">Pages</a>
-                  <ul class="sub-menu">
-                    <li><a href="service.html">Services</a></li>
-                    <li><a href="appoinment.html">Appoinment</a></li>
-                  </ul>
+                  <router-link to="/citas"> Citas </router-link>
                 </li>
-                <li><a href="contact.html">Contact</a></li>
+                <li>
+                  <router-link to="/odontologos"> Odontologos </router-link>
+                </li>
+                <li>
+                  <router-link to="/odontologo_servicios"> Servicios </router-link>
+                </li>
+                <li>
+                  <router-link to="/clientes"> Clientes </router-link>
+                </li>
+                <li>
+                  <router-link to="/contacto"> Contacto </router-link>
+                </li>
+                <li>
+                  <router-link to="/login"> Login </router-link>
+                  <!-- <RouterLink v-if="!authStore.token" to="/login">Iniciar Sesión
+                  </RouterLink>
+                  <a v-else @click="authStore.logout()">Salir</a> -->
+                </li>
               </ul>
             </div>
             <!-- Header Primary Menu End -->
 
             <!-- Header Button Start -->
             <div class="header-btn d-none d-lg-block">
-              <a class="btn" href="appoinment.html">Make Appointment</a>
+              <router-link to="/citas" class="btn"> Reserva tu cita Ahora! </router-link>
             </div>
             <!-- Header Button End -->
 
             <!-- Header Mobile Toggle Start -->
             <div class="header-toggle d-lg-none">
-              <button
-                class="menu-toggle"
-                data-bs-toggle="offcanvas"
-                data-bs-target="#offcanvasMenu"
-              >
+              <button class="menu-toggle" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu">
                 <span></span>
                 <span></span>
                 <span></span>
@@ -123,15 +117,8 @@
     <!-- Mobile Menu End -->
     <div class="offcanvas offcanvas-start" id="offcanvasMenu">
       <div class="offcanvas-header">
-        <a class="logo" href="#"
-          ><img src="@/assets/images/logo.png" alt="Logo"
-        /></a>
-        <button
-          type="button"
-          class="btn-close text-reset"
-          data-bs-dismiss="offcanvas"
-          aria-label="Close"
-        ></button>
+        <a class="logo" href="#"><img src="@/assets/images/logo.png" alt="Logo" /></a>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
       </div>
 
       <div class="offcanvas-body">
@@ -140,12 +127,12 @@
           <ul>
             <li>
               <i class="ri-map-pin-add-line"></i>
-              <span>751 North Berkshire Rd. Auburndale</span>
+              <span>257 Calle Antofagasta Av. Germán Mendoza</span>
             </li>
             <li>
-              <i class="ri-mail-unread-fill"></i> <span>info@example.com</span>
+              <i class="ri-mail-unread-fill"></i> <span>info@clinicadental.com</span>
             </li>
-            <li><i class="ri-phone-fill"></i> +123 4567 7899</li>
+            <li><i class="ri-phone-fill"></i> +591 76543210</li>
           </ul>
         </div>
         <!-- Header Info End -->
@@ -172,30 +159,23 @@
         <div class="mobile-menu">
           <ul class="nav-menu">
             <li>
-              <a class="active" href="index.html">Home</a>
-              <ul class="sub-menu">
-                <li><a href="index.html">Home 01</a></li>
-                <li><a href="index-2.html">Home 02</a></li>
-              </ul>
-            </li>
-            <li><a href="about.html">About</a></li>
-            <li><a href="doctor.html">Doctors</a></li>
-            <li>
-              <a href="blog.html">Blog</a>
-              <ul class="sub-menu">
-                <li><a href="blog.html">Blog 3 Column</a></li>
-                <li><a href="blog-standard.html">Blog Standard</a></li>
-                <li><a href="blog-details.html">Blog Details</a></li>
-              </ul>
+              <router-link to="/" class="active"> Inicio </router-link>
             </li>
             <li>
-              <a href="service.html">Pages</a>
-              <ul class="sub-menu">
-                <li><a href="service.html">Services</a></li>
-                <li><a href="appoinment.html">Appoinment</a></li>
-              </ul>
+              <router-link to="/citas"> Citas </router-link>
             </li>
-            <li><a href="contact.html">Contact</a></li>
+            <li>
+              <router-link to="/odontologos"> Odontologos </router-link>
+            </li>
+            <li>
+              <router-link to="/odontologo_servicios"> Servicios </router-link>
+            </li>
+            <li>
+              <router-link to="/clientes"> Clientes </router-link>
+            </li>
+            <li>
+              <router-link to="/contacto"> Contacto </router-link>
+            </li>
           </ul>
         </div>
       </div>

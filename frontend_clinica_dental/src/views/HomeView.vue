@@ -1,5 +1,5 @@
 <script setup lang="ts">
-//import '@/assets/js/main.js'
+import '@/assets/js/main.js'
 </script>
 
 <template>
