@@ -2,6 +2,7 @@
 import type { Cita } from '../../models/Cita'
 import type { Cliente } from '../../models/Cliente'
 import type { Odontologo } from '../../models/Odontologo'
+import type { Servicios } from '../../models/Servicios'
 import http from '../../plugins/axios'
 import Button from 'primevue/button'
 import Dialog from 'primevue/dialog'
@@ -13,6 +14,7 @@ import { computed, ref, watch, onMounted } from 'vue'
 const ENDPOINT = 'citas'
 const CLIENTES_ENDPOINT = 'clientes'
 const ODONTOLOGOS_ENDPOINT = 'odontologos'
+const SERVICIOS_ENDPOINT = 'servicios/odontologo'
 
 const props = defineProps({
   mostrar: Boolean,
@@ -34,6 +36,7 @@ const dialogVisible = computed({
 const cita = ref<Cita>({ ...props.cita })
 const clientes = ref<Cliente[]>([])
 const odontologos = ref<Odontologo[]>([])
+const servicios = ref<Servicios[]>([])
 
 const estados = [{
   label: 'Confirmada',
@@ -58,16 +61,26 @@ watch(
   },
 )
 
+async function obtenerServicios(odontologoId: number) {
+  if (odontologoId) {
+    servicios.value = await http.get(`${SERVICIOS_ENDPOINT}/${odontologoId}`).then(res => res.data)
+  } else {
+    servicios.value = []
+  }
+}
+
 async function handleSave() {
   try {
     const body = {
       clienteId: cita.value.clienteId,
       odontologoId: cita.value.odontologoId,
+      servicioId: cita.value.servicioId,
       estado: cita.value.estado,
       fechaHoraCita: cita.value.fechaHoraCita,
     };
 
     if (props.modoEdicion && cita.value.id) {
+      console.log('Datos a enviar:', body);
       await http.patch(`${ENDPOINT}/${cita.value.id}`, body);
     } else {
       await http.post(ENDPOINT, body);
@@ -80,7 +93,6 @@ async function handleSave() {
     alert(error?.response?.data?.message || error.message);
   }
 }
-
 
 </script>
 
@@ -95,12 +107,18 @@ async function handleSave() {
       <div class="flex items-center gap-4 mb-4">
         <label for="odontologo" class="font-semibold w-24">Odontólogo</label>
         <Dropdown id="odontologo" v-model="cita.odontologoId" :options="odontologos" optionLabel="nombre"
-          optionValue="id" placeholder="Seleccione un odontólogo" class="flex-auto" />
+          optionValue="id" placeholder="Seleccione un odontólogo" class="flex-auto"
+          @change="obtenerServicios(cita.odontologoId)" />
+      </div>
+      <div class="flex items-center gap-4 mb-4">
+        <label for="servicio" class="font-semibold w-24">Servicio</label>
+        <Dropdown id="servicio" v-model="cita.servicioId" :options="servicios" optionLabel="nombre" optionValue="id"
+          placeholder="Seleccione un servicio" class="flex-auto" />
       </div>
       <div class="flex items-center gap-4 mb-4">
         <label for="estado" class="font-semibold w-24">Estados</label>
-        <Dropdown id="estado" v-model="cita.estado" :options="estados" optionLabel="label"
-        optionValue="value" placeholder="Seleccione un estado" class="flex-auto" />
+        <Dropdown id="estado" v-model="cita.estado" :options="estados" optionLabel="label" optionValue="value"
+          placeholder="Seleccione un estado" class="flex-auto" />
       </div>
       <div class="flex items-center gap-4 mb-4">
         <label for="fechaHoraCita" class="font-semibold w-24">Fecha y Hora</label>
@@ -113,5 +131,6 @@ async function handleSave() {
     </Dialog>
   </div>
 </template>
+
 
 <style scoped></style>

@@ -4,12 +4,13 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { CreateCitaDto } from './dto/create-cita.dto';
 import { UpdateCitaDto } from './dto/update-cita.dto';
 import { Cita } from './entities/cita.entity';
 import { Cliente } from 'src/clientes/entities/cliente.entity';
 import { Odontologo } from 'src/odontologos/entities/odontologo.entity';
+import { Servicio } from 'src/servicios/entities/servicio.entity';
 
 @Injectable()
 export class CitasService {
@@ -20,6 +21,8 @@ export class CitasService {
     private clientesRepository: Repository<Cliente>,
     @InjectRepository(Odontologo)
     private odontologosRepository: Repository<Odontologo>,
+    @InjectRepository(Servicio)
+    private serviciosRepository: Repository<Servicio>,
   ) {}
 
   async create(createCitaDto: CreateCitaDto): Promise<Cita> {
@@ -40,6 +43,16 @@ export class CitasService {
     if (!odontologoExistente) {
       throw new NotFoundException(
         `El odontólogo con ID ${odontologoId} no existe`,
+      );
+    }
+
+    // Verificar si el servicio existe
+    const servicioExistente = await this.serviciosRepository.findOneBy({
+      id: createCitaDto.servicioId,
+    });
+    if (!servicioExistente) {
+      throw new NotFoundException(
+        `El servicio con ID ${createCitaDto.servicioId} no existe`,
       );
     }
 
@@ -73,14 +86,14 @@ export class CitasService {
 
   async findAll(): Promise<Cita[]> {
     return this.citasRepository.find({
-      relations: ['cliente', 'odontologo'],
+      relations: ['cliente', 'odontologo', 'servicio'],
     });
   }
 
   async findOne(id: number): Promise<Cita> {
     const cita = await this.citasRepository.findOne({
       where: { id },
-      relations: ['cliente', 'odontologo'],
+      relations: ['cliente', 'odontologo', 'servicio'],
     });
 
     if (!cita) throw new NotFoundException('La cita no existe');
@@ -90,7 +103,53 @@ export class CitasService {
   async update(id: number, updateCitaDto: UpdateCitaDto): Promise<Cita> {
     const cita = await this.findOne(id);
 
-    // Si se está actualizando la fecha, verificar disponibilidad
+    if (!cita) {
+      throw new NotFoundException(`La cita con ID ${id} no existe`);
+    }
+
+    // Validar si el cliente se está actualizando
+    if (updateCitaDto.clienteId && updateCitaDto.clienteId !== cita.clienteId) {
+      const clienteExistente = await this.clientesRepository.findOneBy({
+        id: updateCitaDto.clienteId,
+      });
+      if (!clienteExistente) {
+        throw new NotFoundException(
+          `El cliente con ID ${updateCitaDto.clienteId} no existe`,
+        );
+      }
+    }
+
+    // Validar si el odontólogo se está actualizando
+    if (
+      updateCitaDto.odontologoId &&
+      updateCitaDto.odontologoId !== cita.odontologoId
+    ) {
+      const odontologoExistente = await this.odontologosRepository.findOneBy({
+        id: updateCitaDto.odontologoId,
+      });
+      if (!odontologoExistente) {
+        throw new NotFoundException(
+          `El odontólogo con ID ${updateCitaDto.odontologoId} no existe`,
+        );
+      }
+    }
+
+    // Validar si el servicio se está actualizando
+    if (
+      updateCitaDto.servicioId &&
+      updateCitaDto.servicioId !== cita.servicioId
+    ) {
+      const servicioExistente = await this.serviciosRepository.findOneBy({
+        id: updateCitaDto.servicioId,
+      });
+      if (!servicioExistente) {
+        throw new NotFoundException(
+          `El servicio con ID ${updateCitaDto.servicioId} no existe`,
+        );
+      }
+    }
+
+    // Verificar si la fecha se está actualizando y si hay conflicto
     if (updateCitaDto.fechaHoraCita) {
       const fechaCita = new Date(updateCitaDto.fechaHoraCita);
       fechaCita.setHours(0, 0, 0, 0);
@@ -100,7 +159,9 @@ export class CitasService {
 
       const citaExistente = await this.citasRepository
         .createQueryBuilder('cita')
-        .where('cita.clienteId = :clienteId', { clienteId: cita.clienteId })
+        .where('cita.clienteId = :clienteId', {
+          clienteId: updateCitaDto.clienteId || cita.clienteId,
+        })
         .andWhere('cita.id != :citaId', { citaId: id })
         .andWhere('cita.fechaHoraCita >= :fechaInicio', {
           fechaInicio: fechaCita,
@@ -115,7 +176,15 @@ export class CitasService {
       }
     }
 
-    const citaActualizada = Object.assign(cita, updateCitaDto);
+    // Combinar la cita existente con los nuevos datos
+    const citaActualizada = {
+      ...updateCitaDto, // Sobrescribir con los nuevos datos
+      id: id, // Mantener el mismo ID
+      fechaHoraCita: updateCitaDto.fechaHoraCita
+        ? new Date(updateCitaDto.fechaHoraCita)
+        : cita.fechaHoraCita,
+    };
+
     return this.citasRepository.save(citaActualizada);
   }
 

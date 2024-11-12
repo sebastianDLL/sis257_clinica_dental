@@ -46,6 +46,7 @@ defineExpose({ obtenerLista })
           <th>Nro.</th>
           <th>Cliente</th>
           <th>Odontologo</th>
+          <th>Servicio</th>
           <th>Estado</th>
           <th>Fecha y Hora</th>
         </tr>
@@ -55,6 +56,7 @@ defineExpose({ obtenerLista })
           <td>{{ index + 1 }}</td>
           <td>{{ cita.cliente.nombre }}</td>
           <td>{{ cita.odontologo.nombre }}</td>
+          <td>{{ cita.servicio.nombre }}</td>
           <td>{{ cita.estado }}</td>  
           <td>{{ cita.fechaHoraCita }}</td>
           <td>
