@@ -49,7 +49,7 @@ watch(
       servicio_ids: newVal.servicio_id !== 0 ? [newVal.servicio_id] : [],
     }
 
-    // Actualizamos el store.nombreBusqueda con el nombre del odontólogo seleccionado
+    // Actualizamos el store.nombreBusqueda con el nombre del odontólogo seleccionado sin funcionar !!!
     const odontologoSeleccionado = odontologos.value.find(
       o => o.id === newVal.odontologo_id,
     )
