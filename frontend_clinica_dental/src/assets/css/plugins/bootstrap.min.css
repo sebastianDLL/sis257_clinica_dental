@@ -5971,7 +5971,7 @@ fieldset:disabled .btn {
 @media (min-width: 1400px) {
   .sticky-xxl-top {
     position: -webkit-sticky;
-    position: sticky;
+    position: fixed;
     top: 0;
     z-index: 1020;
   }
@@ -6094,10 +6094,6 @@ fieldset:disabled .btn {
 }
 .position-fixed {
   position: fixed !important;
-}
-.position-sticky {
-  position: -webkit-sticky !important;
-  position: sticky !important;
 }
 .top-0 {
   top: 0 !important;

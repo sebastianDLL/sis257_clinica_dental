@@ -2,87 +2,87 @@
 
 <template>
   <div class="section footer-area section-padding-02">
-    <!-- Footer Widget Area Start -->
+    <!-- Área de Widgets del Footer Inicio -->
     <div class="footer-widget-area">
       <div class="container">
-        <!-- Footer Widget Wrapper Start -->
+        <!-- Contenedor de Widgets del Footer Inicio -->
         <div class="footer-wrapper">
           <div class="row">
             <div class="col-lg-3 col-md-3 col-sm-6 widget-col">
-              <!-- Footer Widget Start -->
+              <!-- Widget del Footer Inicio -->
               <div class="footer-widget">
-                <h3 class="title">Departments</h3>
+                <h3 class="title">Departamentos</h3>
                 <ul class="footer-link">
                   <li>
                     <i class="ri-check-line"></i>
-                    <a href="#">Neurology Clinic</a>
+                    <a href="#">Clínica de Neurología</a>
                   </li>
                   <li>
                     <i class="ri-check-line"></i>
-                    <a href="#">Pathology Clinic</a>
+                    <a href="#">Clínica de Patología</a>
                   </li>
                   <li>
                     <i class="ri-check-line"></i>
-                    <a href="#">Pediatric Clinic</a>
+                    <a href="#">Clínica Pediátrica</a>
                   </li>
                   <li>
-                    <i class="ri-check-line"></i> <a href="#">Cardiac Clinic</a>
+                    <i class="ri-check-line"></i> <a href="#">Clínica Cardíaca</a>
                   </li>
                   <li>
                     <i class="ri-check-line"></i>
-                    <a href="#">Laboratory Analysis</a>
+                    <a href="#">Análisis de Laboratorio</a>
                   </li>
                 </ul>
               </div>
-              <!-- Footer Widget End -->
+              <!-- Widget del Footer Fin -->
             </div>
             <div class="col-lg-3 col-md-3 col-sm-6 widget-col">
-              <!-- Footer Widget Start -->
+              <!-- Widget del Footer Inicio -->
               <div class="footer-widget">
-                <h3 class="title">Support</h3>
+                <h3 class="title">Soporte</h3>
                 <ul class="footer-link">
                   <li>
-                    <i class="ri-check-line"></i> <a href="#">Help & FAQs</a>
+                    <i class="ri-check-line"></i> <a href="#">Preguntas Frecuentes</a>
                   </li>
                   <li>
-                    <i class="ri-check-line"></i> <a href="#">Contacts</a>
+                    <i class="ri-check-line"></i> <a href="#">Contactos</a>
                   </li>
-                  <li><i class="ri-check-line"></i> <a href="#">Careers</a></li>
+                  <li><i class="ri-check-line"></i> <a href="#">Carreras</a></li>
                   <li>
-                    <i class="ri-check-line"></i> <a href="#">Site Map</a>
+                    <i class="ri-check-line"></i> <a href="#">Mapa del Sitio</a>
                   </li>
                 </ul>
               </div>
-              <!-- Footer Widget End -->
+              <!-- Widget del Footer Fin -->
             </div>
             <div class="col-lg-3 col-md-3 col-sm-6 widget-col">
-              <!-- Footer Widget Start -->
+              <!-- Widget del Footer Inicio -->
               <div class="footer-widget">
-                <h3 class="title">Links</h3>
+                <h3 class="title">Enlaces</h3>
                 <ul class="footer-link">
                   <li>
-                    <i class="ri-check-line"></i> <a href="#">Abouts Us</a>
+                    <i class="ri-check-line"></i> <a href="#">Sobre Nosotros</a>
                   </li>
                   <li>
-                    <i class="ri-check-line"></i> <a href="#">Our Clinic</a>
+                    <i class="ri-check-line"></i> <a href="#">Nuestra Clínica</a>
                   </li>
                   <li>
-                    <i class="ri-check-line"></i> <a href="#">News & Media</a>
+                    <i class="ri-check-line"></i> <a href="#">Noticias y Medios</a>
                   </li>
                   <li>
-                    <i class="ri-check-line"></i> <a href="#">Appointments</a>
+                    <i class="ri-check-line"></i> <a href="#">Citas</a>
                   </li>
                   <li>
-                    <i class="ri-check-line"></i> <a href="#">Our Doctors</a>
+                    <i class="ri-check-line"></i> <a href="#">Nuestros Doctores</a>
                   </li>
                 </ul>
               </div>
-              <!-- Footer Widget End -->
+              <!-- Widget del Footer Fin -->
             </div>
             <div class="col-lg-3 col-md-3 col-sm-6 widget-col">
-              <!-- Footer Widget Start -->
+              <!-- Widget del Footer Inicio -->
               <div class="footer-widget">
-                <h3 class="title">Quick Contact</h3>
+                <h3 class="title">Contacto Rápido</h3>
                 <ul class="footer-info">
                   <li><i class="ri-phone-fill"></i> +123 4567 7899</li>
                   <li><i class="ri-mail-unread-fill"></i> info@example.com</li>
@@ -92,31 +92,31 @@
                   </li>
                 </ul>
               </div>
-              <!-- Footer Widget End -->
+              <!-- Widget del Footer Fin -->
             </div>
           </div>
         </div>
-        <!-- Footer Widget Wrapper End -->
+        <!-- Contenedor de Widgets del Footer Fin -->
       </div>
     </div>
-    <!-- Footer Widget Area End -->
+    <!-- Área de Widgets del Footer Fin -->
 
-    <!-- Footer Copyright Area Start -->
+    <!-- Área de Derechos de Autor Inicio -->
     <div class="footer-copyright-area">
       <div class="container">
         <div class="footer-copyright-wrapper">
           <div class="row">
-            <!-- Footer Copyright Text Start -->
+            <!-- Texto de Derechos de Autor Inicio -->
             <div class="col-lg-7 col-md-8">
               <div class="copyright-text">
                 <p>
-                  © 2021 Design & Development <a href="#">GridTemplate</a> All
-                  Rights Reserved.
+                  © 2021 Diseño y Desarrollo <a href="#">GridTemplate</a>. Todos
+                  los Derechos Reservados.
                 </p>
               </div>
             </div>
-            <!-- Footer Copyright Text End -->
-            <!-- Footer Social Start -->
+            <!-- Texto de Derechos de Autor Fin -->
+            <!-- Redes Sociales Inicio -->
             <div class="col-lg-5 col-md-4">
               <div class="footer-social">
                 <ul class="social">
@@ -135,12 +135,12 @@
                 </ul>
               </div>
             </div>
-            <!-- Footer Social End -->
+            <!-- Redes Sociales Fin -->
           </div>
         </div>
       </div>
     </div>
-    <!-- Footer Copyright Area End -->
+    <!-- Área de Derechos de Autor Fin -->
   </div>
 </template>
 
