@@ -1,5 +1,4 @@
 export interface JwtPayload {
-    sub: number;
-    iat?: number;
-    exp?: number;
-  }
+  sub: number; // ID del usuario
+  role: 'odontologo' | 'cliente'; // Rol del usuario
+}

@@ -1,5 +1,9 @@
 <script setup lang="ts">
 import Button from 'primevue/button'
+import { useAuthStore } from '@/stores'
+import { useRoute } from 'vue-router'
+const authStore = useAuthStore()
+const location = useRoute()
 </script>
 
 <template>
@@ -67,42 +71,43 @@ import Button from 'primevue/button'
           <div class="header-primary-menu d-none d-lg-block">
             <ul class="nav-menu">
               <li>
-                <router-link to="/" class="active"> Inicio </router-link>
+                <router-link to="/" class="active">Inicio</router-link>
               </li>
               <li>
-                <router-link to="/citas"> Citas </router-link>
+                <router-link v-if="authStore.token" to="/citas"
+                  >Citas</router-link
+                >
               </li>
               <li>
-                <router-link to="/odontologos"> Odontologos </router-link>
+                <router-link v-if="authStore.token" to="/odontologos"
+                  >Odontologos</router-link
+                >
               </li>
               <li>
-                <router-link to="/odontologo_servicios">
-                  Servicios
+                <router-link v-if="authStore.token" to="/odontologo_servicios"
+                  >Servicios</router-link
+                >
+              </li>
+              <li>
+                <router-link v-if="authStore.token" to="/clientes"
+                  >Clientes</router-link
+                >
+              </li>
+              <li>
+                <router-link
+                  v-if="!authStore.token"
+                  to="/login"
+                  style="font-weight: bold"
+                >
+                  INICIAR SESIÓN
                 </router-link>
-              </li>
-              <li>
-                <router-link to="/clientes"> Clientes </router-link>
-              </li>
-              <li>
-                <!-- Login Button using PrimeVue -->
-                <router-link to="/login">
-                  <Button label="Login" class="p-button-primary" />
-                </router-link>
-                <!-- <RouterLink v-if="!authStore.token" to="/login">Iniciar Sesión
-                </RouterLink>
-                <a v-else @click="authStore.logout()">Salir</a> -->
+                <a v-else @click="authStore.logout()" style="font-weight: bold"
+                  >Salir</a
+                >
               </li>
             </ul>
           </div>
           <!-- Header Primary Menu End -->
-
-          <!-- Header Button Start 
-          <div class="header-btn d-none d-lg-block">
-            <router-link to="/citas" class="btn">
-              Reserva tu cita Ahora!
-            </router-link>
-          </div>-->
-          <!-- Header Button End -->
 
           <!-- Header Mobile Toggle Start -->
           <div class="header-toggle d-lg-none">
@@ -193,7 +198,7 @@ import Button from 'primevue/button'
             <router-link to="/clientes"> Clientes </router-link>
           </li>
           <li>
-            <router-link to="/contacto"> Contacto </router-link>
+            <router-link to=""> Contacto </router-link>
           </li>
         </ul>
       </div>
@@ -203,11 +208,4 @@ import Button from 'primevue/button'
 </template>
 
 <style scoped>
-.header-primary-menu .p-button-primary {
-  margin: 0; /* Asegúrate de que no tenga márgenes adicionales */
-  padding: 0.5rem 1rem; /* Ajusta el tamaño del botón */
-  font-size: 1.2rem; /* Tamaño de texto consistente */
-  line-height: 1.5; /* Centra el texto verticalmente */
-  vertical-align: middle; /* Alinea verticalmente con el resto del menú */
-}
 </style>

@@ -18,30 +18,30 @@ onMounted(async () => {
       <div class="container">
         <!-- Slider Content Start -->
         <div class="slider-content">
-          <h3 class="sub-title" data-animation="fadeInDown" data-delay="0.3s">
+          <h3 class="sub-title" data-animation="fadeInDown" data-delay="0.5s">
             Nosotros gestionamos servicios dentales flexibles
           </h3>
-          <h2 class="title" data-animation="fadeInUp" data-delay="0.5s">
+          <h2 class="title" data-animation="fadeInUp" data-delay="0.7s">
             Atención dental de alta <br />
             calidad
           </h2>
-          <p data-animation="fadeInUp" data-delay="0.7s">
+          <p data-animation="fadeInUp" data-delay="0.9s">
             En nuestra clínica, te ofrecemos soluciones dentales integrales
             adaptadas a tus necesidades. Desde limpiezas regulares hasta
             tratamientos avanzados.
           </p>
           <RouterLink
             class="btn"
-            to="doctor.html"
+            to=""
             data-animation="fadeInUp"
-            data-delay="0.9s"
+            data-delay="1s"
             >Nuestros doctores</RouterLink
           >
           <RouterLink
             class="btn btn-white"
-            to="/service.html"
+            to=""
             data-animation="fadeInUp"
-            data-delay="0.9s"
+            data-delay="1s"
             >Nuestros servicios</RouterLink
           >
         </div>
@@ -65,30 +65,30 @@ onMounted(async () => {
       <div class="container">
         <!-- Slider Content Start -->
         <div class="slider-content">
-          <h3 class="sub-title" data-animation="fadeInDown" data-delay="0.3s">
+          <h3 class="sub-title" data-animation="fadeInDown" data-delay="0.5s">
             Tu salud dental, nuestra prioridad
           </h3>
-          <h2 class="title" data-animation="fadeInUp" data-delay="0.5s">
+          <h2 class="title" data-animation="fadeInUp" data-delay="0.7s">
             Expertos en cuidado <br />
             dental de calidad
           </h2>
-          <p data-animation="fadeInUp" data-delay="0.7s">
+          <p data-animation="fadeInUp" data-delay="0.9s">
             Combinamos tecnología avanzada y un equipo altamente capacitado para
             ofrecerte tratamientos que garantizan una sonrisa sana y radiante
           </p>
           <a
             class="btn"
-            href="doctor.html"
+            href=""
             data-animation="fadeInUp"
-            data-delay="0.9s"
-            >Our Doctors</a
+            data-delay="1s"
+            >Nuestros doctores</a
           >
           <a
             class="btn btn-white"
-            href="service.html"
+            href=""
             data-animation="fadeInUp"
-            data-delay="0.9s"
-            >Our Services</a
+            data-delay="1s"
+            >Nuestros servicios</a
           >
         </div>
         <!-- Slider Content End -->
@@ -111,29 +111,29 @@ onMounted(async () => {
       <div class="container">
         <!-- Slider Content Start -->
         <div class="slider-content">
-          <h3 class="sub-title" data-animation="fadeInDown" data-delay="0.3s">
+          <h3 class="sub-title" data-animation="fadeInDown" data-delay="0.5s">
             Transformamos tu sonrisa
           </h3>
-          <h2 class="title" data-animation="fadeInUp" data-delay="0.5s">
+          <h2 class="title" data-animation="fadeInUp" data-delay="0.7s">
             Confianza y cuidado en cada tratamiento
           </h2>
-          <p data-animation="fadeInUp" data-delay="0.7s">
+          <p data-animation="fadeInUp" data-delay="0.9s">
             Con un enfoque personalizado, nos comprometemos a cuidar tu salud
             bucal con tratamientos innovadores y profesionales.
           </p>
           <a
             class="btn"
-            href="doctor.html"
+            href=""
             data-animation="fadeInUp"
-            data-delay="0.9s"
-            >Our Doctors</a
+            data-delay="1s"
+            >Nuestros doctores</a
           >
           <a
             class="btn btn-white"
-            href="service.html"
+            href=""
             data-animation="fadeInUp"
-            data-delay="0.9s"
-            >Our Services</a
+            data-delay="1s"
+            >Nuestros servicios</a
           >
         </div>
         <!-- Slider Content End -->
@@ -395,7 +395,7 @@ onMounted(async () => {
                     </li>
                   </ul>
                   <h3 class="name">
-                    <a href="doctor.html">Dr. Jhonny </a>
+                    <a href="">Dr. Jhonny </a>
                   </h3>
                   <h5 class="designation">Oral Surgery</h5>
                   <div class="team-info">
@@ -436,7 +436,7 @@ onMounted(async () => {
                     </li>
                   </ul>
                   <h3 class="name">
-                    <a href="doctor.html">Dr. Victoria Jensen</a>
+                    <a href="">Dr. Victoria Jensen</a>
                   </h3>
                   <h5 class="designation">Oral Surgery</h5>
                   <div class="team-info">
@@ -477,7 +477,7 @@ onMounted(async () => {
                     </li>
                   </ul>
                   <h3 class="name">
-                    <a href="doctor.html">Dr. Victoria Jensen</a>
+                    <a href="">Dr. Victoria Jensen</a>
                   </h3>
                   <h5 class="designation">Oral Surgery</h5>
                   <div class="team-info">
@@ -538,7 +538,7 @@ onMounted(async () => {
                   <i class="flaticon-surgery-room"></i>
                   <div class="service-icon-wrapper">
                     <h3 class="title">
-                      <a href="service.html">Cirugía Oral</a>
+                      <a href="">Cirugía Oral</a>
                     </h3>
                     <p>
                       Realizamos cirugías orales seguras y avanzadas, como
@@ -564,7 +564,7 @@ onMounted(async () => {
                   <i class="flaticon-surgery-room"></i>
                   <div class="service-icon-wrapper">
                     <h3 class="title">
-                      <a href="service.html">Implantes Dentales</a>
+                      <a href="">Implantes Dentales</a>
                     </h3>
                     <p>
                       Recupera tu sonrisa con implantes dentales que se ven y
@@ -590,7 +590,7 @@ onMounted(async () => {
                   <i class="flaticon-surgery-room"></i>
                   <div class="service-icon-wrapper">
                     <h3 class="title">
-                      <a href="service.html">Odontología Familiar</a>
+                      <a href="">Odontología Familiar</a>
                     </h3>
                     <p>
                       Ofrecemos atención dental integral para toda la familia,
@@ -616,7 +616,7 @@ onMounted(async () => {
                   <i class="flaticon-surgery-room"></i>
                   <div class="service-icon-wrapper">
                     <h3 class="title">
-                      <a href="service.html">Ortodoncia</a>
+                      <a href="">Ortodoncia</a>
                     </h3>
                     <p>
                       Corrige la alineación de tus dientes con tratamientos
@@ -642,7 +642,7 @@ onMounted(async () => {
                   <i class="flaticon-surgery-room"></i>
                   <div class="service-icon-wrapper">
                     <h3 class="title">
-                      <a href="service.html">Prótesis Dentales</a>
+                      <a href="">Prótesis Dentales</a>
                     </h3>
                     <p>
                       Recupera tu funcionalidad y estética dental con prótesis
@@ -667,7 +667,7 @@ onMounted(async () => {
                   <i class="flaticon-surgery-room"></i>
                   <div class="service-icon-wrapper">
                     <h3 class="title">
-                      <a href="service.html">Odontología Preventiva</a>
+                      <a href="">Odontología Preventiva</a>
                     </h3>
                     <p>
                       Cuidamos tu salud bucal con chequeos regulares y limpiezas
@@ -692,7 +692,7 @@ onMounted(async () => {
                   <i class="flaticon-surgery-room"></i>
                   <div class="service-icon-wrapper">
                     <h3 class="title">
-                      <a href="service.html">Tratamiento de Caries</a>
+                      <a href="">Tratamiento de Caries</a>
                     </h3>
                     <p>
                       Eliminamos caries y restauramos tus dientes para
@@ -717,7 +717,7 @@ onMounted(async () => {
                   <i class="flaticon-surgery-room"></i>
                   <div class="service-icon-wrapper">
                     <h3 class="title">
-                      <a href="service.html">Blanqueamiento Dental</a>
+                      <a href="">Blanqueamiento Dental</a>
                     </h3>
                     <p>
                       Ilumina tu sonrisa con nuestro tratamiento profesional de
@@ -1090,7 +1090,7 @@ onMounted(async () => {
               <div class="blog-item">
                 <!--  Blog Img Start -->
                 <div class="blog-img">
-                  <a href="blog-details.html"><img src="" alt="" /></a>
+                  <a href=""><img src="" alt="" /></a>
                 </div>
                 <!--  Blog Img End -->
 
@@ -1115,7 +1115,7 @@ onMounted(async () => {
                     Lorem ipsum dolor sit amet, consectetur adipi tempor et ex
                     consequat, dignissim
                   </p>
-                  <a class="btn" href="blog-details.html">Read More</a>
+                  <a class="btn" href="">Read More</a>
                 </div>
                 <!--  Blog Content End -->
               </div>
@@ -1124,7 +1124,7 @@ onMounted(async () => {
               <div class="blog-item">
                 <!--  Blog Img Start -->
                 <div class="blog-img">
-                  <a href="blog-details.html"><img src="" alt="" /></a>
+                  <a href=""><img src="" alt="" /></a>
                 </div>
                 <!--  Blog Img End -->
 
@@ -1149,7 +1149,7 @@ onMounted(async () => {
                     Lorem ipsum dolor sit amet, consectetur adipi tempor et ex
                     consequat, dignissim
                   </p>
-                  <a class="btn" href="blog-details.html">Read More</a>
+                  <a class="btn" href="">Read More</a>
                 </div>
                 <!--  Blog Content End -->
               </div>
@@ -1158,7 +1158,7 @@ onMounted(async () => {
               <div class="blog-item">
                 <!--  Blog Img Start -->
                 <div class="blog-img">
-                  <a href="blog-details.html"><img src="" alt="" /></a>
+                  <a href=""><img src="" alt="" /></a>
                 </div>
                 <!--  Blog Img End -->
 
@@ -1183,7 +1183,7 @@ onMounted(async () => {
                     Lorem ipsum dolor sit amet, consectetur adipi tempor et ex
                     consequat, dignissim
                   </p>
-                  <a class="btn" href="blog-details.html">Read More</a>
+                  <a class="btn" href="">Read More</a>
                 </div>
                 <!--  Blog Content End -->
               </div>

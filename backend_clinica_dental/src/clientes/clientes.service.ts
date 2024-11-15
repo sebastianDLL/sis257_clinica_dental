@@ -64,20 +64,24 @@ export class ClientesService {
   }
 
   // aqui se valida el email y la clave
-  async validate(email: string, clave: string): Promise<Cliente> {
+  async validate(email: string, clave: string): Promise<Cliente | null> {
     const emailOk = await this.clientesRepository.findOne({
       where: { email },
-      select: ['id', 'nombre', 'email', 'password'],
-    })as Cliente;
-
-    if (!emailOk) throw new NotFoundException('Usuario inexistente');
-
+      select: ['id', 'nombre', 'email', 'password'], // Campos seleccionados
+      relations: ['rol'], // Incluye la relación con el rol
+    });
+  
+    if (!emailOk) {
+      return null; // Retorna null si no encuentra el cliente
+    }
+  
     // Validamos la contraseña
     const isPasswordValid = await emailOk.validatePassword(clave);
     if (!isPasswordValid) {
-      throw new UnauthorizedException('Clave incorrecta');
+      return null; // Retorna null si la contraseña no es válida
     }
   
-    return emailOk;
+    return emailOk; // Devuelve el cliente con el rol cargado
   }
+  
 }

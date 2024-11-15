@@ -21,12 +21,10 @@ export class OdontologosService {
     const buscarRepetidos = await this.odontologosRepository.findOne({
       where: { email: createOdontologoDto.email },
     });
-  
+
     if (buscarRepetidos)
-      throw new ConflictException(
-        'El odontólogo con ese email ya existe',
-      );
-  
+      throw new ConflictException('El odontólogo con ese email ya existe');
+
     const odontologo = new Odontologo();
     odontologo.nombre = createOdontologoDto.nombre.trim();
     odontologo.primerApellido = createOdontologoDto.primerApellido.trim();
@@ -36,12 +34,12 @@ export class OdontologosService {
     odontologo.telefono = createOdontologoDto.telefono.trim();
     odontologo.direccion = createOdontologoDto.direccion.trim();
     odontologo.especialidad = createOdontologoDto.especialidad.trim();
-  
+
     return this.odontologosRepository.save(odontologo);
   }
 
   async findAll(): Promise<Odontologo[]> {
-    return this.odontologosRepository.find({ relations: ['rol']});
+    return this.odontologosRepository.find({ relations: ['rol'] });
   }
 
   async findOne(id: number): Promise<Odontologo> {
@@ -66,20 +64,24 @@ export class OdontologosService {
   }
 
   // aqui se valida el email y la clave
-  async validate(email: string, clave: string): Promise<Odontologo> {
+  async validate(email: string, clave: string): Promise<Odontologo | null> {
     const emailOk = await this.odontologosRepository.findOne({
       where: { email },
-      select: ['id', 'nombre', 'email', 'password'],
-    })as Odontologo;
-
-    if (!emailOk) throw new NotFoundException('Usuario inexistente');
-
+      select: ['id', 'nombre', 'email', 'password'], // Campos seleccionados
+      relations: ['rol'], // Incluye la relación con el rol
+    });
+  
+    if (!emailOk) {
+      return null; // Retorna null si no encuentra el odontólogo
+    }
+  
     // Validamos la contraseña
     const isPasswordValid = await emailOk.validatePassword(clave);
     if (!isPasswordValid) {
-      throw new UnauthorizedException('Clave incorrecta');
+      return null; // Retorna null si la contraseña no es válida
     }
   
-    return emailOk;
+    return emailOk; // Devuelve el odontólogo con el rol cargado
   }
+  
 }

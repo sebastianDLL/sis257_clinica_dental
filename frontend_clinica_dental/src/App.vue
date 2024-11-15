@@ -43,7 +43,9 @@ watch(route, async newRoute => {
 
 <template>
   <MainHeader />
-  <RouterView />
+  <div class="main-content">
+    <RouterView />
+  </div>
   <MainFooter />
 </template>
 
@@ -74,4 +76,5 @@ watch(route, async newRoute => {
 @import '@/assets/css/plugins/preloader.css';
 /* Main Style CSS */
 @import '@/assets/css/style.css';
+
 </style>
