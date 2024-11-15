@@ -26,7 +26,8 @@
                     <a href="#">Clínica Pediátrica</a>
                   </li>
                   <li>
-                    <i class="ri-check-line"></i> <a href="#">Clínica Cardíaca</a>
+                    <i class="ri-check-line"></i>
+                    <a href="#">Clínica Cardíaca</a>
                   </li>
                   <li>
                     <i class="ri-check-line"></i>
@@ -42,12 +43,15 @@
                 <h3 class="title">Soporte</h3>
                 <ul class="footer-link">
                   <li>
-                    <i class="ri-check-line"></i> <a href="#">Preguntas Frecuentes</a>
+                    <i class="ri-check-line"></i>
+                    <a href="#">Preguntas Frecuentes</a>
                   </li>
                   <li>
                     <i class="ri-check-line"></i> <a href="#">Contactos</a>
                   </li>
-                  <li><i class="ri-check-line"></i> <a href="#">Carreras</a></li>
+                  <li>
+                    <i class="ri-check-line"></i> <a href="#">Carreras</a>
+                  </li>
                   <li>
                     <i class="ri-check-line"></i> <a href="#">Mapa del Sitio</a>
                   </li>
@@ -64,16 +68,17 @@
                     <i class="ri-check-line"></i> <a href="#">Sobre Nosotros</a>
                   </li>
                   <li>
-                    <i class="ri-check-line"></i> <a href="#">Nuestra Clínica</a>
+                    <i class="ri-check-line"></i>
+                    <a href="#">Nuestra Clínica</a>
                   </li>
                   <li>
-                    <i class="ri-check-line"></i> <a href="#">Noticias y Medios</a>
+                    <i class="ri-check-line"></i>
+                    <a href="#">Noticias y Medios</a>
                   </li>
+                  <li><i class="ri-check-line"></i> <a href="#">Citas</a></li>
                   <li>
-                    <i class="ri-check-line"></i> <a href="#">Citas</a>
-                  </li>
-                  <li>
-                    <i class="ri-check-line"></i> <a href="#">Nuestros Doctores</a>
+                    <i class="ri-check-line"></i>
+                    <a href="#">Nuestros Doctores</a>
                   </li>
                 </ul>
               </div>
@@ -110,8 +115,8 @@
             <div class="col-lg-7 col-md-8">
               <div class="copyright-text">
                 <p>
-                  © 2021 Diseño y Desarrollo <a href="#">GridTemplate</a>. Todos
-                  los Derechos Reservados.
+                  © 2021 Diseño y Desarrollo <a href="#">GridTemplate</a>.
+                  Todos los Derechos Reservados.
                 </p>
               </div>
             </div>

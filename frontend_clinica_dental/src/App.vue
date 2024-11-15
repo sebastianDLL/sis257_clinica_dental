@@ -19,7 +19,6 @@ import MainFooter from '@/components/MainFooter.vue'
 const route = useRoute()
 
 onMounted(async () => {
-  
   // Inicializa los scripts necesarios después de que el DOM esté renderizado
   const { default: initializeMainScripts } = await import('@/assets/js/main.js')
   initializeMainScripts()

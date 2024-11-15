@@ -1,4 +1,6 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import Button from 'primevue/button'
+</script>
 
 <template>
   <!-- Header Section Start -->
@@ -82,24 +84,24 @@
                 <router-link to="/clientes"> Clientes </router-link>
               </li>
               <li>
-                <router-link to="/contacto"> Contacto </router-link>
-              </li>
-              <li>
-                <router-link to="/login"> Login </router-link>
+                <!-- Login Button using PrimeVue -->
+                <router-link to="/login">
+                  <Button label="Login" class="p-button-primary" />
+                </router-link>
                 <!-- <RouterLink v-if="!authStore.token" to="/login">Iniciar Sesión
-                  </RouterLink>
-                  <a v-else @click="authStore.logout()">Salir</a> -->
+                </RouterLink>
+                <a v-else @click="authStore.logout()">Salir</a> -->
               </li>
             </ul>
           </div>
           <!-- Header Primary Menu End -->
 
           <!-- Header Button Start 
-            <div class="header-btn d-none d-lg-block">
-              <router-link to="/citas" class="btn">
-                Reserva tu cita Ahora!
-              </router-link>
-            </div>-->
+          <div class="header-btn d-none d-lg-block">
+            <router-link to="/citas" class="btn">
+              Reserva tu cita Ahora!
+            </router-link>
+          </div>-->
           <!-- Header Button End -->
 
           <!-- Header Mobile Toggle Start -->
@@ -200,4 +202,12 @@
   <!-- Mobile Menu End -->
 </template>
 
-<style></style>
+<style scoped>
+.header-primary-menu .p-button-primary {
+  margin: 0; /* Asegúrate de que no tenga márgenes adicionales */
+  padding: 0.5rem 1rem; /* Ajusta el tamaño del botón */
+  font-size: 1.2rem; /* Tamaño de texto consistente */
+  line-height: 1.5; /* Centra el texto verticalmente */
+  vertical-align: middle; /* Alinea verticalmente con el resto del menú */
+}
+</style>

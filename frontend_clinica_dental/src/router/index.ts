@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import { getTokenFromLocalStorage } from '@/helpers'
+import { useAuthStore } from '@/stores'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -8,7 +10,7 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: HomeView,
-      meta: { requireMainJs: true},
+      meta: { requireMainJs: true },
     },
     {
       path: '/about',
@@ -40,7 +42,24 @@ const router = createRouter({
       name: 'odontologo_servicios',
       component: () => import('../views/OdontologoServiciosView.vue'),
     },
+    {
+      path: '/login',
+      name: 'login',
+      component: () => import('../views/LoginView.vue'),
+    }
   ],
+})
+
+router.beforeEach(async to => {
+  const publicPages = ['/', '/login']
+  const authRequired = !publicPages.includes(to.path)
+  const authStore = useAuthStore()
+
+  if (authRequired && !getTokenFromLocalStorage()) {
+    if (authStore) authStore.logout()
+    authStore.returnUrl = to.fullPath
+    return '/login'
+  }
 })
 
 export default router
