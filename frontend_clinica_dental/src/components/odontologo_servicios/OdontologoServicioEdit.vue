@@ -41,10 +41,10 @@ const relacion = ref({
 // Actualizar `relacion` cuando cambie `props.relacion`
 watch(
   () => props.relacion,
-  (newRelacion) => {
+  newRelacion => {
     relacion.value = { ...newRelacion }
   },
-  { immediate: true }
+  { immediate: true },
 )
 
 // Cargar odontólogos y servicios
@@ -61,29 +61,27 @@ async function cargarDatos() {
 async function handleEditSave() {
   try {
     if (!relacion.value.odontologo_id || !relacion.value.servicio_id) {
-      alert('Debe seleccionar un odontólogo y un servicio');
-      return;
+      alert('Debe seleccionar un odontólogo y un servicio')
+      return
     }
 
     // Crear el cuerpo con el id de la relación y el nuevo servicio
     const body = {
-      odontologoId: relacion.value.odontologo_id,  // Este no cambia
-      servicioId: relacion.value.servicio_id,  // Este sí cambia
-    };
+      odontologoId: relacion.value.odontologo_id, // Este no cambia
+      servicioId: relacion.value.servicio_id, // Este sí cambia
+    }
 
     // Enviar el PATCH con el ID de la relación
-    await http.patch(`odontologos_servicios/${relacion.value.id}`, body);
+    await http.patch(`odontologos_servicios/${relacion.value.id}`, body)
 
     // Emitir evento para recargar la lista
-    emit('guardar');
-    dialogVisible.value = false;
+    emit('guardar')
+    dialogVisible.value = false
   } catch (error: any) {
-    console.error(error);
-    alert(error?.response?.data?.message || 'Error desconocido');
+    console.error(error)
+    alert(error?.response?.data?.message || 'Error desconocido')
   }
 }
-
-
 
 onMounted(() => {
   cargarDatos()
@@ -105,7 +103,6 @@ onMounted(() => {
         option-label="nombre"
         option-value="id"
         class="w-full"
-        
       />
     </div>
     <div class="mb-4">

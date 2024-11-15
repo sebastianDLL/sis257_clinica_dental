@@ -1,101 +1,78 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+import { onMounted, watch } from 'vue'
+import { RouterView, useRoute } from 'vue-router'
+
+import '@/assets/js/vendor/modernizr-3.11.2.min.js'
+import 'https://code.jquery.com/jquery-1.12.4.min.js'
+import 'https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.7/umd/popper.min.js'
+import '@/assets/js/plugins/bootstrap.min.js'
+import 'https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js'
+import 'https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/js/jquery.nice-select.min.js'
+import 'https://cdnjs.cloudflare.com/ajax/libs/gijgo/1.9.13/combined/js/gijgo.min.js'
+import '@/assets/js/plugins/jquery.magnific-popup.min.js'
+import '@/assets/js/main.js'
+
+import MainHeader from '@/components/MainHeader.vue'
+import MainFooter from '@/components/MainFooter.vue'
+
+// Reimporta `main.js` en cada navegación
+const route = useRoute()
+
+onMounted(async () => {
+  
+  // Inicializa los scripts necesarios después de que el DOM esté renderizado
+  const { default: initializeMainScripts } = await import('@/assets/js/main.js')
+  initializeMainScripts()
+
+  // Asegúrate de que todos los scripts que dependen de jQuery también se inicialicen aquí
+  $(document).ready(() => {
+    console.log('Document ready - inicializando scripts adicionales')
+    // Inicializar cualquier plugin de jQuery o lógica adicional aquí
+  })
+})
+
+// Escucha cambios de ruta para ejecutar `main.js` nuevamente
+watch(route, async newRoute => {
+  if (newRoute.path === '/') {
+    const { default: initializeMainScripts } = await import(
+      '@/assets/js/main.js'
+    )
+    initializeMainScripts()
+  }
+})
 </script>
 
 <template>
-  <div class="container">
-    <header>
-      <img
-        alt="Vue logo"
-        class="logo"
-        src="@/assets/logo.svg"
-        width="125"
-        height="125"
-      />
-
-      <div class="wrapper">
-        <HelloWorld msg="You did it!" />
-
-        <nav>
-          <RouterLink to="/">Home</RouterLink>
-          <RouterLink to="/about">About</RouterLink>
-          <RouterLink to="/citas">Citas</RouterLink>
-          <RouterLink to="/clientes">Clientes</RouterLink>
-          <RouterLink to="/odontologos">Odontologos</RouterLink>
-          <RouterLink to="/servicios">Servicios</RouterLink>
-          <RouterLink to="/odontologo_servicios"
-            >Odontologo Servicios</RouterLink
-          >
-        </nav>
-      </div>
-    </header>
-    <main class="content">
-      <RouterView />
-    </main>
-  </div>
+  <MainHeader />
+  <RouterView />
+  <MainFooter />
 </template>
 
-<style scoped>
-.container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  max-width: 1400px;
-  margin: 0 auto;
-}
+<style>
+/* Icon Font CSS */
+@import '@/assets/css/plugins/font-awesome.min.css';
+@import '@/assets/css/plugins/remixicon.css';
+@import '@/assets/css/plugins/flaticon.css';
 
-header {
-  line-height: 1.5;
-  width: 100%;
-  text-align: center;
-}
+/* Bootstrap CSS */
+@import '@/assets/css/plugins/bootstrap.min.css';
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
+/* Animaciones CSS */
+@import '@/assets/css/plugins/animate.min.css';
+/* Slick Carousel CSS */
+@import 'https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.css';
 
-nav {
-  width: 100%;
-  font-size: 14px;
-  text-align: center;
-  margin-top: 1rem;
-}
+/* Nice Select */
+@import 'https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/css/nice-select.css';
 
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
+/* Gijgo CSS */
+@import 'https://cdnjs.cloudflare.com/ajax/libs/gijgo/1.9.13/combined/css/gijgo.min.css';
 
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
+/* Magnific Popup CSS */
+@import 'https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.min.css';
 
-nav a:first-of-type {
-  border: 0;
-}
-
-.content {
-  margin-top: 1rem; /* Añade espacio entre el encabezado y la tabla */
-  width: 100%;
-}
-
-.wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-}
-
-header,
-.table-container {
-  max-width: 100%; /* Ajusta esto según el ancho que desees */
-  margin: 0 auto;
-}
-
-.table-container {
-  margin-top: 20px;
-}
+/* Preloader (local si no hay CDN disponible) */
+@import '@/assets/css/plugins/preloader.css';
+/* Main Style CSS */
+@import '@/assets/css/style.css';
 </style>

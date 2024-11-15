@@ -1,23 +1,29 @@
-import './assets/main.css'
+import { createApp } from 'vue';
+import { createPinia } from 'pinia';
 
-import { createApp } from 'vue'
-import { createPinia } from 'pinia'
-import PrimeVue from 'primevue/config'
-import Aura from '@primevue/themes/aura'
-import 'primeicons/primeicons.css'
-import 'primeflex/primeflex.min.css'
 
-import App from './App.vue'
-import router from './router'
+// Importa Bootstrap
+import '@/assets/js/plugins/bootstrap.min.js';
+import '@/assets/css/plugins/bootstrap.min.css';
 
-const app = createApp(App)
+// Importa PrimeVue
+import PrimeVue from 'primevue/config';
+import Aura from '@primevue/themes/aura';
+import 'primeicons/primeicons.css';
+import 'primeflex/primeflex.min.css';
 
-app.use(createPinia())
-app.use(router)
+// Componentes principales
+import App from './App.vue';
+import router from './router';
+
+const app = createApp(App);
+
+app.use(createPinia());
+app.use(router);
 app.use(PrimeVue, {
   theme: {
     preset: Aura,
   },
-})
+});
 
-app.mount('#app')
+app.mount('#app');

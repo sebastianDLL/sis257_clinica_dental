@@ -6,21 +6,23 @@ import OdontologoServicioList from '@/components/odontologo_servicios/Odontologo
 import Button from 'primevue/button'
 import type { Odontologo_servicio } from '../models/Odontologo_servicio'
 
-const mostrarDialogCreate = ref(false)  // Para el modo creación
-const mostrarDialogEdit = ref(false)    // Para el modo edición
+const mostrarDialogCreate = ref(false) // Para el modo creación
+const mostrarDialogEdit = ref(false) // Para el modo edición
 const relacionEdit = ref<Odontologo_servicio | null>(null)
-const OdontologoServicioListRef = ref<typeof OdontologoServicioList | null>(null)
+const OdontologoServicioListRef = ref<typeof OdontologoServicioList | null>(
+  null,
+)
 
 // Función para manejar la creación
 function handleCreate() {
   relacionEdit.value = { id: 0, odontologo_id: 0, servicio_id: 0 }
-  mostrarDialogCreate.value = true  // Solo mostrar el diálogo de creación
+  mostrarDialogCreate.value = true // Solo mostrar el diálogo de creación
 }
 
 // Función para manejar la edición
 function handleEdit(relacion: Odontologo_servicio) {
   relacionEdit.value = { ...relacion }
-  mostrarDialogEdit.value = true  // Solo mostrar el diálogo de edición
+  mostrarDialogEdit.value = true // Solo mostrar el diálogo de edición
 }
 
 // Función para cerrar ambos diálogos
@@ -43,13 +45,13 @@ function handleGuardar() {
       icon="pi pi-plus"
       @click="handleCreate"
     />
-    
+
     <!-- Lista de relaciones -->
     <OdontologoServicioList
       ref="OdontologoServicioListRef"
       @edit="handleEdit"
     />
-    
+
     <!-- Diálogo de creación -->
     <OdontologoServicioSave
       :mostrar="mostrarDialogCreate"
@@ -64,8 +66,7 @@ function handleGuardar() {
       :mostrar="mostrarDialogEdit"
       :relacion="relacionEdit || { id: 0, odontologo_id: 0, servicio_id: 0 }"
       @guardar="handleGuardar"
-      @close="handleCloseDialog"-->
-    />
+      @close="handleCloseDialog"/> -->
   </div>
 </template>
 
