@@ -192,4 +192,23 @@ export class CitasService {
     const cita = await this.findOne(id);
     return this.citasRepository.softRemove(cita);
   }
+
+  async obtenerServiciosPorOdontologo(odontologoId: number): Promise<Servicio[]> {
+    const servicios = await this.serviciosRepository
+      .createQueryBuilder('servicio')
+      .innerJoin('odontologo_servicios', 'os', 'os.servicio_id = servicio.id')
+      .where('os.odontologo_id = :odontologoId', { odontologoId })
+      .getMany();
+  
+    if (!servicios || servicios.length === 0) {
+      throw new NotFoundException(`El odontólogo con ID ${odontologoId} no tiene servicios asociados`);
+    }
+  
+    return servicios;
+  }
+  
+  
+
+
+
 }

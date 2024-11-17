@@ -1,41 +1,55 @@
 <script setup lang="ts">
-import type { Cita } from '../../models/Cita'
-import http from '../../plugins/axios'
-import Button from 'primevue/button'
-import Dialog from 'primevue/dialog'
-import { onMounted, ref } from 'vue'
+import type { Cita } from '../../models/Cita';
+import http from '../../plugins/axios';
+import Button from 'primevue/button';
+import Dialog from 'primevue/dialog';
+import { onMounted, ref, computed } from 'vue';
+import { useAuthStore } from '@/stores';
 
-const ENDPOINT = 'citas'
-let citas = ref<Cita[]>([])
+const authStore = useAuthStore(); // Para obtener el cliente logueado
+const ENDPOINT = 'citas';
 
-const emit = defineEmits(['edit'])
-const citaDelete = ref<Cita | null>(null)
-const mostrarConfirmDialog = ref<boolean>(false)
+let citas = ref<Cita[]>([]); // Todas las citas
+let citasFiltradas = computed(() =>
+  citas.value.filter((cita) => cita.clienteId === authStore.user?.id)
+); // Filtra las citas del cliente logueado
 
+const emit = defineEmits(['edit']);
+const citaDelete = ref<Cita | null>(null);
+const mostrarConfirmDialog = ref<boolean>(false);
+
+// Obtener todas las citas desde el backend
 async function obtenerLista() {
-  citas.value = await http.get(ENDPOINT).then(response => response.data)
+  citas.value = await http.get(ENDPOINT).then((response) => response.data);
 }
 
+// Emitir evento para edición
 function emitirEdicion(cita: Cita) {
-  emit('edit', cita)
+  emit('edit', cita);
 }
 
+// Mostrar diálogo de confirmación de eliminación
 function mostrarEliminarConfirm(cita: Cita) {
-  citaDelete.value = cita
-  mostrarConfirmDialog.value = true
+  citaDelete.value = cita;
+  mostrarConfirmDialog.value = true;
 }
 
+// Eliminar cita seleccionada
 async function eliminar() {
-  await http.delete(`${ENDPOINT}/${citaDelete.value?.id}`)
-  obtenerLista()
-  mostrarConfirmDialog.value = false
+  if (citaDelete.value?.id) {
+    await http.delete(`${ENDPOINT}/${citaDelete.value.id}`);
+    obtenerLista();
+    mostrarConfirmDialog.value = false;
+  }
 }
 
+// Obtener la lista al montar el componente
 onMounted(() => {
-  obtenerLista()
-})
+  obtenerLista();
+});
 
-defineExpose({ obtenerLista })
+// Exponer la función de actualización
+defineExpose({ obtenerLista });
 </script>
 
 <template>
@@ -44,22 +58,20 @@ defineExpose({ obtenerLista })
       <thead>
         <tr>
           <th>Nro.</th>
-          <th>Cliente</th>
-          <th>Odontologo</th>
+          <th>Odontólogo</th>
           <th>Servicio</th>
-          <th>Monto Total</th>
+          <!-- <th>Monto Total</th>-->
           <th>Estado</th>
           <th>Fecha y Hora</th>
           <th>Acciones</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(cita, index) in citas" :key="cita.id">
+        <tr v-for="(cita, index) in citasFiltradas" :key="cita.id">
           <td>{{ index + 1 }}</td>
-          <td>{{ cita.cliente.nombre }}</td>
           <td>{{ cita.odontologo.nombre }}</td>
-          <td>{{ cita.servicio.nombre }}</td>
-          <td>{{ cita.servicio.precio }} Bs.</td>
+          <td>{{ cita.servicio?.nombre }}</td>
+          <!-- <td>{{ cita.montoTotal }} Bs.</td>-->
           <td>{{ cita.estado }}</td>
           <td>{{ new Date(cita.fechaHoraCita).toLocaleString() }}</td>
           <td>
@@ -80,12 +92,13 @@ defineExpose({ obtenerLista })
       </tbody>
     </table>
 
+    <!-- Diálogo de confirmación para eliminar -->
     <Dialog
       v-model:visible="mostrarConfirmDialog"
       header="Confirmar Eliminación"
       :style="{ width: '25rem' }"
     >
-      <p>¿Estás seguro de que deseas eliminar este registro?</p>
+      <p>¿Estás seguro de que deseas eliminar esta cita?</p>
       <div class="flex justify-end gap-2">
         <Button
           type="button"

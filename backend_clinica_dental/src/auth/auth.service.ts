@@ -45,7 +45,14 @@ export class AuthService {
 
     const access_token = await this.getAccessToken(payload);
 
-    return { ...user, access_token };
+    return {
+      id: user.id,
+      name: user.nombre, // Aquí usamos el atributo 'nombre' como 'name'
+      email: user.email, // Si el email también es compartido
+      rol: payload.role, // Devuelve 'odontologo' o 'cliente'
+      access_token,
+    };
+    
   }
 
   async verifyPayload(payload: JwtPayload): Promise<Odontologo | Cliente> {

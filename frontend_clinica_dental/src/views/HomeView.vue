@@ -257,10 +257,10 @@ onMounted(async () => {
               <iframe
                 width="100%"
                 height="500"
-                src="https://www.youtube.com/embed/2glNgj9RquU?autoplay=1"
+                src="https://www.youtube.com/embed/2glNgj9RquU?autoplay=0"
                 title="YouTube Shorts player"
                 frameborder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowfullscreen
               ></iframe>
             </div>

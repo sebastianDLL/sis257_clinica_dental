@@ -10,43 +10,50 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: HomeView,
-      meta: { requireMainJs: true },
+      meta: { requireMainJs: true, roles: [] }, // Accesible por cualquier rol
     },
     {
       path: '/about',
       name: 'about',
       component: () => import('../views/AboutView.vue'),
+      meta: { roles: [] }, // Sin restricción de rol
     },
     {
       path: '/citas',
       name: 'citas',
       component: () => import('../views/CitaView.vue'),
+      meta: { roles: ['cliente', 'odontologo'] }, // Accesible por ambos roles
     },
     {
       path: '/clientes',
       name: 'clientes',
       component: () => import('../views/ClienteView.vue'),
+      meta: { roles: ['odontologo'] }, // Solo accesible por odontólogos
     },
     {
       path: '/odontologos',
       name: 'odontologos',
       component: () => import('../views/OdontologoView.vue'),
+      meta: { roles: ['odontologo'] }, // Solo accesible por odontólogos
     },
     {
       path: '/servicios',
       name: 'servicios',
       component: () => import('../views/ServiciosView.vue'),
+      meta: { roles: ['odontologo'] }, // Solo accesible por odontólogos
     },
     {
       path: '/odontologo_servicios',
       name: 'odontologo_servicios',
       component: () => import('../views/OdontologoServiciosView.vue'),
+      meta: { roles: ['odontologo'] }, // Solo accesible por odontólogos
     },
     {
       path: '/login',
       name: 'login',
       component: () => import('../views/LoginView.vue'),
-    }
+      meta: { roles: [] }, // Sin restricción de rol
+    },
   ],
 })
 
@@ -55,6 +62,7 @@ router.beforeEach(async to => {
   const authRequired = !publicPages.includes(to.path)
   const authStore = useAuthStore()
 
+  // Verificar si el usuario tiene un token válido
   if (authRequired && !getTokenFromLocalStorage()) {
     if (authStore) authStore.logout()
     authStore.returnUrl = to.fullPath

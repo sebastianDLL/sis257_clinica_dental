@@ -36,6 +36,16 @@ export class CitasController {
     return this.citasService.findOne(+id);
   }
 
+  // Este método se encarga de obtener los servicios de un odontólogo
+  @Get('odontologo/:odontologoId/servicios')
+  async obtenerServiciosPorOdontologo(
+    @Param('odontologoId') odontologoId: number,
+  ) {
+    return this.citasService.obtenerServiciosPorOdontologo(odontologoId);
+  }
+
+
+  
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateCitaDto: UpdateCitaDto) {
     return this.citasService.update(+id, updateCitaDto);

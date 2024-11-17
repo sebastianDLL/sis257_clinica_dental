@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import Button from 'primevue/button'
-import { useAuthStore } from '@/stores'
-import { useRoute } from 'vue-router'
-const authStore = useAuthStore()
-const location = useRoute()
+import Button from 'primevue/button';
+import { useAuthStore } from '@/stores'; // Aseguramos la ruta correcta
+import { useRoute } from 'vue-router';
+
+const authStore = useAuthStore();
+const location = useRoute();
 </script>
 
 <template>
@@ -14,7 +15,7 @@ const location = useRoute()
       <div class="container">
         <!-- Header Top Wrapper Start -->
         <div class="header-top-wrapper">
-          <!-- Header Info Start  -->
+          <!-- Header Info Start -->
           <div class="header-top-info">
             <ul>
               <li>
@@ -58,54 +59,64 @@ const location = useRoute()
     <div class="header-bottom">
       <div class="container">
         <!-- Header Bottom Wrapper Start -->
-        <div class="header-bottom-wrapper">
+        <div class="header-bottom-wrapper d-flex align-items-center justify-content-between">
           <!-- Header Logo Start -->
           <div class="header-logo">
-            <router-link to="/"
-              ><img src="@/assets/images/logo.png" alt="Logo"
-            /></router-link>
+            <router-link to="/">
+              <img src="@/assets/images/logo.png" alt="Logo" />
+            </router-link>
           </div>
-          <!-- Header logo End -->
+          <!-- Header Logo End -->
 
           <!-- Header Primary Menu Start -->
-          <div class="header-primary-menu d-none d-lg-block">
-            <ul class="nav-menu">
+          <div class="header-primary-menu d-none d-lg-flex align-items-center">
+            <ul class="nav-menu d-flex align-items-center">
               <li>
                 <router-link to="/" class="active">Inicio</router-link>
               </li>
-              <li>
-                <router-link v-if="authStore.token" to="/citas"
-                  >Citas</router-link
-                >
+
+              <!-- Pestañas visibles solo para clientes -->
+              <li v-if="authStore.token && authStore.role === 'cliente'">
+                <router-link to="/citas">Crear Cita</router-link>
               </li>
-              <li>
-                <router-link v-if="authStore.token" to="/odontologos"
-                  >Odontologos</router-link
-                >
+
+              <!-- Pestañas visibles solo para odontólogos -->
+              <li v-if="authStore.token && authStore.role === 'odontologo'">
+                <router-link to="/citas">Ver Citas</router-link>
               </li>
-              <li>
-                <router-link v-if="authStore.token" to="/odontologo_servicios"
-                  >Servicios</router-link
-                >
+              <li v-if="authStore.token && authStore.role === 'odontologo'">
+                <router-link to="/odontologos">Odontólogos</router-link>
               </li>
-              <li>
-                <router-link v-if="authStore.token" to="/clientes"
-                  >Clientes</router-link
-                >
+              <li v-if="authStore.token && authStore.role === 'odontologo'">
+                <router-link to="/odontologo_servicios">Servicios</router-link>
               </li>
-              <li>
-                <router-link
-                  v-if="!authStore.token"
-                  to="/login"
-                  style="font-weight: bold"
-                >
-                  INICIAR SESIÓN
-                </router-link>
-                <a v-else @click="authStore.logout()" style="font-weight: bold"
-                  >Salir</a
-                >
+              <li v-if="authStore.token && authStore.role === 'odontologo'">
+                <router-link to="/clientes">Clientes</router-link>
               </li>
             </ul>
+
+            <!-- Saludo y botón de logout -->
+            <div class="d-flex align-items-center ms-4">
+              <!-- Saludo dinámico -->
+              <p v-if="authStore.token" class="mb-0 me-3" style="font-size: 1rem; font-weight: bold; color: #2e7d32;">
+                Bienvenido, {{ authStore.user?.name || 'Usuario' }}!
+              </p>
+              <!-- Botón de login/logout -->
+              <router-link
+                v-if="!authStore.token"
+                to="/login"
+                class="btn btn-primary"
+              >
+                INICIAR SESIÓN
+              </router-link>
+              <button
+                v-else
+                @click="authStore.logout()"
+                class="btn btn-outline-danger"
+              >
+                Salir
+              </button>
+            </div>
           </div>
           <!-- Header Primary Menu End -->
 
@@ -133,9 +144,9 @@ const location = useRoute()
   <!-- Mobile Menu End -->
   <div class="offcanvas offcanvas-start" id="offcanvasMenu">
     <div class="offcanvas-header">
-      <a class="logo" href="#"
-        ><img src="@/assets/images/logo.png" alt="Logo"
-      /></a>
+      <a class="logo" href="#">
+        <img src="@/assets/images/logo.png" alt="Logo" />
+      </a>
       <button
         type="button"
         class="btn-close text-reset"
@@ -145,7 +156,7 @@ const location = useRoute()
     </div>
 
     <div class="offcanvas-body">
-      <!-- Header Info Start  -->
+      <!-- Header Info Start -->
       <div class="header-top-info">
         <ul>
           <li>
@@ -183,22 +194,24 @@ const location = useRoute()
       <div class="mobile-menu">
         <ul class="nav-menu">
           <li>
-            <router-link to="/" class="active"> Inicio </router-link>
+            <router-link to="/" class="active">Inicio</router-link>
           </li>
-          <li>
-            <router-link to="/citas"> Citas </router-link>
+
+          <!-- Menú móvil - Pestañas dinámicas -->
+          <li v-if="authStore.token && authStore.role === 'cliente'">
+            <router-link to="/citas">Citas</router-link>
           </li>
-          <li>
-            <router-link to="/odontologos"> Odontologos </router-link>
+          <li v-if="authStore.token && authStore.role === 'odontologo'">
+            <router-link to="/citas">Citas</router-link>
           </li>
-          <li>
-            <router-link to="/odontologo_servicios"> Servicios </router-link>
+          <li v-if="authStore.token && authStore.role === 'odontologo'">
+            <router-link to="/odontologos">Odontólogos</router-link>
           </li>
-          <li>
-            <router-link to="/clientes"> Clientes </router-link>
+          <li v-if="authStore.token && authStore.role === 'odontologo'">
+            <router-link to="/odontologo_servicios">Servicios</router-link>
           </li>
-          <li>
-            <router-link to=""> Contacto </router-link>
+          <li v-if="authStore.token && authStore.role === 'odontologo'">
+            <router-link to="/clientes">Clientes</router-link>
           </li>
         </ul>
       </div>
@@ -208,4 +221,12 @@ const location = useRoute()
 </template>
 
 <style scoped>
+/* Ajuste para alinear el saludo con el botón */
+.header-primary-menu .d-flex {
+  align-items: center;
+}
+.header-primary-menu .btn {
+  font-size: 0.9rem;
+  margin-left: 0.5rem;
+}
 </style>
