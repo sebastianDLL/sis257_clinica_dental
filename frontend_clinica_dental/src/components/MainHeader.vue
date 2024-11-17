@@ -77,7 +77,7 @@ const location = useRoute();
 
               <!-- Pestañas visibles solo para clientes -->
               <li v-if="authStore.token && authStore.role === 'cliente'">
-                <router-link to="/citas">Crear Cita</router-link>
+                <router-link to="/citas">Mis Citas</router-link>
               </li>
 
               <!-- Pestañas visibles solo para odontólogos -->
@@ -199,10 +199,10 @@ const location = useRoute();
 
           <!-- Menú móvil - Pestañas dinámicas -->
           <li v-if="authStore.token && authStore.role === 'cliente'">
-            <router-link to="/citas">Citas</router-link>
+            <router-link to="/citas">Mis Citas</router-link>
           </li>
           <li v-if="authStore.token && authStore.role === 'odontologo'">
-            <router-link to="/citas">Citas</router-link>
+            <router-link to="/citas">Ver Citas</router-link>
           </li>
           <li v-if="authStore.token && authStore.role === 'odontologo'">
             <router-link to="/odontologos">Odontólogos</router-link>

@@ -1,21 +1,20 @@
 <script setup lang="ts">
-import type { Cita } from '../../models/Cita';
-import type { Odontologo } from '../../models/Odontologo';
-import type { Servicios } from '../../models/Servicios';
-import http from '../../plugins/axios';
-import Button from 'primevue/button';
-import Dialog from 'primevue/dialog';
-import Dropdown from 'primevue/dropdown';
-import Calendar from 'primevue/calendar';
-import { computed, ref, watch, onMounted } from 'vue';
-import { useAuthStore } from '@/stores';
+import type { Cita } from '../../models/Cita'
+import type { Odontologo } from '../../models/Odontologo'
+import type { Servicios } from '../../models/Servicios'
+import http from '../../plugins/axios'
+import Button from 'primevue/button'
+import Dialog from 'primevue/dialog'
+import Dropdown from 'primevue/dropdown'
+import Calendar from 'primevue/calendar'
+import { computed, ref, watch, onMounted } from 'vue'
+import { useAuthStore } from '@/stores'
 
+const ENDPOINT = 'citas'
+const ODONTOLOGOS_ENDPOINT = 'odontologos'
+const SERVICIOS_ENDPOINT = 'servicios/odontologo'
 
-const ENDPOINT = 'citas';
-const ODONTOLOGOS_ENDPOINT = 'odontologos';
-const SERVICIOS_ENDPOINT = 'servicios/odontologo';
-
-const authStore = useAuthStore();
+const authStore = useAuthStore()
 
 const props = defineProps({
   mostrar: Boolean,
@@ -24,143 +23,141 @@ const props = defineProps({
     default: () => ({}) as Cita,
   },
   modoEdicion: Boolean,
-});
-const emit = defineEmits(['guardar', 'close']);
+})
+const emit = defineEmits(['guardar', 'close'])
 
 const dialogVisible = computed({
   get: () => props.mostrar,
-  set: (value) => {
-    if (!value) emit('close');
+  set: value => {
+    if (!value) emit('close')
   },
-});
+})
 
-const cita = ref<Cita>({ ...props.cita });
-const odontologos = ref<Odontologo[]>([]);
-const servicios = ref<Servicios[]>([]);
-const montoTotal = ref<number>(0);
+const cita = ref<Cita>({ ...props.cita })
+const odontologos = ref<Odontologo[]>([])
+const servicios = ref<Servicios[]>([])
 
 const estados = [
   { label: 'Confirmada', value: 'Confirmada' },
   { label: 'Pendiente', value: 'Pendiente' },
   { label: 'Cancelada', value: 'Cancelada' },
-];
+]
 
 // Carga los odontólogos al montar el componente
 onMounted(async () => {
   odontologos.value = await http
     .get(ODONTOLOGOS_ENDPOINT)
-    .then((response) => response.data);
-});
+    .then(response => response.data)
+})
 
 // Actualiza los servicios disponibles cuando se selecciona un odontólogo
 watch(
   () => cita.value.odontologoId,
-  async (odontologoId) => {
+  async odontologoId => {
     if (odontologoId) {
       servicios.value = await http
         .get(`${SERVICIOS_ENDPOINT}/${odontologoId}`)
-        .then((response) => response.data);
+        .then(response => response.data)
     } else {
-      servicios.value = [];
+      servicios.value = []
     }
-  }
-);
+  },
+)
 
-// Actualiza el monto total basado en el servicio seleccionado
-watch(
-  () => cita.value.servicioId,
-  (servicioId) => {
-    if (servicioId) {
-      const servicioSeleccionado = servicios.value.find(
-        (s) => s.id === servicioId // No es necesario convertir porque el modelo ya espera un número
-      );
-      montoTotal.value = servicioSeleccionado ? servicioSeleccionado.precio : 0;
-    }
-  }
-);
 // Observa cambios en props.cita y actualiza cita
 watch(
   () => props.cita,
-  (newCita) => {
-    cita.value = { ...newCita };
+  newCita => {
+    cita.value = { ...newCita }
   },
-  { immediate: true } // Esto asegura que se sincronice al cargar por primera vez
-);
+  { immediate: true }, // Esto asegura que se sincronice al cargar por primera vez
+)
+
+// buscar el servicio seleccionado
+const servicioSeleccionado = computed(() => {
+  if (!servicios.value.length || !cita.value.servicioId) {
+    console.log('Servicios aún no cargados o servicioId no está definido');
+    return null;
+  }
+  const servicio = servicios.value.find(s => s.id === cita.value.servicioId);
+  console.log('Servicio seleccionado (dentro del computed):', servicio);
+  return servicio;
+});
+
 
 // Función para cargar servicios
 async function cargarServicios(odontologoId: number) {
   servicios.value = await http
     .get(`${SERVICIOS_ENDPOINT}/${odontologoId}`)
-    .then((response) => response.data);
+    .then(response => response.data)
 
   // Validar si el servicio seleccionado aún está disponible
   if (cita.value.servicioId) {
     const servicioSeleccionado = servicios.value.find(
-      (s) => s.id === cita.value.servicioId
-    );
+      s => s.id === cita.value.servicioId,
+    )
     if (!servicioSeleccionado) {
-      cita.value.servicioId = 0; // Limpia el servicio si ya no está disponible
+      cita.value.servicioId = 0 // Limpia el servicio si ya no está disponible
     }
   }
 }
 // Observa cambios en odontologoId para cargar servicios
 watch(
   () => cita.value.odontologoId,
-  async (odontologoId) => {
+  async odontologoId => {
     if (odontologoId) {
-      await cargarServicios(odontologoId);
+      await cargarServicios(odontologoId)
     } else {
-      servicios.value = [];
+      servicios.value = []
     }
-  }
-);
+  },
+)
 // Cargar datos al abrir el modal en modo edición
 watch(
   () => props.cita,
-  async (newCita) => {
-    cita.value = { ...newCita };
+  async newCita => {
+    cita.value = { ...newCita }
 
     // Si está en modo edición, carga los servicios asociados al odontólogo seleccionado
     if (props.modoEdicion && cita.value.odontologoId) {
-      await cargarServicios(cita.value.odontologoId);
+      await cargarServicios(cita.value.odontologoId)
     }
   },
-  { immediate: true } // Asegura la ejecución al iniciar
-);
+  { immediate: true }, // Asegura la ejecución al iniciar
+)
 
 async function handleSave() {
   try {
     if (!authStore.user) {
-      throw new Error('El usuario no está autenticado.');
+      throw new Error('El usuario no está autenticado.')
     }
 
-    const clienteId = authStore.user.id; // Ahora TypeScript sabe que user no es null
+    const clienteId = authStore.user.id // Ahora TypeScript sabe que user no es null
 
     const body = {
       clienteId: clienteId, // ID del cliente autenticado
       odontologoId: cita.value.odontologoId,
       servicioId: cita.value.servicioId,
+
       estado: cita.value.estado,
       fechaHoraCita: cita.value.fechaHoraCita,
-    };
+    }
 
     if (props.modoEdicion && cita.value.id) {
-      console.log('Datos a enviar (editar):', body);
-      await http.patch(`${ENDPOINT}/${cita.value.id}`, body);
+      console.log('Datos a enviar (editar):', body)
+      await http.patch(`${ENDPOINT}/${cita.value.id}`, body)
     } else {
-      console.log('Datos a enviar (crear):', body);
-      await http.post(ENDPOINT, body);
+      console.log('Datos a enviar (crear):', body)
+      await http.post(ENDPOINT, body)
     }
-    emit('guardar');
-    cita.value = {} as Cita;
-    dialogVisible.value = false;
+    emit('guardar')
+    cita.value = {} as Cita
+    dialogVisible.value = false
   } catch (error: any) {
-    console.error('Error al guardar:', error);
-    alert(error?.response?.data?.message || error.message);
+    console.error('Error al guardar:', error)
+    alert(error?.response?.data?.message || error.message)
   }
 }
-
-
 </script>
 
 <template>
@@ -198,10 +195,15 @@ async function handleSave() {
         />
       </div>
 
-      <!-- Monto Total -->
+      <!-- Precio -->
       <div class="flex items-center gap-4 mb-4">
-        <label for="monto" class="font-semibold w-24">Monto Total</label>
-        <InputText id="monto" :value="montoTotal" readonly class="flex-auto" />
+        <label for="precio" class="font-semibold w-24">Precio</label>
+        <InputText
+          id="precio"
+          :value="servicioSeleccionado?.precio || 0"
+          readonly
+          class="flex-auto"
+        />
       </div>
 
       <!-- Estado -->
@@ -220,7 +222,9 @@ async function handleSave() {
 
       <!-- Fecha y Hora -->
       <div class="flex items-center gap-4 mb-4">
-        <label for="fechaHoraCita" class="font-semibold w-24">Fecha y Hora</label>
+        <label for="fechaHoraCita" class="font-semibold w-24"
+          >Fecha y Hora</label
+        >
         <Calendar
           id="fechaHoraCita"
           v-model="cita.fechaHoraCita"

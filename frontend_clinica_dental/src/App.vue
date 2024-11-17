@@ -1,40 +1,41 @@
 <script setup lang="ts">
-import { onMounted, watch } from 'vue';
-import { RouterView, useRoute } from 'vue-router';
+import { onMounted, watch } from 'vue'
+import { RouterView, useRoute } from 'vue-router'
 
-import '@/assets/js/main.js';
+import MainHeader from '@/components/MainHeader.vue'
+import MainFooter from '@/components/MainFooter.vue'
 
-import MainHeader from '@/components/MainHeader.vue';
-import MainFooter from '@/components/MainFooter.vue';
-
-import { useAuthStore } from '@/stores'; // Importa la tienda de autenticación
+import { useAuthStore } from '@/stores' // Importa la tienda de autenticación
+import '@/assets/js/plugins/bootstrap.min.js'
+import '@/assets/css/plugins/bootstrap.min.css'
+import '@/assets/js/main.js'
 
 // Reimporta `main.js` en cada navegación
-const route = useRoute();
-const authStore = useAuthStore();
+const route = useRoute()
+const authStore = useAuthStore()
 
 onMounted(() => {
   // Inicializa los scripts necesarios después de que el DOM esté renderizado
-  console.log('Document ready - inicializando scripts locales');
+  console.log('Document ready - inicializando scripts locales')
 
   // Verifica el token al cargar la aplicación
-  authStore.validateToken();
+  authStore.validateToken()
 
   // Configura una validación periódica del token (cada 10 segundos)
   setInterval(() => {
-    authStore.validateToken();
-  }, 10000);
-});
+    authStore.validateToken()
+  }, 10000)
+})
 
 // Escucha cambios de ruta para ejecutar `main.js` nuevamente
-watch(route, async (newRoute) => {
+watch(route, async newRoute => {
   if (newRoute.path === '/') {
     const { default: initializeMainScripts } = await import(
       '@/assets/js/main.js'
-    );
-    initializeMainScripts();
+    )
+    initializeMainScripts()
   }
-});
+})
 </script>
 
 <template>

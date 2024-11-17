@@ -1,9 +1,6 @@
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
 
-// Importa Bootstrap
-import '@/assets/js/plugins/bootstrap.min.js';
-import '@/assets/css/plugins/bootstrap.min.css';
 
 // Importa PrimeVue
 import PrimeVue from 'primevue/config';

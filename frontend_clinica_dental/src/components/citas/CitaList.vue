@@ -60,7 +60,7 @@ defineExpose({ obtenerLista });
           <th>Nro.</th>
           <th>Odontólogo</th>
           <th>Servicio</th>
-          <!-- <th>Monto Total</th>-->
+          <th>Precio</th>
           <th>Estado</th>
           <th>Fecha y Hora</th>
           <th>Acciones</th>
@@ -71,7 +71,7 @@ defineExpose({ obtenerLista });
           <td>{{ index + 1 }}</td>
           <td>{{ cita.odontologo.nombre }}</td>
           <td>{{ cita.servicio?.nombre }}</td>
-          <!-- <td>{{ cita.montoTotal }} Bs.</td>-->
+           <td>{{ cita.servicio?.precio }} Bs.</td>
           <td>{{ cita.estado }}</td>
           <td>{{ new Date(cita.fechaHoraCita).toLocaleString() }}</td>
           <td>

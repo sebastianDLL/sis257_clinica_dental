@@ -1,11 +1,5 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
-import { onMounted } from 'vue'
-
-onMounted(async () => {
-  const initializeMainScripts = (await import('@/assets/js/main.js')).default
-  initializeMainScripts()
-})
 </script>
 
 <template>
