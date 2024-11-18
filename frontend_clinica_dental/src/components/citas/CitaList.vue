@@ -4,7 +4,7 @@ import http from '../../plugins/axios';
 import Button from 'primevue/button';
 import Dialog from 'primevue/dialog';
 import { onMounted, ref, computed } from 'vue';
-import { useAuthStore } from '@/stores';
+import { useAuthStore } from '../../stores';
 
 const authStore = useAuthStore(); // Para obtener el cliente logueado
 const ENDPOINT = 'citas';
@@ -21,6 +21,7 @@ const mostrarConfirmDialog = ref<boolean>(false);
 // Obtener todas las citas desde el backend
 async function obtenerLista() {
   citas.value = await http.get(ENDPOINT).then((response) => response.data);
+  console.log(citas.value);
 }
 
 // Emitir evento para edición

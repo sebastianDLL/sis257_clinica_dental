@@ -8,7 +8,7 @@ import Dialog from 'primevue/dialog'
 import Dropdown from 'primevue/dropdown'
 import Calendar from 'primevue/calendar'
 import { computed, ref, watch, onMounted } from 'vue'
-import { useAuthStore } from '@/stores'
+import { useAuthStore } from '../../stores'
 
 const ENDPOINT = 'citas'
 const ODONTOLOGOS_ENDPOINT = 'odontologos'
@@ -135,10 +135,9 @@ async function handleSave() {
     const clienteId = authStore.user.id // Ahora TypeScript sabe que user no es null
 
     const body = {
-      clienteId: clienteId, // ID del cliente autenticado
+      clienteId: clienteId,
       odontologoId: cita.value.odontologoId,
       servicioId: cita.value.servicioId,
-
       estado: cita.value.estado,
       fechaHoraCita: cita.value.fechaHoraCita,
     }
@@ -191,17 +190,6 @@ async function handleSave() {
           optionLabel="nombre"
           optionValue="id"
           placeholder="Seleccione un servicio"
-          class="flex-auto"
-        />
-      </div>
-
-      <!-- Precio -->
-      <div class="flex items-center gap-4 mb-4">
-        <label for="precio" class="font-semibold w-24">Precio</label>
-        <InputText
-          id="precio"
-          :value="servicioSeleccionado?.precio || 0"
-          readonly
           class="flex-auto"
         />
       </div>

@@ -21,9 +21,21 @@ const router = createRouter({
     {
       path: '/citas',
       name: 'citas',
-      component: () => import('../views/CitaView.vue'),
+      component: () => import('../views/CitaView.vue'),  // Componente predeterminado
       meta: { roles: ['cliente', 'odontologo'] }, // Accesible por ambos roles
     },
+    {
+      path: '/citas-cliente',
+      name: 'citas-cliente',
+      component: () => import('../views/CitaView.vue'),  // Componente predeterminado
+      meta: { roles: ['cliente'] }, // Accesible por ambos roles
+    }, 
+    {
+      path: '/citas-odontologo',
+      name: 'citas-odontologo',
+      component: () => import('../views/CitaOdontologoView.vue'),  // Componente predeterminado
+      meta: { roles: ['odontologo'] }, // Accesible por ambos roles
+    },  
     {
       path: '/clientes',
       name: 'clientes',
@@ -57,16 +69,30 @@ const router = createRouter({
   ],
 })
 
-router.beforeEach(async to => {
+router.beforeEach(async (to, from, next) => {
   const publicPages = ['/', '/login']
   const authRequired = !publicPages.includes(to.path)
   const authStore = useAuthStore()
+  const userRole = authStore.role // Obtener el rol del usuario autenticado
 
   // Verificar si el usuario tiene un token válido
   if (authRequired && !getTokenFromLocalStorage()) {
     if (authStore) authStore.logout()
     authStore.returnUrl = to.fullPath
-    return '/login'
+    return next({ name: 'login' })  // Redirige a la página de login
+  }
+
+  // Lógica para manejar la redirección según el rol en la ruta '/citas'
+  if (to.name === 'citas') {
+    if (userRole === 'cliente') {
+      next({ name: 'citas-cliente' }) // Redirige a la vista de citas para clientes
+    } else if (userRole === 'odontologo') {
+      next({ name: 'citas-odontologo' }) // Redirige a la vista de citas para odontólogos
+    } else {
+      next({ name: 'unauthorized' }) // Redirige si no tiene un rol válido
+    }
+  } else {
+    next() // Si la ruta no es '/citas', permite la navegación normal
   }
 })
 
