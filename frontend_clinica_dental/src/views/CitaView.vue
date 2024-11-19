@@ -55,14 +55,11 @@ function handleGuardar() {
 
 <style scoped>
 .slider-background {
-  background-image: url('@/assets/images/slider/slider-1.png');
-  background-size: cover; /* Escala la imagen para cubrir todo el contenedor */
-  background-repeat: no-repeat; /* Evita que se repita */
-  background-position: center; /* Centra la imagen */
-  min-height: 100vh; /* Asegura que ocupe al menos el alto de la ventana */
-  display: flex; /* Habilita el centrado del contenido */
-  justify-content: center; /* Centra horizontalmente */
-  align-items: center; /* Centra verticalmente */
+  background-color: #2700C1; /* Fondo sólido con el color especificado */
+  min-height: 100vh; /* Asegura que cubra al menos el alto de la ventana */
+  display: flex; /* Flexbox para centrar el contenido */
+  justify-content: center; /* Centra el contenido horizontalmente */
+  align-items: flex-start; /* Alinea el contenido al inicio vertical */
   padding: 2rem; /* Espaciado interno */
 }
 
@@ -72,8 +69,8 @@ function handleGuardar() {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Sombra */
   padding: 2rem; /* Espaciado interno */
   width: 100%; /* Ajusta al contenedor */
-  max-width: 800px; /* Ancho máximo */
-  margin-top: 100px;
+  max-width: 1000px; /* Ancho máximo */
+  margin-top: 200px; /* Espaciado superior */
 }
 
 .title {
@@ -81,4 +78,5 @@ function handleGuardar() {
   text-align: center; /* Centrado del título */
   margin-bottom: 1.5rem; /* Espaciado inferior */
 }
+
 </style>
