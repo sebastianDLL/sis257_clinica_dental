@@ -80,7 +80,7 @@ export class ClientesController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  async remove(@Param('id') id: string) {
     return this.clientesService.remove(+id);
   }
 }
