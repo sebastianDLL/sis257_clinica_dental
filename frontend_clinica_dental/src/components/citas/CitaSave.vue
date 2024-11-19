@@ -159,27 +159,10 @@ async function handleSave() {
         />
       </div>
 
-      <!-- Estado 
-      <div class="flex items-center gap-4 mb-4">
-        <label for="estado" class="font-semibold w-24">Estado</label>
-        <Dropdown
-          id="estado"
-          v-model="cita.estado"
-          :options="estados"
-          optionLabel="label"
-          optionValue="value"
-          placeholder="Seleccione un estado"
-          class="flex-auto"
-        />
-      </div>-->
-
-      <!-- Fecha -->
       <!-- Fecha -->
       <div class="flex items-center gap-4 mb-4">
-        <label for="fecha" class="font-semibold w-24">Fecha</label>
         <label for="fecha" class="font-semibold w-24">Fecha</label>
         <Calendar
-          id="fecha"
           id="fecha"
           v-model="cita.fechaHoraCita"
           class="flex-auto"
