@@ -38,7 +38,6 @@
                       extracciones complejas y tratamientos quirúrgicos, para
                       garantizar tu salud bucal.
                     </p>
-                    <a class="read-more" href="#">Leer Más</a>
                   </div>
                 </div>
                 <!-- Service Content End -->
@@ -64,7 +63,6 @@
                       sienten como dientes naturales. Una solución duradera y
                       confiable
                     </p>
-                    <a class="read-more" href="#">Leer Más</a>
                   </div>
                 </div>
                 <!-- Service Content End -->
@@ -90,7 +88,6 @@
                       desde chequeos regulares hasta limpiezas profundas, en un
                       ambiente cómodo y profesional.
                     </p>
-                    <a class="read-more" href="#">Leer Más</a>
                   </div>
                 </div>
                 <!-- Service Content End -->
@@ -116,7 +113,6 @@
                       modernos como brackets o alineadores invisibles. Consigue
                       una sonrisa perfecta.
                     </p>
-                    <a class="read-more" href="#">Leer Más</a>
                   </div>
                 </div>
                 <!-- Service Content End -->
@@ -141,7 +137,6 @@
                       Recupera tu funcionalidad y estética dental con prótesis
                       diseñadas a medida para ti.
                     </p>
-                    <a class="read-more" href="#">Leer Más</a>
                   </div>
                 </div>
                 <!-- Service Content End -->
@@ -166,7 +161,6 @@
                       Cuidamos tu salud bucal con chequeos regulares y limpiezas
                       profesionales.
                     </p>
-                    <a class="read-more" href="#">Leer Más</a>
                   </div>
                 </div>
                 <!-- Service Content End -->
@@ -191,7 +185,6 @@
                       Eliminamos caries y restauramos tus dientes para
                       devolverles su salud y fortaleza.
                     </p>
-                    <a class="read-more" href="#">Leer Más</a>
                   </div>
                 </div>
                 <!-- Service Content End -->
@@ -216,7 +209,6 @@
                       Ilumina tu sonrisa con nuestro tratamiento profesional de
                       blanqueamiento dental.
                     </p>
-                    <a class="read-more" href="#">Leer Más</a>
                   </div>
                 </div>
                 <!-- Service Content End -->
