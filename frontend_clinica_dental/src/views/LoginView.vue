@@ -82,7 +82,7 @@ function onSubmit() {
 .auth-title {
   font-size: 2.5rem;
   font-weight: bold;
-  color: #009024; /* Verde oscuro */
+  color: #ffffff; /* Verde oscuro */
   margin-bottom: 0;
   text-align: center;
 }

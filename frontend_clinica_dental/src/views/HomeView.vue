@@ -6,9 +6,7 @@ import { RouterLink } from 'vue-router'
   <!-- Slider Section Start -->
   <div class="section slider-area slider-active">
     <!-- Single Slider Start -->
-    <div
-      class="single-slider bg-cover d-flex align-items-center slider-background"
-    >
+    <div class="single-slider bg-cover d-flex align-items-center slider-background">
       <div class="container">
         <!-- Slider Content Start -->
         <div class="slider-content">
@@ -24,20 +22,9 @@ import { RouterLink } from 'vue-router'
             adaptadas a tus necesidades. Desde limpiezas regulares hasta
             tratamientos avanzados.
           </p>
-          <RouterLink
-            class="btn"
-            to=""
-            data-animation="fadeInUp"
-            data-delay="1s"
-            >Nuestros doctores</RouterLink
-          >
-          <RouterLink
-            class="btn btn-white"
-            to=""
-            data-animation="fadeInUp"
-            data-delay="1s"
-            >Nuestros servicios</RouterLink
-          >
+          <a class="btn" href="#odontologos" data-animation="fadeInUp" data-delay="1s">Nuestros doctores</a>
+          <RouterLink class="btn btn-white" to="" data-animation="fadeInUp" data-delay="1s">Nuestros servicios
+          </RouterLink>
         </div>
         <!-- Slider Content End -->
       </div>
@@ -53,9 +40,7 @@ import { RouterLink } from 'vue-router'
     <!-- Single Slider End -->
 
     <!-- Single Slider Start -->
-    <div
-      class="single-slider bg-cover d-flex align-items-center slider-background"
-    >
+    <div class="single-slider bg-cover d-flex align-items-center slider-background">
       <div class="container">
         <!-- Slider Content Start -->
         <div class="slider-content">
@@ -70,20 +55,8 @@ import { RouterLink } from 'vue-router'
             Combinamos tecnología avanzada y un equipo altamente capacitado para
             ofrecerte tratamientos que garantizan una sonrisa sana y radiante
           </p>
-          <a
-            class="btn"
-            href=""
-            data-animation="fadeInUp"
-            data-delay="1s"
-            >Nuestros doctores</a
-          >
-          <a
-            class="btn btn-white"
-            href=""
-            data-animation="fadeInUp"
-            data-delay="1s"
-            >Nuestros servicios</a
-          >
+          <a class="btn" href="#odontologos" data-animation="fadeInUp" data-delay="1s">Nuestros doctores</a>
+          <a class="btn btn-white" href="" data-animation="fadeInUp" data-delay="1s">Nuestros servicios</a>
         </div>
         <!-- Slider Content End -->
       </div>
@@ -99,9 +72,7 @@ import { RouterLink } from 'vue-router'
     <!-- Single Slider End -->
 
     <!-- Single Slider Start -->
-    <div
-      class="single-slider bg-cover d-flex align-items-center slider-background"
-    >
+    <div class="single-slider bg-cover d-flex align-items-center slider-background">
       <div class="container">
         <!-- Slider Content Start -->
         <div class="slider-content">
@@ -115,20 +86,8 @@ import { RouterLink } from 'vue-router'
             Con un enfoque personalizado, nos comprometemos a cuidar tu salud
             bucal con tratamientos innovadores y profesionales.
           </p>
-          <a
-            class="btn"
-            href=""
-            data-animation="fadeInUp"
-            data-delay="1s"
-            >Nuestros doctores</a
-          >
-          <a
-            class="btn btn-white"
-            href=""
-            data-animation="fadeInUp"
-            data-delay="1s"
-            >Nuestros servicios</a
-          >
+          <a class="btn" href="#odontologos" data-animation="fadeInUp" data-delay="1s">Nuestros doctores</a>
+          <a class="btn btn-white" href="" data-animation="fadeInUp" data-delay="1s">Nuestros servicios</a>
         </div>
         <!-- Slider Content End -->
       </div>
@@ -183,9 +142,7 @@ import { RouterLink } from 'vue-router'
 
         <!-- Features Icon Wrapper Start -->
         <div class="features-icon-wrapper">
-          <div
-            class="row row-cols-2 row-cols-md-3 row-cols-lg-5 justify-content-around"
-          >
+          <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5 justify-content-around">
             <!-- Features Item Start -->
             <div class="col">
               <div class="features-item">
@@ -248,15 +205,10 @@ import { RouterLink } from 'vue-router'
           <div class="col-lg-6 col-md-6">
             <div class="about-video" style="margin-left: -20px">
               <!-- Ajuste hacia la izquierda -->
-              <iframe
-                width="100%"
-                height="500"
-                src="https://www.youtube.com/embed/2glNgj9RquU?autoplay=0"
-                title="YouTube Shorts player"
-                frameborder="0"
+              <iframe width="100%" height="500" src="https://www.youtube.com/embed/2glNgj9RquU?autoplay=0"
+                title="YouTube Shorts player" frameborder="0"
                 allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowfullscreen
-              ></iframe>
+                allowfullscreen></iframe>
             </div>
           </div>
 
@@ -331,11 +283,7 @@ import { RouterLink } from 'vue-router'
       </div>
     </div>
 
-    <img
-      class="shape d-none d-md-block"
-      src="@/assets/images/r-shape.png"
-      alt=""
-    />
+    <img class="shape d-none d-md-block" src="@/assets/images/r-shape.png" alt="" />
   </div>
   <!-- Research Section End -->
 
@@ -497,11 +445,7 @@ import { RouterLink } from 'vue-router'
 
   <!-- Service Section Start -->
   <div class="section service-area section-padding">
-    <img
-      class="shape d-none d-md-block"
-      src="@/assets/images/s-shape.png"
-      alt=""
-    />
+    <img class="shape d-none d-md-block" src="@/assets/images/s-shape.png" alt="" />
     <div class="container">
       <!-- Service Wrapper Start -->
       <div class="service-wrapper">
@@ -784,11 +728,7 @@ import { RouterLink } from 'vue-router'
 
               <!--  Appointment Form Inner Start -->
               <div class="appointment-form-inner">
-                <form
-                  id="contact-form"
-                  action="assets/contact.php"
-                  method="post"
-                >
+                <form id="contact-form" action="assets/contact.php" method="post">
                   <div class="row">
                     <div class="col-sm-6">
                       <div class="single-form">
@@ -834,11 +774,7 @@ import { RouterLink } from 'vue-router'
                     </div>
                     <div class="col-sm-6">
                       <div class="single-form">
-                        <input
-                          type="text"
-                          id="datepicker"
-                          placeholder="Select Date & Time"
-                        />
+                        <input type="text" id="datepicker" placeholder="Select Date & Time" />
                       </div>
                     </div>
                     <div class="col-sm-12">
@@ -859,11 +795,7 @@ import { RouterLink } from 'vue-router'
       </div>
       <!--  Appointment Wrapper End -->
     </div>
-    <img
-      class="shape d-none d-md-block"
-      src="@/assets/images/r-shape.png"
-      alt=""
-    />
+    <img class="shape d-none d-md-block" src="@/assets/images/r-shape.png" alt="" />
   </div>
   <!--  Appointment Section End -->
 
@@ -889,9 +821,7 @@ import { RouterLink } from 'vue-router'
 
     <!--  Result Content Wrapper Start -->
     <div class="result-content-wrapper">
-      <div
-        class="result-img d-flex align-items-center bg-cover home-background"
-      >
+      <div class="result-img d-flex align-items-center bg-cover home-background">
         <div class="container">
           <div class="result-item-wrapper">
             <!--  Result Content Start -->
@@ -1047,12 +977,8 @@ import { RouterLink } from 'vue-router'
         <div class="map-container">
           <iframe
             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3771.3517743557354!2d-65.2600836!3d-19.0482651!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x93fbcf36656fb06b%3A0x5e4f23584d3c808f!2sPl.%2025%20de%20Mayo%2C%20Sucre!5e0!3m2!1ses-419!2sbo!4v1731473447163!5m2!1ses-419!2sbo"
-            style="border: 0; width: 100%; height: 450px"
-            allowfullscreen
-            loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade"
-            title="Google Maps"
-          ></iframe>
+            style="border: 0; width: 100%; height: 450px" allowfullscreen loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade" title="Google Maps"></iframe>
         </div>
       </div>
     </div>
@@ -1092,14 +1018,10 @@ import { RouterLink } from 'vue-router'
                 <div class="blog-content">
                   <ul class="blog-meta">
                     <li>
-                      <a href="#"
-                        ><i class="flaticon-add-user"></i> By Doctor</a
-                      >
+                      <a href="#"><i class="flaticon-add-user"></i> By Doctor</a>
                     </li>
                     <li>
-                      <a href="#"
-                        ><i class="flaticon-calendar"></i> 17 June 2021</a
-                      >
+                      <a href="#"><i class="flaticon-calendar"></i> 17 June 2021</a>
                     </li>
                   </ul>
                   <h3 class="title">
@@ -1126,14 +1048,10 @@ import { RouterLink } from 'vue-router'
                 <div class="blog-content">
                   <ul class="blog-meta">
                     <li>
-                      <a href="#"
-                        ><i class="flaticon-add-user"></i> Por el doctor</a
-                      >
+                      <a href="#"><i class="flaticon-add-user"></i> Por el doctor</a>
                     </li>
                     <li>
-                      <a href="#"
-                        ><i class="flaticon-calendar"></i> 17 June 2021</a
-                      >
+                      <a href="#"><i class="flaticon-calendar"></i> 17 June 2021</a>
                     </li>
                   </ul>
                   <h3 class="title">
@@ -1160,14 +1078,10 @@ import { RouterLink } from 'vue-router'
                 <div class="blog-content">
                   <ul class="blog-meta">
                     <li>
-                      <a href="#"
-                        ><i class="flaticon-add-user"></i> Por el doctor</a
-                      >
+                      <a href="#"><i class="flaticon-add-user"></i> Por el doctor</a>
                     </li>
                     <li>
-                      <a href="#"
-                        ><i class="flaticon-calendar"></i> 17 June 2021</a
-                      >
+                      <a href="#"><i class="flaticon-calendar"></i> 17 June 2021</a>
                     </li>
                   </ul>
                   <h3 class="title">
@@ -1225,6 +1139,7 @@ import { RouterLink } from 'vue-router'
 .slider-background {
   background-image: url('@/assets/images/slider/slider-1.png');
 }
+
 .slider2-background {
   background-image: url('@/assets/images/slider/slider-img-2.png');
 }
@@ -1232,19 +1147,29 @@ import { RouterLink } from 'vue-router'
 .home-background {
   background-image: url('@/assets/images/result.png');
 }
+
 .about-video iframe {
-  border-radius: 10px; /* Bordes redondeados opcionales */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombras para darle más estilo */
+  border-radius: 10px;
+  /* Bordes redondeados opcionales */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  /* Sombras para darle más estilo */
 }
+
 .map-container {
-  border: 2px solid #0d6efd; /* Color del borde */
-  border-radius: 10px; /* Bordes redondeados */
-  overflow: hidden; /* Para que el iframe no sobresalga de los bordes redondeados */
-  padding: 5px; /* Espaciado entre el marco y el iframe (opcional) */
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Sombra para darle profundidad */
+  border: 2px solid #0d6efd;
+  /* Color del borde */
+  border-radius: 10px;
+  /* Bordes redondeados */
+  overflow: hidden;
+  /* Para que el iframe no sobresalga de los bordes redondeados */
+  padding: 5px;
+  /* Espaciado entre el marco y el iframe (opcional) */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  /* Sombra para darle profundidad */
 }
 
 iframe {
-  border: none; /* Asegúrate de que el iframe no tenga su propio borde */
+  border: none;
+  /* Asegúrate de que el iframe no tenga su propio borde */
 }
 </style>
