@@ -43,7 +43,6 @@ const estados = [
   { label: 'Cancelada', value: 'Cancelada' },
 ]
 
-// Define los intervalos de tiempo disponibles
 const intervalos = [
   { label: '08:00 - 09:00', value: '08:00-09:00' },
   { label: '09:00 - 10:00', value: '09:00-10:00' },
@@ -55,14 +54,12 @@ const intervalos = [
   { label: '17:00 - 18:00', value: '17:00-18:00' },
 ]
 
-// Carga los odontólogos al montar el componente
 onMounted(async () => {
   odontologos.value = await http
     .get(ODONTOLOGOS_ENDPOINT)
     .then(response => response.data)
 })
 
-// Actualiza los servicios disponibles cuando se selecciona un odontólogo
 watch(
   () => cita.value.odontologoId,
   async odontologoId => {
@@ -76,11 +73,13 @@ watch(
   },
 )
 
-// Observa cambios en props.cita y actualiza cita
 watch(
   () => props.cita,
   newCita => {
     cita.value = { ...newCita }
+    if (!props.modoEdicion) {
+      cita.value.estado = 'Pendiente'
+    }
   },
   { immediate: true },
 )
@@ -92,33 +91,27 @@ async function handleSave() {
     }
 
     const clienteId = authStore.user.id
-
-    // Extraer la hora de inicio del intervalo seleccionado
-    // Verifica si 'cita.value.intervalo' está definido antes de intentar dividirlo
-    const horaInicio = cita.value.intervalo?.split('-')[0] // Si no hay intervalo, 'horaInicio' será undefined
+    const horaInicio = cita.value.intervalo?.split('-')[0]
 
     if (!horaInicio) {
       throw new Error('Por favor, selecciona un intervalo válido.')
     }
 
-    // Crear una fecha y hora combinada
-    const fechaSeleccionada = new Date(cita.value.fechaHoraCita) // Asegúrate de que fechaHoraCita sea una fecha válida
-    const [horas, minutos] = horaInicio.split(':').map(Number) // Convierte "08:00" en [8, 0]
-    fechaSeleccionada.setHours(horas, minutos, 0, 0) // Combina la fecha con la hora de inicio
+    const fechaSeleccionada = new Date(cita.value.fechaHoraCita)
+    const [horas, minutos] = horaInicio.split(':').map(Number)
+    fechaSeleccionada.setHours(horas, minutos, 0, 0)
 
     const body = {
       clienteId: clienteId,
       odontologoId: cita.value.odontologoId,
       servicioId: cita.value.servicioId,
       estado: cita.value.estado,
-      fechaHoraCita: fechaSeleccionada.toISOString(), // Envía un formato ISO al backend
+      fechaHoraCita: fechaSeleccionada.toISOString(),
     }
 
     if (props.modoEdicion && cita.value.id) {
-      console.log('Datos a enviar (editar):', body)
       await http.patch(`${ENDPOINT}/${cita.value.id}`, body)
     } else {
-      console.log('Datos a enviar (crear):', body)
       await http.post(ENDPOINT, body)
     }
     emit('guardar')
@@ -166,7 +159,7 @@ async function handleSave() {
         />
       </div>
 
-      <!-- Estado -->
+      <!-- Estado 
       <div class="flex items-center gap-4 mb-4">
         <label for="estado" class="font-semibold w-24">Estado</label>
         <Dropdown
@@ -178,12 +171,15 @@ async function handleSave() {
           placeholder="Seleccione un estado"
           class="flex-auto"
         />
-      </div>
+      </div>-->
 
+      <!-- Fecha -->
       <!-- Fecha -->
       <div class="flex items-center gap-4 mb-4">
         <label for="fecha" class="font-semibold w-24">Fecha</label>
+        <label for="fecha" class="font-semibold w-24">Fecha</label>
         <Calendar
+          id="fecha"
           id="fecha"
           v-model="cita.fechaHoraCita"
           class="flex-auto"

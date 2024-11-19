@@ -22,6 +22,26 @@ async function cargarClienteAutenticado() {
   }
 }
 
+// Eliminar la cuenta del usuario autenticado
+async function eliminarCuenta() {
+  if (confirm('¿Estás seguro de que deseas eliminar tu cuenta? Esta acción no se puede deshacer.')) {
+    try {
+      // Solicitud al backend para eliminar la cuenta
+      await http.delete(`clientes/${cliente.value?.id}`);
+      
+      // Cerrar sesión y redirigir al inicio
+      authStore.logout(); // Asegúrate de tener un método para cerrar sesión
+      alert('Tu cuenta ha sido eliminada correctamente.');
+      window.location.href = '/'; // Redirige al inicio
+    } catch (error) {
+      console.error('Error al eliminar la cuenta:', error);
+      alert('No se pudo eliminar la cuenta. Inténtalo de nuevo.');
+    }
+  }
+}
+
+
+
 // Inicializar los datos al montar el componente
 onMounted(() => {
   cargarClienteAutenticado()
@@ -105,6 +125,13 @@ onMounted(() => {
         icon="pi pi-lock"
         class="p-button-text p-button-danger"
         @click="$emit('cambiarPassword')"
+      />
+      <!-- Botón para eliminar la cuenta -->
+      <Button
+        label="Eliminar Cuenta"
+        icon="pi pi-trash"
+        class="p-button-text p-button-danger"
+        @click="eliminarCuenta"
       />
     </div>
     <p v-else>Cargando datos del cliente...</p>
