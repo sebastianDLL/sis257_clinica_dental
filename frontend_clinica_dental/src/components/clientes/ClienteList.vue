@@ -1,178 +1,157 @@
 <script setup lang="ts">
-import type { Cliente } from '../../models/Cliente'
+import type { Cliente } from '../../models/Cliente' // Importamos el modelo
+import { ref, onMounted } from 'vue'
+import { useAuthStore } from '../../stores' // Acceso al cliente autenticado
 import http from '../../plugins/axios'
 import Button from 'primevue/button'
-import Dialog from 'primevue/dialog'
-import { onMounted, ref } from 'vue'
+import InputText from 'primevue/inputtext'
 
-const ENDPOINT = 'clientes'
-let clientes = ref<Cliente[]>([])
+const authStore = useAuthStore() // Obtener el cliente autenticado
+const cliente = ref<Cliente | null>(null) // Especificamos que cliente puede ser Cliente o null
 
-const emit = defineEmits(['edit'])
-const clienteDelete = ref<Cliente | null>(null)
-const mostrarConfirmDialog = ref<boolean>(false)
+const emit = defineEmits(['editar', 'cambiarPassword']) // Ahora incluye 'cambiarPassword'
 
-async function obtenerLista() {
-  clientes.value = await http.get(ENDPOINT).then(response => response.data)
+// Cargar los datos del cliente autenticado desde el backend
+async function cargarClienteAutenticado() {
+  try {
+    cliente.value = await http.get('clientes/mi-perfil').then(res => res.data)
+    console.log('Datos del cliente autenticado:', cliente.value)
+  } catch (error) {
+    console.error('Error al cargar los datos del cliente:', error)
+    alert('No se pudieron cargar los datos del cliente.')
+  }
 }
 
-function emitirEdicion(cliente: Cliente) {
-  emit('edit', cliente)
-}
-
-function mostrarEliminarConfirm(cliente: Cliente) {
-  clienteDelete.value = cliente
-  mostrarConfirmDialog.value = true
-}
-
-async function eliminar() {
-  await http.delete(`${ENDPOINT}/${clienteDelete.value?.id}`)
-  obtenerLista()
-  mostrarConfirmDialog.value = false
-}
-
+// Inicializar los datos al montar el componente
 onMounted(() => {
-  obtenerLista()
+  cargarClienteAutenticado()
 })
-
-defineExpose({ obtenerLista })
 </script>
 
 <template>
-  <div class="clients-container">
-    <div class="table-wrapper">
-      <table class="clients-table">
-        <thead>
-          <tr>
-            <th>Nro.</th>
-            <th>Nombre</th>
-            <th>Primer Apellido</th>
-            <th>Segundo Apellido</th>
-            <th>Correo</th>
-            <th>Teléfono</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(cliente, index) in clientes" :key="cliente.id">
-            <td>{{ index + 1 }}</td>
-            <td>{{ cliente.nombre }}</td>
-            <td>{{ cliente.primerApellido }}</td>
-            <td>{{ cliente.segundoApellido }}</td>
-            <td>{{ cliente.email }}</td>
-            <td>{{ cliente.telefono }}</td>
-            <td class="actions-column">
-              <Button icon="pi pi-pencil" aria-label="Editar" text class="edit-button"
-                @click="emitirEdicion(cliente)" />
-              <Button icon="pi pi-trash" aria-label="Eliminar" text class="delete-button"
-                @click="mostrarEliminarConfirm(cliente)" />
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <Dialog v-model:visible="mostrarConfirmDialog" header="Confirmar Eliminación" :style="{ width: '25rem' }"
-      class="delete-dialog">
-      <p>¿Estás seguro de que deseas eliminar este registro?</p>
-      <div class="dialog-footer">
-        <Button type="button" label="Cancelar" severity="secondary" @click="mostrarConfirmDialog = false"
-          class="cancel-button" />
-        <Button type="button" label="Eliminar" @click="eliminar" class="confirm-delete-button" />
+  <div>
+    <div v-if="cliente" class="card flex flex-column gap-4">
+      <div class="flex items-center gap-4 mb-4">
+        <label for="nombre" class="font-semibold w-24">Nombre</label>
+        <InputText
+          id="nombre"
+          :value="cliente.nombre"
+          disabled
+          class="flex-auto"
+        />
       </div>
-    </Dialog>
+      <div class="flex items-center gap-4 mb-4">
+        <label for="primer_apellido" class="font-semibold w-24"
+          >Primer <br />
+          Apellido</label
+        >
+        <InputText
+          id="primer_apellido"
+          :value="cliente.primerApellido"
+          disabled
+          class="flex-auto"
+        />
+      </div>
+      <div class="flex items-center gap-4 mb-4">
+        <label for="segundo_apellido" class="font-semibold w-24"
+          >Segundo Apellido</label
+        >
+        <InputText
+          id="segundo_apellido"
+          :value="cliente.segundoApellido"
+          disabled
+          class="flex-auto"
+        />
+      </div>
+      <div class="flex items-center gap-4 mb-4">
+        <label for="email" class="font-semibold w-24">Correo</label>
+        <InputText
+          id="email"
+          :value="cliente.email"
+          disabled
+          class="flex-auto"
+        />
+      </div>
+      <div class="flex items-center gap-4 mb-4">
+        <label for="telefono" class="font-semibold w-24">Teléfono</label>
+        <InputText
+          id="telefono"
+          :value="cliente.telefono"
+          disabled
+          class="flex-auto"
+        />
+      </div>
+      <div class="flex items-center gap-4 mb-4">
+        <label for="direccion" class="font-semibold w-24">Dirección</label>
+        <InputText
+          id="direccion"
+          :value="cliente.direccion"
+          disabled
+          class="flex-auto"
+        />
+      </div>
+
+      <!-- Botón para abrir el diálogo de edición -->
+
+      <Button
+        label="Editar"
+        icon="pi pi-pencil"
+        class="p-button-text"
+        @click="$emit('editar')"
+      />
+
+      <Button
+        label="Cambiar Contraseña"
+        icon="pi pi-lock"
+        class="p-button-text p-button-danger"
+        @click="$emit('cambiarPassword')"
+      />
+    </div>
+    <p v-else>Cargando datos del cliente...</p>
   </div>
 </template>
 
 <style scoped>
-.clients-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem;
+/* Contenedor principal del formulario */
+.card {
+  max-width: 600px; /* Define un ancho máximo para el formulario */
+  margin: 0 auto; /* Centra horizontalmente el formulario */
+  padding: 20px; /* Espaciado interno */
+  background-color: #f9f9f9; /* Color de fondo claro */
+  border: 1px solid #ddd; /* Borde del formulario */
+  border-radius: 10px; /* Bordes redondeados */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Sombra para resaltar el formulario */
 }
 
-.table-wrapper {
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  overflow-x: auto;
+/* Ajustes para las filas del formulario */
+.flex {
+  display: flex; /* Usar flexbox para organizar los elementos */
+  align-items: center; /* Alinear verticalmente */
 }
 
-.clients-table {
-  width: 100%;
-  border-collapse: collapse;
-  min-width: 800px;
+/* Etiquetas */
+label {
+  font-size: 1.2rem; /* Tamaño de fuente estándar */
+  font-weight: bold; /* Texto en negrita */
+  color: #333; /* Color de las etiquetas */
+  width: 180px; /* Ancho fijo para alinear etiquetas */
+  text-align: start; /* Alinear texto de las etiquetas a la derecha */
 }
 
-.clients-table th {
-  background-color: #240090;
-  /* Color morado/índigo */
-  color: white;
-  padding: 1rem;
-  text-align: left;
-  font-weight: 600;
+/* Campos deshabilitados */
+input[disabled],
+textarea[disabled] {
+  background-color: #f2f2f2; /* Fondo gris claro */
+  cursor: not-allowed; /* Cursor indicando no editable */
 }
 
-.clients-table td {
-  padding: 0.75rem 1rem;
-  border-bottom: 1px solid #e2e8f0;
+/* Botón Editar */
+.p-button-text {
+  color: #4caf50; /* Verde para el botón de editar */
+  font-weight: bold; /* Texto en negrita */
 }
 
-.clients-table tbody tr:hover {
-  background-color: #f8f9fa;
-}
-
-.actions-column {
-  white-space: nowrap;
-  width: 100px;
-}
-
-.edit-button {
-  color: #008000 !important;
-  /* Verde para coincidir con tu marca */
-}
-
-.delete-button {
-  color: #dc2626 !important;
-}
-
-.edit-button:hover,
-.delete-button:hover {
-  background-color: #f3f4f6 !important;
-  border-radius: 4px;
-}
-
-/* Estilos para el diálogo de confirmación */
-.delete-dialog {
-  border-radius: 8px;
-}
-
-.dialog-footer {
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.75rem;
-  margin-top: 1.5rem;
-}
-
-.cancel-button {
-  background-color: #e5e7eb !important;
-  color: #374151 !important;
-}
-
-.confirm-delete-button {
-  background-color: #dc2626 !important;
-  color: white !important;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .clients-container {
-    padding: 1rem;
-  }
-
-  .table-wrapper {
-    border-radius: 0;
-    box-shadow: none;
-  }
+.p-button-text:hover {
+  background-color: rgba(76, 175, 80, 0.1); /* Fondo verde claro al pasar */
 }
 </style>

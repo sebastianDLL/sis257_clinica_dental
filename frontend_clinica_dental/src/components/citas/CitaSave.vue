@@ -43,6 +43,18 @@ const estados = [
   { label: 'Cancelada', value: 'Cancelada' },
 ]
 
+// Define los intervalos de tiempo disponibles
+const intervalos = [
+  { label: '08:00 - 09:00', value: '08:00-09:00' },
+  { label: '09:00 - 10:00', value: '09:00-10:00' },
+  { label: '10:00 - 11:00', value: '10:00-11:00' },
+  { label: '11:00 - 12:00', value: '11:00-12:00' },
+  { label: '14:00 - 15:00', value: '14:00-15:00' },
+  { label: '15:00 - 16:00', value: '15:00-16:00' },
+  { label: '16:00 - 17:00', value: '16:00-17:00' },
+  { label: '17:00 - 18:00', value: '17:00-18:00' },
+]
+
 // Carga los odontólogos al montar el componente
 onMounted(async () => {
   odontologos.value = await http
@@ -70,60 +82,7 @@ watch(
   newCita => {
     cita.value = { ...newCita }
   },
-  { immediate: true }, // Esto asegura que se sincronice al cargar por primera vez
-)
-
-// buscar el servicio seleccionado
-const servicioSeleccionado = computed(() => {
-  if (!servicios.value.length || !cita.value.servicioId) {
-    console.log('Servicios aún no cargados o servicioId no está definido');
-    return null;
-  }
-  const servicio = servicios.value.find(s => s.id === cita.value.servicioId);
-  console.log('Servicio seleccionado (dentro del computed):', servicio);
-  return servicio;
-});
-
-
-// Función para cargar servicios
-async function cargarServicios(odontologoId: number) {
-  servicios.value = await http
-    .get(`${SERVICIOS_ENDPOINT}/${odontologoId}`)
-    .then(response => response.data)
-
-  // Validar si el servicio seleccionado aún está disponible
-  if (cita.value.servicioId) {
-    const servicioSeleccionado = servicios.value.find(
-      s => s.id === cita.value.servicioId,
-    )
-    if (!servicioSeleccionado) {
-      cita.value.servicioId = 0 // Limpia el servicio si ya no está disponible
-    }
-  }
-}
-// Observa cambios en odontologoId para cargar servicios
-watch(
-  () => cita.value.odontologoId,
-  async odontologoId => {
-    if (odontologoId) {
-      await cargarServicios(odontologoId)
-    } else {
-      servicios.value = []
-    }
-  },
-)
-// Cargar datos al abrir el modal en modo edición
-watch(
-  () => props.cita,
-  async newCita => {
-    cita.value = { ...newCita }
-
-    // Si está en modo edición, carga los servicios asociados al odontólogo seleccionado
-    if (props.modoEdicion && cita.value.odontologoId) {
-      await cargarServicios(cita.value.odontologoId)
-    }
-  },
-  { immediate: true }, // Asegura la ejecución al iniciar
+  { immediate: true },
 )
 
 async function handleSave() {
@@ -132,14 +91,27 @@ async function handleSave() {
       throw new Error('El usuario no está autenticado.')
     }
 
-    const clienteId = authStore.user.id // Ahora TypeScript sabe que user no es null
+    const clienteId = authStore.user.id
+
+    // Extraer la hora de inicio del intervalo seleccionado
+    // Verifica si 'cita.value.intervalo' está definido antes de intentar dividirlo
+    const horaInicio = cita.value.intervalo?.split('-')[0] // Si no hay intervalo, 'horaInicio' será undefined
+
+    if (!horaInicio) {
+      throw new Error('Por favor, selecciona un intervalo válido.')
+    }
+
+    // Crear una fecha y hora combinada
+    const fechaSeleccionada = new Date(cita.value.fechaHoraCita) // Asegúrate de que fechaHoraCita sea una fecha válida
+    const [horas, minutos] = horaInicio.split(':').map(Number) // Convierte "08:00" en [8, 0]
+    fechaSeleccionada.setHours(horas, minutos, 0, 0) // Combina la fecha con la hora de inicio
 
     const body = {
       clienteId: clienteId,
       odontologoId: cita.value.odontologoId,
       servicioId: cita.value.servicioId,
       estado: cita.value.estado,
-      fechaHoraCita: cita.value.fechaHoraCita,
+      fechaHoraCita: fechaSeleccionada.toISOString(), // Envía un formato ISO al backend
     }
 
     if (props.modoEdicion && cita.value.id) {
@@ -208,17 +180,28 @@ async function handleSave() {
         />
       </div>
 
-      <!-- Fecha y Hora -->
+      <!-- Fecha -->
       <div class="flex items-center gap-4 mb-4">
-        <label for="fechaHoraCita" class="font-semibold w-24"
-          >Fecha y Hora</label
-        >
+        <label for="fecha" class="font-semibold w-24">Fecha</label>
         <Calendar
-          id="fechaHoraCita"
+          id="fecha"
           v-model="cita.fechaHoraCita"
           class="flex-auto"
-          showTime
           showIcon
+        />
+      </div>
+
+      <!-- Intervalo de tiempo -->
+      <div class="flex items-center gap-4 mb-4">
+        <label for="intervalo" class="font-semibold w-24">Hora</label>
+        <Dropdown
+          id="intervalo"
+          v-model="cita.intervalo"
+          :options="intervalos"
+          optionLabel="label"
+          optionValue="value"
+          placeholder="Seleccione un intervalo"
+          class="flex-auto"
         />
       </div>
 

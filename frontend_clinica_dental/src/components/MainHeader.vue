@@ -1,15 +1,49 @@
 <script setup lang="ts">
-import Button from 'primevue/button';
-import { useAuthStore } from '@/stores'; // Aseguramos la ruta correcta
-import { useRoute } from 'vue-router';
+import Button from 'primevue/button'
+import { useAuthStore } from '@/stores' // Aseguramos la ruta correcta
+import { useRoute } from 'vue-router'
+import { ref } from 'vue'
+import router from '@/router'
+import Menu from 'primevue/menu'
+import Dialog from 'primevue/dialog'
 
-const authStore = useAuthStore();
-const location = useRoute();
+const authStore = useAuthStore()
+const location = useRoute()
+const showLogoutMessage = ref(false) // Controla la visibilidad del mensaje flotante
+const userMenu = ref<InstanceType<typeof Menu> | null>(null)
+const showConfirmLogout = ref(false) // Estado para mostrar el diálogo de confirmación
+
+async function handleLogout() {
+  showConfirmLogout.value = false // Oculta el diálogo
+  showLogoutMessage.value = true // Muestra el mensaje flotante
+  setTimeout(() => {
+    authStore.logout() // Llama al método de cierre de sesión
+    showLogoutMessage.value = false // Oculta el mensaje flotante
+    router.push('/') // Redirige al inicio
+  }, 1000) // Espera 1 segundo antes de redirigir
+}
+// Opciones del menú del usuario
+const userMenuItems = [
+  {
+    label: 'Ver Perfil',
+    icon: 'pi pi-user',
+    command: () => router.push('/cliente-perfil'),
+  },
+  {
+    label: 'Salir',
+    icon: 'pi pi-sign-out',
+    command: () => (showConfirmLogout.value = true), // Abre el cuadro de diálogo
+  },
+]
 </script>
 
 <template>
   <!-- Header Section Start -->
   <div class="section header-section transparent-header">
+    <!-- Mensaje flotante de cierre de sesión -->
+    <div v-if="showLogoutMessage" class="logout-overlay">
+      <p>Cerrando sesión...</p>
+    </div>
     <!-- Header Top Start -->
     <div class="header-top d-none d-lg-block">
       <div class="container">
@@ -59,7 +93,9 @@ const location = useRoute();
     <div class="header-bottom">
       <div class="container">
         <!-- Header Bottom Wrapper Start -->
-        <div class="header-bottom-wrapper d-flex align-items-center justify-content-between">
+        <div
+          class="header-bottom-wrapper d-flex align-items-center justify-content-between"
+        >
           <!-- Header Logo Start -->
           <div class="header-logo">
             <router-link to="/">
@@ -98,9 +134,56 @@ const location = useRoute();
             <!-- Saludo y botón de logout -->
             <div class="d-flex align-items-center ms-4">
               <!-- Saludo dinámico -->
-              <p v-if="authStore.token" class="mb-0 me-3" style="font-size: 1rem; font-weight: bold; color: #2e7d32;">
+              <p
+                v-if="authStore.token"
+                class="mb-0 me-3"
+                style="font-size: 1rem; font-weight: bold; color: #2e7d32"
+              >
                 Bienvenido, {{ authStore.user?.name || 'Usuario' }}!
               </p>
+
+              <!-- Menú del usuario -->
+              <div
+                v-if="authStore.token"
+                class="user-menu ms-3"
+                style="position: relative"
+              >
+                <Button
+                  icon="pi pi-user"
+                  style="font-size: 2rem"
+                  class="p-button-rounded p-button-text custom-button"
+                  aria-label="User Menu"
+                  @click="userMenu?.toggle($event)"
+                />
+
+                <!-- Menú desplegable -->
+                <Menu ref="userMenu" :model="userMenuItems" popup />
+
+                <Dialog
+                  v-model:visible="showConfirmLogout"
+                  header="Confirmación"
+                  modal
+                  :closable="false"
+                  :style="{ width: '350px' }"
+                >
+                  <p>¿Está seguro de que desea cerrar sesión?</p>
+                  <div class="d-flex justify-content-end mt-4">
+                    <Button
+                      label="Cancelar"
+                      icon="pi pi-times"
+                      class="p-button-text"
+                      @click="showConfirmLogout = false"
+                    />
+                    <Button
+                      label="Salir"
+                      icon="pi pi-check"
+                      class="p-button-danger"
+                      @click="handleLogout"
+                    />
+                  </div>
+                </Dialog>
+              </div>
+
               <!-- Botón de login/logout -->
               <router-link
                 v-if="!authStore.token"
@@ -109,13 +192,6 @@ const location = useRoute();
               >
                 INICIAR SESIÓN
               </router-link>
-              <button
-                v-else
-                @click="authStore.logout()"
-                class="btn btn-outline-danger"
-              >
-                Salir
-              </button>
             </div>
           </div>
           <!-- Header Primary Menu End -->
@@ -228,5 +304,34 @@ const location = useRoute();
 .header-primary-menu .btn {
   font-size: 0.9rem;
   margin-left: 0.5rem;
+}
+/* Mensaje al Salir */
+.logout-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  font-size: 1.5rem;
+  z-index: 1000;
+}
+
+.logout-overlay p {
+  background-color: rgba(0, 0, 0, 0.8);
+  padding: 1rem 2rem;
+  border-radius: 8px;
+}
+.user-menu {
+  cursor: pointer;
+  padding-left: 2rem;
+  padding-right: 3rem;
+}
+.custom-button {
+  transform: scale(2);
 }
 </style>

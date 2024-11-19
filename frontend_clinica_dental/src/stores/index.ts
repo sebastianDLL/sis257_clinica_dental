@@ -67,6 +67,11 @@ const useAuthStore = defineStore('auth', {
       }
     },
     logout() {
+      if (!this.token && !this.user) {
+        console.warn('Ya estás desconectado. Ignorando logout.');
+        return;
+      }
+    
       console.log('Cerrando sesión...');
       localStorage.clear();
       this.$reset();
@@ -75,21 +80,23 @@ const useAuthStore = defineStore('auth', {
       router.push('/');
     },
     validateToken() {
-      if (!this.token) {
-        return;
-      }
-
+      if (!this.token) return;
+    
       try {
         const decoded = JSON.parse(atob(this.token.split('.')[1]));
         const currentTime = Date.now() / 1000;
-
+    
         if (decoded.exp < currentTime) {
+          if (!this.user) {
+            console.warn('El token ha expirado y el usuario ya está deslogueado.');
+            return;
+          }
           console.warn('El token ha expirado.');
-          this.logout(); // Cierra sesión automáticamente
+          this.logout();
         }
       } catch (error) {
         console.error('Error al validar el token:', error);
-        this.logout(); // Si el token es inválido, forzar cierre de sesión
+        this.logout();
       }
     },
   },
