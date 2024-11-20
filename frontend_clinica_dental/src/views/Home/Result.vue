@@ -8,8 +8,8 @@
                         <div class="section-title result-title text-center">
                             <h2 class="title">Los mejores resultados posibles</h2>
                             <p>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla,
-                                tempor et ex consequat, dignissim finibus enim.
+                                Logra una sonrisa saludable y brillante con nuestros tratamientos especializados. 
+                                Nos enfocamos en cuidar cada detalle para que te sientas y te veas mejor que nunca.
                             </p>
                         </div>
                         <!--  Result Title End -->

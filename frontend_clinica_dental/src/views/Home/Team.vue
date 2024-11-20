@@ -22,7 +22,7 @@
                             <div class="team-item">
                                 <!-- Team Img Start -->
                                 <div class="team-img">
-                                    <img src="@/assets/images/team/team-1.jpg" alt="" />
+                                    <img src="@/assets/images/team/team-1.jpg" alt="Doctor_1" />
                                 </div>
                                 <!-- Team Img End -->
 
@@ -30,29 +30,33 @@
                                 <div class="team-content text-center">
                                     <ul class="social">
                                         <li>
-                                            <a href="#"><i class="ri-facebook-fill"></i></a>
+                                            <a href="https://www.facebook.com/dra.andrea/" target="_blank"><i
+                                                    class="ri-facebook-fill"></i></a>
                                         </li>
                                         <li>
-                                            <a href="#"><i class="ri-twitter-fill"></i></a>
+                                            <a href="https://www.twitter.com/draandrea" target="_blank"><i
+                                                    class="ri-twitter-fill"></i></a>
                                         </li>
                                         <li>
-                                            <a href="#"><i class="ri-linkedin-fill"></i></a>
+                                            <a href="https://www.linkedin.com/in/draandrea" target="_blank"><i
+                                                    class="ri-linkedin-fill"></i></a>
                                         </li>
                                         <li>
-                                            <a href="#"><i class="ri-instagram-fill"></i></a>
+                                            <a href="https://www.instagram.com/draandrea" target="_blank"><i
+                                                    class="ri-instagram-fill"></i></a>
                                         </li>
                                     </ul>
                                     <h3 class="name">
-                                        <a href="">Dr. Jhonny </a>
+                                        Dr. Andrea López
                                     </h3>
-                                    <h5 class="designation">Oral Surgery</h5>
+                                    <h5 class="designation">Ortodoncia Invisible</h5>
                                     <div class="team-info">
                                         <ul>
                                             <li>
                                                 <i class="ri-mail-unread-fill"></i>
-                                                <span>info@example.com</span>
+                                                <span>andrea.lopez@diwadental.com</span>
                                             </li>
-                                            <li><i class="ri-phone-fill"></i> +123 4567 7899</li>
+                                            <li><i class="ri-phone-fill"></i> +591 76412345</li>
                                         </ul>
                                     </div>
                                 </div>
@@ -63,7 +67,7 @@
                             <div class="team-item">
                                 <!-- Team Img Start -->
                                 <div class="team-img">
-                                    <img src="@/assets/images/team/team-2.jpg" alt="" />
+                                    <img src="@/assets/images/team/team-2.jpg" alt="Doctor_2" />
                                 </div>
                                 <!-- Team Img End -->
 
@@ -71,29 +75,33 @@
                                 <div class="team-content text-center">
                                     <ul class="social">
                                         <li>
-                                            <a href="#"><i class="ri-facebook-fill"></i></a>
+                                            <a href="https://www.facebook.com/drmarco" target="_blank"><i
+                                                    class="ri-facebook-fill"></i></a>
                                         </li>
                                         <li>
-                                            <a href="#"><i class="ri-twitter-fill"></i></a>
+                                            <a href="https://www.twitter.com/drmarco" target="_blank"><i
+                                                    class="ri-twitter-fill"></i></a>
                                         </li>
                                         <li>
-                                            <a href="#"><i class="ri-linkedin-fill"></i></a>
+                                            <a href="https://www.linkedin.com/in/drmarco" target="_blank"><i
+                                                    class="ri-linkedin-fill"></i></a>
                                         </li>
                                         <li>
-                                            <a href="#"><i class="ri-instagram-fill"></i></a>
+                                            <a href="https://www.instagram.com/drmarco" target="_blank"><i
+                                                    class="ri-instagram-fill"></i></a>
                                         </li>
                                     </ul>
                                     <h3 class="name">
-                                        <a href="">Dr. Victoria Jensen</a>
+                                        Dr. Marco Gutiérrez
                                     </h3>
-                                    <h5 class="designation">Oral Surgery</h5>
+                                    <h5 class="designation">Implantes Dentales</h5>
                                     <div class="team-info">
                                         <ul>
                                             <li>
                                                 <i class="ri-mail-unread-fill"></i>
-                                                <span>info@example.com</span>
+                                                <span>marco.gutierrez@diwadental.com</span>
                                             </li>
-                                            <li><i class="ri-phone-fill"></i> +123 4567 7899</li>
+                                            <li><i class="ri-phone-fill"></i> +591 72178945</li>
                                         </ul>
                                     </div>
                                 </div>
@@ -104,7 +112,7 @@
                             <div class="team-item">
                                 <!-- Team Img Start -->
                                 <div class="team-img">
-                                    <img src="@/assets/images/team/team-3.jpg" alt="" />
+                                    <img src="@/assets/images/team/team-3.jpg" alt="Doctor_3" />
                                 </div>
                                 <!-- Team Img End -->
 
@@ -112,29 +120,33 @@
                                 <div class="team-content text-center">
                                     <ul class="social">
                                         <li>
-                                            <a href="#"><i class="ri-facebook-fill"></i></a>
+                                            <a href="https://www.facebook.com/lilillanos" target="_blank"><i
+                                                    class="ri-facebook-fill"></i></a>
                                         </li>
                                         <li>
-                                            <a href="#"><i class="ri-twitter-fill"></i></a>
+                                            <a href="https://www.twitter.com/lilillanos" target="_blank"><i
+                                                    class="ri-twitter-fill"></i></a>
                                         </li>
                                         <li>
-                                            <a href="#"><i class="ri-linkedin-fill"></i></a>
+                                            <a href="https://www.linkedin.com/in/lilillanos" target="_blank"><i
+                                                    class="ri-linkedin-fill"></i></a>
                                         </li>
                                         <li>
-                                            <a href="#"><i class="ri-instagram-fill"></i></a>
+                                            <a href="https://www.instagram.com/lilillanos" target="_blank"><i
+                                                    class="ri-instagram-fill"></i></a>
                                         </li>
                                     </ul>
                                     <h3 class="name">
-                                        <a href="">Dr. Victoria Jensen</a>
+                                        Dr. Lilian Llanos
                                     </h3>
-                                    <h5 class="designation">Oral Surgery</h5>
+                                    <h5 class="designation">Blanqueamiento Dental</h5>
                                     <div class="team-info">
                                         <ul>
                                             <li>
                                                 <i class="ri-mail-unread-fill"></i>
-                                                <span>info@example.com</span>
+                                                <span>lilian.llanos@diwadental.com</span>
                                             </li>
-                                            <li><i class="ri-phone-fill"></i> +123 4567 7899</li>
+                                            <li><i class="ri-phone-fill"></i> +591 76532187</li>
                                         </ul>
                                     </div>
                                 </div>

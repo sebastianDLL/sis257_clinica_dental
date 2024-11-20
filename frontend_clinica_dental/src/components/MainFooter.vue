@@ -89,11 +89,10 @@
               <div class="footer-widget">
                 <h3 class="title">Contacto Rápido</h3>
                 <ul class="footer-info">
-                  <li><i class="ri-phone-fill"></i> +123 4567 7899</li>
-                  <li><i class="ri-mail-unread-fill"></i> info@example.com</li>
+                  <li><i class="ri-phone-fill"></i>  +591 76543210</li>
+                  <li><i class="ri-mail-unread-fill"></i> info@clinicadental.com</li>
                   <li>
-                    <i class="ri-map-pin-add-line"></i> 51 North Berkshire Rd.
-                    Auburndale
+                    <i class="ri-map-pin-add-line"></i> 257 Calle Antofagasta Av. Germán Mendoza.
                   </li>
                 </ul>
               </div>
@@ -115,7 +114,7 @@
             <div class="col-lg-7 col-md-8">
               <div class="copyright-text">
                 <p>
-                  © 2021 Diseño y Desarrollo <a href="#">GridTemplate</a>.
+                  © 2024 Diseño y Desarrollo <a href="#">GridTemplate</a>.
                   Todos los Derechos Reservados.
                 </p>
               </div>

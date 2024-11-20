@@ -28,7 +28,7 @@
                   Desde chequeos regulares hasta procedimientos avanzados,
                   estamos contigo en cada paso hacia una sonrisa saludable
                 </p>
-                <h3 class="name">Dr. Shauna Cusumano.<span>Fundadora</span></h3>
+                <h3 class="name">Dra. Victoria Castro.<span>Fundadora</span></h3>
               </div>
             </div>
           </div>

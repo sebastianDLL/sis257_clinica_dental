@@ -24,14 +24,14 @@
                                         <i class="flaticon-right-quotation-mark"></i>
                                     </div>
                                     <div class="testimonial-client">
-                                        <h3 class="name">Lucas Méndez</h3>
+                                        <h3 class="name">María Fernández</h3>
                                         <span>Paciente dental</span>
                                     </div>
                                 </div>
                                 <div class="testimonial-text">
                                     <p>
-                                        La atención fue excelente y muy profesional. Mi sonrisa luce
-                                        mejor que nunca gracias a su tratamiento
+                                        Me atendieron con mucha paciencia y profesionalismo. 
+                                        Ahora mi sonrisa está increíble. ¡Gracias!
                                     </p>
                                 </div>
                             </div>
@@ -44,14 +44,14 @@
                                         <i class="flaticon-right-quotation-mark"></i>
                                     </div>
                                     <div class="testimonial-client">
-                                        <h3 class="name">Lucas Méndez</h3>
+                                        <h3 class="name">Carla López</h3>
                                         <span>Paciente dental</span>
                                     </div>
                                 </div>
                                 <div class="testimonial-text">
                                     <p>
-                                        Estoy realmente satisfecho con los resultados. El equipo fue
-                                        muy amable y resolvieron todas mis dudas.
+                                        El equipo fue muy amable, me sentí en confianza desde el primer momento. 
+                                        100% recomendados.
                                     </p>
                                 </div>
                             </div>
@@ -64,14 +64,14 @@
                                         <i class="flaticon-right-quotation-mark"></i>
                                     </div>
                                     <div class="testimonial-client">
-                                        <h3 class="name">Alejandro Herrera</h3>
-                                        <span>Dental patient</span>
+                                        <h3 class="name">Ana Gutiérrez</h3>
+                                        <span>Paciente Dental</span>
                                     </div>
                                 </div>
                                 <div class="testimonial-text">
                                     <p>
-                                        Recomendaría esta clínica a todos. El cuidado y detalle que
-                                        pusieron en mi tratamiento fue increíble.
+                                        Nunca pensé que un tratamiento dental pudiera ser tan cómodo. 
+                                        Estoy muy feliz con los resultados.
                                     </p>
                                 </div>
                             </div>
@@ -84,14 +84,14 @@
                                         <i class="flaticon-right-quotation-mark"></i>
                                     </div>
                                     <div class="testimonial-client">
-                                        <h3 class="name">Isabella Martínez</h3>
+                                        <h3 class="name">Sofía Martínez</h3>
                                         <span>Paciente dental</span>
                                     </div>
                                 </div>
                                 <div class="testimonial-text">
                                     <p>
-                                        Los resultados superaron mis expectativas. No solo mejoraron
-                                        mi sonrisa, sino también mi confianza.
+                                        El servicio fue impecable y el ambiente muy agradable. 
+                                        Definitivamente regresaré.
                                     </p>
                                 </div>
                             </div>

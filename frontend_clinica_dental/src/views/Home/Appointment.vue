@@ -8,12 +8,11 @@
                         <div class="appointment-content">
                             <!--  Appointment Title Start -->
                             <div class="section-title appointment-main-title">
-                                <h3 class="sub-title">Cita</h3>
-                                <h2 class="title">Pedir hora</h2>
+                                <h3 class="sub-title">Contacto</h3>
+                                <h2 class="title">Ponte en contacto</h2>
                                 <p>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing egestas
-                                    Phasellus rutrum ante a tortor efficitur, quis tempor tellus.
-                                    Nunc pulvinar elit vitae sagittis tristique.
+                                    Si tienes preguntas o necesitas más información, no dudes en escribirnos. 
+                                    Estamos aquí para ayudarte con cualquier consulta.
                                 </p>
                             </div>
                             <!--  Appointment Title End -->
@@ -31,8 +30,8 @@
                             <!--  Appointment Title Wrapper Start -->
                             <div class="appointment-title-wrapper">
                                 <div class="appointment-title">
-                                    <h3 class="title">Reservar una cita</h3>
-                                    <span>Por favor llámenos para asegurarse</span>
+                                    <h3 class="title">Formulario de contacto</h3>
+                                    <span>Completa los campos para que podamos ayudarte.</span>
                                 </div>
                                 <div class="appointment-icon">
                                     <i class="ri-phone-fill"></i>
@@ -46,49 +45,25 @@
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <div class="single-form">
-                                                <select>
-                                                    <option value="0">Select Services</option>
-                                                    <option value="1">Services 01</option>
-                                                    <option value="2">Services 02</option>
-                                                    <option value="3">Services 03</option>
-                                                    <option value="4">Services 04</option>
-                                                    <option value="5">Services 05</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="single-form">
-                                                <select>
-                                                    <option value="0">Choose Doctor</option>
-                                                    <option value="1">Doctor 01</option>
-                                                    <option value="2">Doctor 02</option>
-                                                    <option value="3">Doctor 03</option>
-                                                    <option value="4">Doctor 04</option>
-                                                    <option value="5">Doctor 05</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="single-form">
-                                                <input type="text" placeholder="Your Name" />
+                                                <input type="text" placeholder="Nombre" />
                                                 <i class="flaticon-user"></i>
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="single-form">
-                                                <input type="email" placeholder="Email Address" />
+                                                <input type="email" placeholder="Correo" />
                                                 <i class="flaticon-message"></i>
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="single-form">
-                                                <input type="text" placeholder="Your Phone" />
+                                                <input type="text" placeholder="Celular" />
                                                 <i class="flaticon-phone-call"></i>
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="single-form">
-                                                <input type="text" id="datepicker" placeholder="Select Date & Time" />
+                                                <input type="text" id="datepicker" placeholder="Motivo" />
                                             </div>
                                         </div>
                                         <div class="col-sm-12">
@@ -96,7 +71,7 @@
                                         </div>
 
                                         <div class="col-sm-12">
-                                            <button class="btn" type="submit">Hacer cita</button>
+                                            <button class="btn" type="submit">Enviar</button>
                                         </div>
                                     </div>
                                 </form>
