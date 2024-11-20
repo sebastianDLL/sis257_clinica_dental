@@ -17,8 +17,12 @@ export class CreateCitaDto {
   readonly estado: string;
 
   @ApiProperty()
-  @IsDefined({ message: 'El campo fecha_hora_cita es obligatorio' })
-  readonly fechaHoraCita: Date;
+  @IsDefined({ message: 'El campo fecha de inicio es obligatorio' })
+  readonly fechaHoraInicio: Date;
+
+  @ApiProperty()
+  @IsDefined({ message: 'El campo fecha de fin es obligatorio' })
+  readonly fechaHoraFin: Date;
 
   @ApiProperty()
   @IsDefined({ message: 'El campo cliente_id es obligatorio' })

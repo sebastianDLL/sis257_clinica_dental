@@ -69,7 +69,7 @@ function handleGuardar() {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Sombra */
   padding: 2rem; /* Espaciado interno */
   width: 100%; /* Ajusta al contenedor */
-  max-width: 1000px; /* Ancho máximo */
+  max-width: 1200px; /* Ancho máximo */
   margin-top: 200px; /* Espaciado superior */
 }
 

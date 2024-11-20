@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { CreateCitaDto } from './dto/create-cita.dto';
 import { UpdateCitaDto } from './dto/update-cita.dto';
 import { Cita } from './entities/cita.entity';
@@ -26,7 +26,8 @@ export class CitasService {
   ) {}
 
   async create(createCitaDto: CreateCitaDto): Promise<Cita> {
-    const { clienteId, odontologoId, fechaHoraCita } = createCitaDto;
+    const { clienteId, odontologoId, fechaHoraInicio, fechaHoraFin } =
+      createCitaDto;
 
     // Verificar si el cliente existe
     const clienteExistente = await this.clientesRepository.findOneBy({
@@ -56,27 +57,35 @@ export class CitasService {
       );
     }
 
-    // Convertir la fecha de la cita a inicio del día (00:00:00)
-    const fechaCita = new Date(fechaHoraCita);
-    fechaCita.setHours(0, 0, 0, 0);
+    // Convertir las fechas a UTC
+    const fechaInicioUTC = new Date(fechaHoraInicio).toISOString();
+    const fechaFinUTC = new Date(fechaHoraFin).toISOString();
 
-    // Convertir a fecha fin del día (23:59:59)
-    const fechaFinDia = new Date(fechaCita);
-    fechaFinDia.setHours(23, 59, 59, 999);
+    // Verificar traslapes para el odontólogo
+    const traslapeOdontologo = await this.verificarTraslapes(
+      odontologoId,
+      fechaInicioUTC,
+      fechaFinUTC,
+      'odontologoId',
+    );
 
-    // Verificar si ya existe una cita para el cliente en ese día
-    const citaExistente = await this.citasRepository
-      .createQueryBuilder('cita')
-      .where('cita.clienteId = :clienteId', { clienteId })
-      .andWhere('cita.fechaHoraCita >= :fechaInicio', {
-        fechaInicio: fechaCita,
-      })
-      .andWhere('cita.fechaHoraCita <= :fechaFin', { fechaFin: fechaFinDia })
-      .getOne();
-
-    if (citaExistente) {
+    if (traslapeOdontologo) {
       throw new ConflictException(
-        'El cliente ya tiene una cita programada para este día',
+        'Ya existe una cita en este intervalo de tiempo con el odontólogo seleccionado.',
+      );
+    }
+
+    // Verificar traslapes para el cliente
+    const traslapeCliente = await this.verificarTraslapes(
+      clienteId,
+      fechaInicioUTC,
+      fechaFinUTC,
+      'clienteId',
+    );
+
+    if (traslapeCliente) {
+      throw new ConflictException(
+        'Ya tienes una cita programada en este intervalo de tiempo.',
       );
     }
 
@@ -107,85 +116,45 @@ export class CitasService {
       throw new NotFoundException(`La cita con ID ${id} no existe`);
     }
 
-    // Validar si el cliente se está actualizando
-    if (updateCitaDto.clienteId && updateCitaDto.clienteId !== cita.clienteId) {
-      const clienteExistente = await this.clientesRepository.findOneBy({
-        id: updateCitaDto.clienteId,
-      });
-      if (!clienteExistente) {
-        throw new NotFoundException(
-          `El cliente con ID ${updateCitaDto.clienteId} no existe`,
-        );
-      }
+    const { fechaHoraInicio, fechaHoraFin, odontologoId, clienteId } =
+      updateCitaDto;
+
+    // Convertir las fechas a UTC
+    const fechaInicioUTC = new Date(fechaHoraInicio).toISOString();
+    const fechaFinUTC = new Date(fechaHoraFin).toISOString();
+
+    // Verificar traslapes para el odontólogo (excluyendo la cita actual)
+    const traslapeOdontologo = await this.verificarTraslapes(
+      odontologoId,
+      fechaInicioUTC,
+      fechaFinUTC,
+      'odontologoId',
+      id,
+    );
+
+    if (traslapeOdontologo) {
+      throw new ConflictException(
+        'Ya existe una cita en este intervalo de tiempo con el odontólogo seleccionado.',
+      );
     }
 
-    // Validar si el odontólogo se está actualizando
-    if (
-      updateCitaDto.odontologoId &&
-      updateCitaDto.odontologoId !== cita.odontologoId
-    ) {
-      const odontologoExistente = await this.odontologosRepository.findOneBy({
-        id: updateCitaDto.odontologoId,
-      });
-      if (!odontologoExistente) {
-        throw new NotFoundException(
-          `El odontólogo con ID ${updateCitaDto.odontologoId} no existe`,
-        );
-      }
+    // Verificar traslapes para el cliente (excluyendo la cita actual)
+    const traslapeCliente = await this.verificarTraslapes(
+      clienteId,
+      fechaInicioUTC,
+      fechaFinUTC,
+      'clienteId',
+      id,
+    );
+
+    if (traslapeCliente) {
+      throw new ConflictException(
+        'Ya tienes una cita programada en este intervalo de tiempo.',
+      );
     }
 
-    // Validar si el servicio se está actualizando
-    if (
-      updateCitaDto.servicioId &&
-      updateCitaDto.servicioId !== cita.servicioId
-    ) {
-      const servicioExistente = await this.serviciosRepository.findOneBy({
-        id: updateCitaDto.servicioId,
-      });
-      if (!servicioExistente) {
-        throw new NotFoundException(
-          `El servicio con ID ${updateCitaDto.servicioId} no existe`,
-        );
-      }
-    }
-
-    // Verificar si la fecha se está actualizando y si hay conflicto
-    if (updateCitaDto.fechaHoraCita) {
-      const fechaCita = new Date(updateCitaDto.fechaHoraCita);
-      fechaCita.setHours(0, 0, 0, 0);
-
-      const fechaFinDia = new Date(fechaCita);
-      fechaFinDia.setHours(23, 59, 59, 999);
-
-      const citaExistente = await this.citasRepository
-        .createQueryBuilder('cita')
-        .where('cita.clienteId = :clienteId', {
-          clienteId: updateCitaDto.clienteId || cita.clienteId,
-        })
-        .andWhere('cita.id != :citaId', { citaId: id })
-        .andWhere('cita.fechaHoraCita >= :fechaInicio', {
-          fechaInicio: fechaCita,
-        })
-        .andWhere('cita.fechaHoraCita <= :fechaFin', { fechaFin: fechaFinDia })
-        .getOne();
-
-      if (citaExistente) {
-        throw new ConflictException(
-          'El cliente ya tiene una cita programada para este día',
-        );
-      }
-    }
-
-    // Combinar la cita existente con los nuevos datos
-    const citaActualizada = {
-      ...updateCitaDto, // Sobrescribir con los nuevos datos
-      id: id, // Mantener el mismo ID
-      fechaHoraCita: updateCitaDto.fechaHoraCita
-        ? new Date(updateCitaDto.fechaHoraCita)
-        : cita.fechaHoraCita,
-    };
-
-    return this.citasRepository.save(citaActualizada);
+    Object.assign(cita, updateCitaDto);
+    return this.citasRepository.save(cita);
   }
 
   async remove(id: number): Promise<Cita> {
@@ -193,22 +162,43 @@ export class CitasService {
     return this.citasRepository.softRemove(cita);
   }
 
-  async obtenerServiciosPorOdontologo(odontologoId: number): Promise<Servicio[]> {
+  async obtenerServiciosPorOdontologo(
+    odontologoId: number,
+  ): Promise<Servicio[]> {
     const servicios = await this.serviciosRepository
       .createQueryBuilder('servicio')
       .innerJoin('odontologo_servicios', 'os', 'os.servicio_id = servicio.id')
       .where('os.odontologo_id = :odontologoId', { odontologoId })
       .getMany();
-  
+
     if (!servicios || servicios.length === 0) {
-      throw new NotFoundException(`El odontólogo con ID ${odontologoId} no tiene servicios asociados`);
+      throw new NotFoundException(
+        `El odontólogo con ID ${odontologoId} no tiene servicios asociados`,
+      );
     }
-  
+
     return servicios;
   }
-  
-  
 
+  private async verificarTraslapes(
+    entidadId: number,
+    fechaHoraInicio: string,
+    fechaHoraFin: string,
+    tipo: 'odontologoId' | 'clienteId',
+    citaId?: number,
+  ) {
+    const query = this.citasRepository
+      .createQueryBuilder('cita')
+      .where(`cita.${tipo} = :entidadId`, { entidadId })
+      .andWhere(
+        '(cita.fechaHoraInicio < :fechaHoraFin AND cita.fechaHoraFin > :fechaHoraInicio)',
+        { fechaHoraInicio, fechaHoraFin },
+      );
 
+    if (citaId) {
+      query.andWhere('cita.id != :citaId', { citaId });
+    }
 
+    return await query.getOne();
+  }
 }

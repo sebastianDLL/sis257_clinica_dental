@@ -36,6 +36,6 @@ export class CreateServicioDto {
   @ApiProperty()
   @IsNotEmpty({ message: 'El campo duracion es obligatorio' })
   @IsDefined({ message: 'El campo duracion debe estar definido' })
-  @IsString({ message: 'El campo duracion debe ser un string o cadena' })
-  readonly duracion: string;
+  @IsNumber({}, { message: 'El campo duracion debe ser un número' })
+  readonly duracion: number;
 }

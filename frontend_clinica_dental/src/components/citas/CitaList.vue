@@ -1,56 +1,56 @@
 <script setup lang="ts">
-import type { Cita } from '../../models/Cita';
-import http from '../../plugins/axios';
-import Button from 'primevue/button';
-import Dialog from 'primevue/dialog';
-import { onMounted, ref, computed } from 'vue';
-import { useAuthStore } from '../../stores';
+import type { Cita } from '../../models/Cita'
+import http from '../../plugins/axios'
+import Button from 'primevue/button'
+import Dialog from 'primevue/dialog'
+import { onMounted, ref, computed } from 'vue'
+import { useAuthStore } from '../../stores'
 
-const authStore = useAuthStore(); // Para obtener el cliente logueado
-const ENDPOINT = 'citas';
+const authStore = useAuthStore() // Para obtener el cliente logueado
+const ENDPOINT = 'citas'
 
-let citas = ref<Cita[]>([]); // Todas las citas
+let citas = ref<Cita[]>([]) // Todas las citas
 let citasFiltradas = computed(() =>
-  citas.value.filter((cita) => cita.clienteId === authStore.user?.id)
-); // Filtra las citas del cliente logueado
+  citas.value.filter(cita => cita.clienteId === authStore.user?.id),
+) // Filtra las citas del cliente logueado
 
-const emit = defineEmits(['edit']);
-const citaDelete = ref<Cita | null>(null);
-const mostrarConfirmDialog = ref<boolean>(false);
+const emit = defineEmits(['edit'])
+const citaDelete = ref<Cita | null>(null)
+const mostrarConfirmDialog = ref<boolean>(false)
 
 // Obtener todas las citas desde el backend
 async function obtenerLista() {
-  citas.value = await http.get(ENDPOINT).then((response) => response.data);
-  console.log(citas.value);
+  citas.value = await http.get(ENDPOINT).then(response => response.data)
+  console.log(citas.value)
 }
 
 // Emitir evento para edición
 function emitirEdicion(cita: Cita) {
-  emit('edit', cita);
+  emit('edit', cita)
 }
 
 // Mostrar diálogo de confirmación de eliminación
 function mostrarEliminarConfirm(cita: Cita) {
-  citaDelete.value = cita;
-  mostrarConfirmDialog.value = true;
+  citaDelete.value = cita
+  mostrarConfirmDialog.value = true
 }
 
 // Eliminar cita seleccionada
 async function eliminar() {
   if (citaDelete.value?.id) {
-    await http.delete(`${ENDPOINT}/${citaDelete.value.id}`);
-    obtenerLista();
-    mostrarConfirmDialog.value = false;
+    await http.delete(`${ENDPOINT}/${citaDelete.value.id}`)
+    obtenerLista()
+    mostrarConfirmDialog.value = false
   }
 }
 
 // Obtener la lista al montar el componente
 onMounted(() => {
-  obtenerLista();
-});
+  obtenerLista()
+})
 
 // Exponer la función de actualización
-defineExpose({ obtenerLista });
+defineExpose({ obtenerLista })
 </script>
 
 <template>
@@ -63,6 +63,7 @@ defineExpose({ obtenerLista });
           <th>Servicio</th>
           <th>Precio</th>
           <th>Estado</th>
+          <th>Duracion (MIN)</th>
           <th>Fecha y Hora</th>
           <th>Acciones</th>
         </tr>
@@ -70,11 +71,15 @@ defineExpose({ obtenerLista });
       <tbody>
         <tr v-for="(cita, index) in citasFiltradas" :key="cita.id">
           <td>{{ index + 1 }}</td>
-          <td>{{ cita.odontologo.nombre }}</td>
+          <td>
+            {{ cita.odontologo.nombre }} {{ cita.odontologo.primerApellido }}
+          </td>
           <td>{{ cita.servicio?.nombre }}</td>
-           <td>{{ cita.servicio?.precio }} Bs.</td>
+          <td>{{ cita.servicio?.precio }} Bs.</td>
           <td>{{ cita.estado }}</td>
-          <td>{{ new Date(cita.fechaHoraCita).toLocaleString() }}</td>
+          <td>{{ cita.servicio?.duracion }}</td>
+          <td>{{ new Date(cita.fechaHoraInicio).toLocaleString() }} - {{ new Date(cita.fechaHoraFin).toLocaleString() }}</td>
+
           <td>
             <Button
               icon="pi pi-pencil"

@@ -37,23 +37,6 @@ const cita = ref<Cita>({ ...props.cita })
 const odontologos = ref<Odontologo[]>([])
 const servicios = ref<Servicios[]>([])
 
-const estados = [
-  { label: 'Confirmada', value: 'Confirmada' },
-  { label: 'Pendiente', value: 'Pendiente' },
-  { label: 'Cancelada', value: 'Cancelada' },
-]
-
-const intervalos = [
-  { label: '08:00 - 09:00', value: '08:00-09:00' },
-  { label: '09:00 - 10:00', value: '09:00-10:00' },
-  { label: '10:00 - 11:00', value: '10:00-11:00' },
-  { label: '11:00 - 12:00', value: '11:00-12:00' },
-  { label: '14:00 - 15:00', value: '14:00-15:00' },
-  { label: '15:00 - 16:00', value: '15:00-16:00' },
-  { label: '16:00 - 17:00', value: '16:00-17:00' },
-  { label: '17:00 - 18:00', value: '17:00-18:00' },
-]
-
 onMounted(async () => {
   odontologos.value = await http
     .get(ODONTOLOGOS_ENDPOINT)
@@ -76,13 +59,58 @@ watch(
 watch(
   () => props.cita,
   newCita => {
-    cita.value = { ...newCita }
-    if (!props.modoEdicion) {
-      cita.value.estado = 'Pendiente'
+    if (newCita !== cita.value) {
+      cita.value = { ...newCita }
+      if (!props.modoEdicion && !cita.value.estado) {
+        cita.value.estado = 'Pendiente'
+      }
     }
   },
   { immediate: true },
 )
+
+watch(
+  () => cita.value.servicioId,
+  async servicioId => {
+    if (servicioId && cita.value.fechaHoraInicio) {
+      // Solo calcular si hay servicio y fecha de inicio definidos
+      const servicio = servicios.value.find(s => s.id === servicioId)
+      if (servicio) {
+        calcularFechaHoraFin(Number(servicio.duracion))
+      }
+    }
+  }
+)
+
+watch(
+  () => cita.value.fechaHoraInicio,
+  fechaHoraInicio => {
+    if (
+      fechaHoraInicio &&
+      cita.value.servicioId &&
+      (!cita.value.fechaHoraFin || new Date(cita.value.fechaHoraFin).getTime() !== new Date(fechaHoraInicio).getTime())
+    ) {
+      // Evita recalcular si la fechaHoraFin ya es correcta
+      const servicio = servicios.value.find(s => s.id === cita.value.servicioId)
+      if (servicio) {
+        calcularFechaHoraFin(Number(servicio.duracion))
+      }
+    }
+  }
+)
+function calcularFechaHoraFin(duracionMinutos: number) {
+  const fechaInicio = new Date(cita.value.fechaHoraInicio)
+  fechaInicio.setSeconds(0, 0) // Ajustar segundos y milisegundos
+
+  const fechaFin = new Date(fechaInicio.getTime() + duracionMinutos * 60000)
+  fechaFin.setSeconds(0, 0) // Ajustar segundos y milisegundos
+
+  // Solo actualiza si es necesario
+  if (!cita.value.fechaHoraFin || new Date(cita.value.fechaHoraFin).getTime() !== fechaFin.getTime()) {
+    cita.value.fechaHoraInicio = fechaInicio
+    cita.value.fechaHoraFin = fechaFin
+  }
+}
 
 async function handleSave() {
   try {
@@ -91,22 +119,19 @@ async function handleSave() {
     }
 
     const clienteId = authStore.user.id
-    const horaInicio = cita.value.intervalo?.split('-')[0]
 
-    if (!horaInicio) {
-      throw new Error('Por favor, selecciona un intervalo válido.')
+    // Verificar que las fechas estén seleccionadas
+    if (!cita.value.fechaHoraInicio || !cita.value.fechaHoraFin) {
+      throw new Error('Por favor, selecciona las fechas de inicio y fin.')
     }
-
-    const fechaSeleccionada = new Date(cita.value.fechaHoraCita)
-    const [horas, minutos] = horaInicio.split(':').map(Number)
-    fechaSeleccionada.setHours(horas, minutos, 0, 0)
 
     const body = {
       clienteId: clienteId,
       odontologoId: cita.value.odontologoId,
       servicioId: cita.value.servicioId,
-      estado: cita.value.estado,
-      fechaHoraCita: fechaSeleccionada.toISOString(),
+      estado: cita.value.estado || 'Pendiente', // Valor predeterminado para estado
+      fechaHoraInicio: new Date(cita.value.fechaHoraInicio).toISOString(),
+      fechaHoraFin: new Date(cita.value.fechaHoraFin).toISOString(),
     }
 
     if (props.modoEdicion && cita.value.id) {
@@ -118,8 +143,12 @@ async function handleSave() {
     cita.value = {} as Cita
     dialogVisible.value = false
   } catch (error: any) {
-    console.error('Error al guardar:', error)
-    alert(error?.response?.data?.message || error.message)
+    if (error.response?.status === 409) {
+      alert('Este horario ya está reservado. Por favor, elige otro horario.');
+    } else {
+      console.error('Error al guardar:', error);
+      alert(error?.response?.data?.message || error.message);
+    }
   }
 }
 </script>
@@ -159,27 +188,27 @@ async function handleSave() {
         />
       </div>
 
-      <!-- Fecha -->
+      <!-- Fecha de inicio -->
       <div class="flex items-center gap-4 mb-4">
-        <label for="fecha" class="font-semibold w-24">Fecha</label>
+        <label for="fechaInicio" class="font-semibold w-24">Fecha Inicio</label>
         <Calendar
-          id="fecha"
-          v-model="cita.fechaHoraCita"
+          id="fechaInicio"
+          v-model="cita.fechaHoraInicio"
           class="flex-auto"
           showIcon
+          :showTime="true"
+          dateFormat="yy-mm-dd"
+          placeholder="Selecciona fecha y hora de inicio"
         />
       </div>
 
-      <!-- Intervalo de tiempo -->
+      <!-- Fecha de fin (solo lectura) -->
       <div class="flex items-center gap-4 mb-4">
-        <label for="intervalo" class="font-semibold w-24">Hora</label>
-        <Dropdown
-          id="intervalo"
-          v-model="cita.intervalo"
-          :options="intervalos"
-          optionLabel="label"
-          optionValue="value"
-          placeholder="Seleccione un intervalo"
+        <label for="fechaFin" class="font-semibold w-24">Fecha Fin</label>
+        <InputText
+          id="fechaFin"
+          :value="new Date(cita.fechaHoraFin).toLocaleString()"
+          disabled
           class="flex-auto"
         />
       </div>

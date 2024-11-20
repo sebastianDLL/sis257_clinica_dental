@@ -31,8 +31,12 @@ export class Cita {
   @Column('integer', { name: 'servicio_id' })
   servicioId: number;
 
-  @Column('timestamp', { name: 'fecha_hora_cita' })
-  fechaHoraCita: Date;
+  // Agregado para manejar un rango de tiempo
+  @Column('timestamp', { name: 'fecha_hora_inicio' })
+  fechaHoraInicio: Date;
+
+  @Column('timestamp', { name: 'fecha_hora_fin' })
+  fechaHoraFin: Date;
 
   @CreateDateColumn({ name: 'fecha_creacion' })
   fechaCreacion: Date;
@@ -54,5 +58,4 @@ export class Cita {
   @ManyToOne(() => Servicio, (servicio) => servicio.citas)
   @JoinColumn({ name: 'servicio_id', referencedColumnName: 'id' })
   servicio: Servicio;
-
 }

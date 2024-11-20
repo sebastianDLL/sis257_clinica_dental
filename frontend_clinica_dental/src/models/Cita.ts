@@ -5,7 +5,8 @@ import type { Servicios } from './Servicios'
 export interface Cita {
   id: number
   estado: string
-  fechaHoraCita: Date
+  fechaHoraInicio: Date
+  fechaHoraFin: Date
   clienteId: number
   odontologoId: number
   servicioId: number
