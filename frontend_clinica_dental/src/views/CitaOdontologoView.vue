@@ -39,8 +39,8 @@ const clienteId = computed(() => authStore.user?.id || null) // Obtiene el ID de
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Sombra */
   padding: 2rem; /* Espaciado interno */
   width: 100%; /* Ajusta al contenedor */
-  max-width: 800px; /* Ancho máximo */
-  margin-top: 100px;
+  max-width: 1200px; /* Ancho máximo */
+  margin-top: 200px;
 }
 
 .title {

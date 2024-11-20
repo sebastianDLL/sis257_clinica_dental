@@ -116,43 +116,69 @@ export class CitasService {
       throw new NotFoundException(`La cita con ID ${id} no existe`);
     }
 
-    const { fechaHoraInicio, fechaHoraFin, odontologoId, clienteId } =
+    const { fechaHoraInicio, fechaHoraFin, odontologoId, clienteId, estado } =
       updateCitaDto;
 
-    // Convertir las fechas a UTC
-    const fechaInicioUTC = new Date(fechaHoraInicio).toISOString();
-    const fechaFinUTC = new Date(fechaHoraFin).toISOString();
-
-    // Verificar traslapes para el odontólogo (excluyendo la cita actual)
-    const traslapeOdontologo = await this.verificarTraslapes(
-      odontologoId,
-      fechaInicioUTC,
-      fechaFinUTC,
-      'odontologoId',
-      id,
-    );
-
-    if (traslapeOdontologo) {
-      throw new ConflictException(
-        'Ya existe una cita en este intervalo de tiempo con el odontólogo seleccionado.',
-      );
+    // Si solo se está actualizando el estado, no ejecutar lógica de fechas
+    if (
+      estado &&
+      !fechaHoraInicio &&
+      !fechaHoraFin &&
+      !odontologoId &&
+      !clienteId
+    ) {
+      cita.estado = estado; // Actualizar solo el estado
+      return this.citasRepository.save(cita);
     }
 
-    // Verificar traslapes para el cliente (excluyendo la cita actual)
-    const traslapeCliente = await this.verificarTraslapes(
-      clienteId,
-      fechaInicioUTC,
-      fechaFinUTC,
-      'clienteId',
-      id,
-    );
+    // Convertir las fechas a UTC si se proporcionan
+    if (fechaHoraInicio && fechaHoraFin) {
+      const fechaInicioUTC = new Date(fechaHoraInicio).toISOString();
+      const fechaFinUTC = new Date(fechaHoraFin).toISOString();
 
-    if (traslapeCliente) {
-      throw new ConflictException(
-        'Ya tienes una cita programada en este intervalo de tiempo.',
+      // Verificar traslapes para el odontólogo (excluyendo la cita actual)
+      const traslapeOdontologo = await this.verificarTraslapes(
+        odontologoId,
+        fechaInicioUTC,
+        fechaFinUTC,
+        'odontologoId',
+        id,
       );
+
+      if (traslapeOdontologo) {
+        throw new ConflictException(
+          'Ya existe una cita en este intervalo de tiempo con el odontólogo seleccionado.',
+        );
+      }
+
+      // Verificar traslapes para el cliente (excluyendo la cita actual)
+      const traslapeCliente = await this.verificarTraslapes(
+        clienteId,
+        fechaInicioUTC,
+        fechaFinUTC,
+        'clienteId',
+        id,
+      );
+
+      if (traslapeCliente) {
+        throw new ConflictException(
+          'Ya tienes una cita programada en este intervalo de tiempo.',
+        );
+      }
     }
 
+    // Actualizar otros campos solo si están proporcionados
+    if (fechaHoraInicio) {
+      cita.fechaHoraInicio = new Date(fechaHoraInicio);
+    }
+    if (fechaHoraFin) {
+      cita.fechaHoraFin = new Date(fechaHoraFin);
+    }
+    if (estado) {
+      cita.estado = estado;
+    }
+
+    // Mezclar cualquier otro dato proporcionado
     Object.assign(cita, updateCitaDto);
     return this.citasRepository.save(cita);
   }
