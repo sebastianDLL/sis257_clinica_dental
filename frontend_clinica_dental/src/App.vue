@@ -7,7 +7,6 @@ import MainFooter from '@/components/MainFooter.vue'
 
 import { useAuthStore } from '@/stores' // Importa la tienda de autenticación
 import '@/assets/js/plugins/bootstrap.min.js'
-import '@/assets/css/plugins/bootstrap.min.css'
 import '@/assets/js/main.js'
 
 // Reimporta `main.js` en cada navegación

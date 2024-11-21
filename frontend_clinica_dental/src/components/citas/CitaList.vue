@@ -14,6 +14,17 @@ let citasFiltradas = computed(() =>
   citas.value.filter(cita => cita.clienteId === authStore.user?.id),
 ) // Filtra las citas del cliente logueado
 
+// Computed para calcular el total de precios
+const totalPrecio = computed(() =>
+  citasFiltradas.value.reduce((total, cita) => {
+    // Sumar solo si el estado no es "Rechazado"
+    if (cita.estado !== 'Rechazado') {
+      return total + Number(cita.servicio?.precio || 0) // Convertir a número antes de sumar
+    }
+    return total
+  }, 0),
+)
+
 const emit = defineEmits(['edit'])
 const citaDelete = ref<Cita | null>(null)
 const mostrarConfirmDialog = ref<boolean>(false)
@@ -21,7 +32,7 @@ const mostrarConfirmDialog = ref<boolean>(false)
 // Obtener todas las citas desde el backend
 async function obtenerLista() {
   citas.value = await http.get(ENDPOINT).then(response => response.data)
-  console.log(citas.value)
+  citas.value.sort((a, b) => a.id - b.id) // Ordenar por ID
 }
 
 // Emitir evento para edición
@@ -69,7 +80,15 @@ defineExpose({ obtenerLista })
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(cita, index) in citasFiltradas" :key="cita.id">
+        <tr
+          v-for="(cita, index) in citasFiltradas"
+          :key="cita.id"
+          :class="{
+            confirmado: cita.estado === 'Confirmado',
+            pendiente: cita.estado === 'Pendiente',
+            rechazado: cita.estado === 'Rechazado',
+          }"
+        >
           <td>{{ index + 1 }}</td>
           <td>
             {{ cita.odontologo.nombre }} {{ cita.odontologo.primerApellido }}
@@ -78,7 +97,16 @@ defineExpose({ obtenerLista })
           <td>{{ cita.servicio?.precio }} Bs.</td>
           <td>{{ cita.estado }}</td>
           <td>{{ cita.servicio?.duracion }}</td>
-          <td>{{ new Date(cita.fechaHoraInicio).toLocaleString() }} - {{ new Date(cita.fechaHoraFin).toLocaleString() }}</td>
+          <td>
+            {{ new Date(cita.fechaHoraInicio).toLocaleString() }} -
+            {{
+              new Date(cita.fechaHoraFin).toLocaleTimeString([], {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true,
+              })
+            }}
+          </td>
 
           <td>
             <Button
@@ -97,6 +125,14 @@ defineExpose({ obtenerLista })
         </tr>
       </tbody>
     </table>
+
+    <!-- Mostrar total de precios -->
+    <div class="total-container">
+      <p>
+        Monto Total de las Citas Programadas:
+        <strong>{{ totalPrecio }} Bs.</strong>
+      </p>
+    </div>
 
     <!-- Diálogo de confirmación para eliminar -->
     <Dialog
@@ -129,11 +165,11 @@ th,
 td {
   padding: 12px;
   text-align: left;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #ffffff;
 }
 
 th {
-  background-color: #f2f2f2;
+  background-color: #ffffff;
   font-weight: bold;
 }
 
@@ -163,5 +199,23 @@ tr:hover {
 
 .action-buttons button.delete {
   background-color: #f44336;
+}
+.total-container {
+  margin-top: 20px;
+  font-size: 18px;
+  text-align: right;
+}
+.confirmado {
+  background-color: #d4edda; /* Verde claro */
+  color: #155724; /* Texto verde oscuro */
+}
+
+.pendiente {
+  background-color: #fff3cd; /* Amarillo claro */
+  color: #9b7015; /* Texto amarillo oscuro */
+}
+.rechazado {
+  background-color: #f8d7da; /* Rojo claro */
+  color: #af2432; /* Texto rojo oscuro */
 }
 </style>

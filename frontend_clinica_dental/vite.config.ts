@@ -20,4 +20,7 @@ export default defineConfig({
   build: {
     sourcemap: false, // Desactiva los mapas de fuentes
   },
+  server: {
+    port: parseInt(process.env.VITE_APP_PORT || '5173'), // Usa el puerto de la variable de entorno o 5173 por defecto
+  },
 })

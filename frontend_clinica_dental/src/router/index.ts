@@ -72,6 +72,12 @@ const router = createRouter({
       meta: { roles: ['odontologo'] }, // Solo accesible por odontólogos
     },
     {
+      path: '/odontologo-cards', 
+      name: 'odontologo-cards', 
+      component: () => import('../views/OdontologoCardView.vue'),
+      meta: { roles: [] }, // Sin restricción de rol
+    },
+    {
       path: '/login',
       name: 'login',
       component: () => import('../views/LoginView.vue'),
@@ -87,7 +93,7 @@ const router = createRouter({
 })
 
 router.beforeEach(async (to, from, next) => {
-  const publicPages = ['/', '/login','/cliente-crear-cuenta']
+  const publicPages = ['/', '/login','/cliente-crear-cuenta', '/odontologo-cards'] // Páginas públicas
   const authRequired = !publicPages.includes(to.path)
   const authStore = useAuthStore()
   const userRole = authStore.role // Obtener el rol del usuario autenticado

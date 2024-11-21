@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:port1": "cross-env VITE_APP_PORT=5173 vite",
+    "dev:port2": "cross-env VITE_APP_PORT=5174 vite",
     "build": "run-p type-check \"build-only {@}\" --",
     "preview": "vite preview",
     "test:unit": "vitest",
@@ -39,6 +41,7 @@
     "@vue/eslint-config-typescript": "^14.0.0",
     "@vue/test-utils": "^2.4.6",
     "@vue/tsconfig": "^0.5.1",
+    "cross-env": "^7.0.3",
     "eslint": "^9.12.0",
     "eslint-plugin-vue": "^9.28.0",
     "jsdom": "^25.0.1",

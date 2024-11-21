@@ -10,7 +10,6 @@ export interface Cita {
   clienteId: number
   odontologoId: number
   servicioId: number
-  intervalo?: string; // Intervalo opcional
   cliente: Cliente
   odontologo: Odontologo
   servicio?: Servicios;

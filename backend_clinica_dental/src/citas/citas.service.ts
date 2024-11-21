@@ -116,71 +116,111 @@ export class CitasService {
       throw new NotFoundException(`La cita con ID ${id} no existe`);
     }
 
-    const { fechaHoraInicio, fechaHoraFin, odontologoId, clienteId, estado } =
-      updateCitaDto;
+    const {
+      clienteId,
+      odontologoId,
+      servicioId,
+      fechaHoraInicio,
+      fechaHoraFin,
+      estado,
+    } = updateCitaDto;
 
-    // Si solo se está actualizando el estado, no ejecutar lógica de fechas
-    if (
-      estado &&
-      !fechaHoraInicio &&
-      !fechaHoraFin &&
-      !odontologoId &&
-      !clienteId
-    ) {
-      cita.estado = estado; // Actualizar solo el estado
-      return this.citasRepository.save(cita);
+    /// Validar si el cliente se está actualizando
+    if (updateCitaDto.clienteId && updateCitaDto.clienteId !== cita.clienteId) {
+      const clienteExistente = await this.clientesRepository.findOneBy({
+        id: updateCitaDto.clienteId,
+      });
+      if (!clienteExistente) {
+        throw new NotFoundException(
+          `El cliente con ID ${updateCitaDto.clienteId} no existe`,
+        );
+      }
     }
 
-    // Convertir las fechas a UTC si se proporcionan
+    // Validar si el odontólogo se está actualizando
+    if (
+      updateCitaDto.odontologoId &&
+      updateCitaDto.odontologoId !== cita.odontologoId
+    ) {
+      const odontologoExistente = await this.odontologosRepository.findOneBy({
+        id: updateCitaDto.odontologoId,
+      });
+      if (!odontologoExistente) {
+        throw new NotFoundException(
+          `El odontólogo con ID ${updateCitaDto.odontologoId} no existe`,
+        );
+      }
+    }
+
+    // Validar si el servicio se está actualizando
+    if (
+      updateCitaDto.servicioId &&
+      updateCitaDto.servicioId !== cita.servicioId
+    ) {
+      const servicioExistente = await this.serviciosRepository.findOneBy({
+        id: updateCitaDto.servicioId,
+      });
+      if (!servicioExistente) {
+        throw new NotFoundException(
+          `El servicio con ID ${updateCitaDto.servicioId} no existe`,
+        );
+      }
+    }
+
+    // Validar Fechas y Traslapes
     if (fechaHoraInicio && fechaHoraFin) {
       const fechaInicioUTC = new Date(fechaHoraInicio).toISOString();
       const fechaFinUTC = new Date(fechaHoraFin).toISOString();
 
-      // Verificar traslapes para el odontólogo (excluyendo la cita actual)
-      const traslapeOdontologo = await this.verificarTraslapes(
-        odontologoId,
-        fechaInicioUTC,
-        fechaFinUTC,
-        'odontologoId',
-        id,
-      );
-
-      if (traslapeOdontologo) {
-        throw new ConflictException(
-          'Ya existe una cita en este intervalo de tiempo con el odontólogo seleccionado.',
+      // Validar traslape con otras citas del odontólogo
+      if (odontologoId) {
+        const traslapeOdontologo = await this.verificarTraslapes(
+          odontologoId,
+          fechaInicioUTC,
+          fechaFinUTC,
+          'odontologoId',
+          id,
         );
+        if (traslapeOdontologo) {
+          throw new ConflictException(
+            'Ya existe una cita en este intervalo de tiempo con el odontólogo seleccionado.',
+          );
+        }
       }
 
-      // Verificar traslapes para el cliente (excluyendo la cita actual)
-      const traslapeCliente = await this.verificarTraslapes(
-        clienteId,
-        fechaInicioUTC,
-        fechaFinUTC,
-        'clienteId',
-        id,
-      );
-
-      if (traslapeCliente) {
-        throw new ConflictException(
-          'Ya tienes una cita programada en este intervalo de tiempo.',
+      // Validar traslape con otras citas del cliente
+      if (clienteId) {
+        const traslapeCliente = await this.verificarTraslapes(
+          clienteId,
+          fechaInicioUTC,
+          fechaFinUTC,
+          'clienteId',
+          id,
         );
+        if (traslapeCliente) {
+          throw new ConflictException(
+            'Ya tienes una cita programada en este intervalo de tiempo.',
+          );
+        }
       }
-    }
 
-    // Actualizar otros campos solo si están proporcionados
-    if (fechaHoraInicio) {
+      // Actualizar Fechas
       cita.fechaHoraInicio = new Date(fechaHoraInicio);
-    }
-    if (fechaHoraFin) {
       cita.fechaHoraFin = new Date(fechaHoraFin);
     }
+
+    // Actualizar Estado
     if (estado) {
       cita.estado = estado;
     }
+    // Combinar la cita existente con los nuevos datos
+    const citaActualizada = {
+      ...updateCitaDto, // Sobrescribir con los nuevos datos
+      id: id, // Mantener el mismo ID
+    };
 
-    // Mezclar cualquier otro dato proporcionado
-    Object.assign(cita, updateCitaDto);
-    return this.citasRepository.save(cita);
+    return this.citasRepository.save(citaActualizada);
+    // Guardar Cambios
   }
 
   async remove(id: number): Promise<Cita> {
@@ -206,7 +246,7 @@ export class CitasService {
     return servicios;
   }
 
-  private async verificarTraslapes(
+  async verificarTraslapes(
     entidadId: number,
     fechaHoraInicio: string,
     fechaHoraFin: string,

@@ -14,6 +14,16 @@ let citasFiltradas = computed(
   () => citas.value.filter(cita => cita.odontologoId === authStore.user?.id), // Filtra las citas del odontólogo logueado
 )
 
+// Computed para calcular el monto total de las citas confirmadas
+const totalCobrar = computed(() =>
+  citasFiltradas.value.reduce((total, cita) => {
+    // Sumar solo si el estado es "Confirmado"
+    return cita.estado === 'Confirmado' ? total + Number(cita.servicio?.precio || 0) : total;
+  }, 0),
+);
+
+
+
 const emit = defineEmits(['edit'])
 const citaDelete = ref<Cita | null>(null)
 const mostrarConfirmDialog = ref<boolean>(false)
@@ -125,7 +135,13 @@ defineExpose({ obtenerLista })
         </tr>
       </tbody>
     </table>
-
+    <!-- Mostrar total de precios confirmados -->
+    <div class="total-container">
+      <p>
+        Monto Total de Cobrar:
+        <strong>{{ totalCobrar }} Bs.</strong>
+      </p>
+    </div>
     <!-- Diálogo de confirmación para eliminar -->
     <Dialog
       v-model:visible="mostrarConfirmDialog"
@@ -191,5 +207,11 @@ tr:hover {
 
 .action-buttons button.delete {
   background-color: #f44336;
+}
+
+.total-container {
+  margin-top: 20px;
+  font-size: 18px;
+  text-align: right;
 }
 </style>

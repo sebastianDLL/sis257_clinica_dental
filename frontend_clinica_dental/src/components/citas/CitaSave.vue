@@ -5,10 +5,11 @@ import type { Servicios } from '../../models/Servicios'
 import http from '../../plugins/axios'
 import Button from 'primevue/button'
 import Dialog from 'primevue/dialog'
-import Dropdown from 'primevue/dropdown'
-import Calendar from 'primevue/calendar'
 import { computed, ref, watch, onMounted } from 'vue'
 import { useAuthStore } from '../../stores'
+import { DatePicker } from 'primevue'
+import Select from 'primevue/select'
+import InputText from 'primevue/inputtext'
 
 const ENDPOINT = 'citas'
 const ODONTOLOGOS_ENDPOINT = 'odontologos'
@@ -26,6 +27,10 @@ const props = defineProps({
 })
 const emit = defineEmits(['guardar', 'close'])
 
+const cita = ref<Cita>({ ...props.cita })
+const odontologos = ref<Odontologo[]>([])
+const servicios = ref<Servicios[]>([])
+
 const dialogVisible = computed({
   get: () => props.mostrar,
   set: value => {
@@ -33,16 +38,14 @@ const dialogVisible = computed({
   },
 })
 
-const cita = ref<Cita>({ ...props.cita })
-const odontologos = ref<Odontologo[]>([])
-const servicios = ref<Servicios[]>([])
-
+// cargar odontologos al montar el componente
 onMounted(async () => {
   odontologos.value = await http
     .get(ODONTOLOGOS_ENDPOINT)
     .then(response => response.data)
 })
 
+// Cargar servicios al cambiar el odontólogo seleccionado
 watch(
   () => cita.value.odontologoId,
   async odontologoId => {
@@ -50,23 +53,24 @@ watch(
       servicios.value = await http
         .get(`${SERVICIOS_ENDPOINT}/${odontologoId}`)
         .then(response => response.data)
+
+      // Si hay un servicio preseleccionado, asegúrate de que esté reflejado en los servicios cargados
+      if (!servicios.value.some(s => s.id === cita.value.servicioId)) {
+        cita.value.servicioId = 0 // Restablecer si el servicio no pertenece al odontólogo actual
+      }
     } else {
       servicios.value = []
     }
   },
 )
 
+// Observa cambios en props.cita y actualiza cita
 watch(
   () => props.cita,
   newCita => {
-    if (newCita !== cita.value) {
-      cita.value = { ...newCita }
-      if (!props.modoEdicion && !cita.value.estado) {
-        cita.value.estado = 'Pendiente'
-      }
-    }
+    cita.value = { ...newCita }
   },
-  { immediate: true },
+  { immediate: true }, // Esto asegura que se sincronice al cargar por primera vez
 )
 
 watch(
@@ -79,7 +83,7 @@ watch(
         calcularFechaHoraFin(Number(servicio.duracion))
       }
     }
-  }
+  },
 )
 
 watch(
@@ -88,7 +92,9 @@ watch(
     if (
       fechaHoraInicio &&
       cita.value.servicioId &&
-      (!cita.value.fechaHoraFin || new Date(cita.value.fechaHoraFin).getTime() !== new Date(fechaHoraInicio).getTime())
+      (!cita.value.fechaHoraFin ||
+        new Date(cita.value.fechaHoraFin).getTime() !==
+          new Date(fechaHoraInicio).getTime())
     ) {
       // Evita recalcular si la fechaHoraFin ya es correcta
       const servicio = servicios.value.find(s => s.id === cita.value.servicioId)
@@ -96,8 +102,9 @@ watch(
         calcularFechaHoraFin(Number(servicio.duracion))
       }
     }
-  }
+  },
 )
+
 function calcularFechaHoraFin(duracionMinutos: number) {
   const fechaInicio = new Date(cita.value.fechaHoraInicio)
   fechaInicio.setSeconds(0, 0) // Ajustar segundos y milisegundos
@@ -106,11 +113,56 @@ function calcularFechaHoraFin(duracionMinutos: number) {
   fechaFin.setSeconds(0, 0) // Ajustar segundos y milisegundos
 
   // Solo actualiza si es necesario
-  if (!cita.value.fechaHoraFin || new Date(cita.value.fechaHoraFin).getTime() !== fechaFin.getTime()) {
+  if (
+    !cita.value.fechaHoraFin ||
+    new Date(cita.value.fechaHoraFin).getTime() !== fechaFin.getTime()
+  ) {
     cita.value.fechaHoraInicio = fechaInicio
     cita.value.fechaHoraFin = fechaFin
   }
 }
+
+// Función para cargar servicios
+async function cargarServicios(odontologoId: number) {
+  servicios.value = await http
+    .get(`${SERVICIOS_ENDPOINT}/${odontologoId}`)
+    .then(response => response.data)
+
+  // Validar si el servicio seleccionado aún está disponible
+  if (cita.value.servicioId) {
+    const servicioSeleccionado = servicios.value.find(
+      s => s.id === cita.value.servicioId,
+    )
+    if (!servicioSeleccionado) {
+      cita.value.servicioId = 0 // Limpia el servicio si ya no está disponible
+    }
+  }
+}
+// Observa cambios en odontologoId para cargar servicios
+watch(
+  () => cita.value.odontologoId,
+  async odontologoId => {
+    if (odontologoId) {
+      await cargarServicios(odontologoId)
+    } else {
+      servicios.value = []
+    }
+  },
+)
+
+// Cargar datos al abrir el modal en modo edición
+watch(
+  () => props.cita,
+  async newCita => {
+    cita.value = { ...newCita }
+
+    // Si está en modo edición, carga los servicios asociados al odontólogo seleccionado
+    if (props.modoEdicion && cita.value.odontologoId) {
+      await cargarServicios(cita.value.odontologoId)
+    }
+  },
+  { immediate: true }, // Asegura la ejecución al iniciar
+)
 
 async function handleSave() {
   try {
@@ -144,10 +196,10 @@ async function handleSave() {
     dialogVisible.value = false
   } catch (error: any) {
     if (error.response?.status === 409) {
-      alert('Este horario ya está reservado. Por favor, elige otro horario.');
+      alert('Este horario ya está reservado. Por favor, elige otro horario.')
     } else {
-      console.error('Error al guardar:', error);
-      alert(error?.response?.data?.message || error.message);
+      console.error('Error al guardar:', error)
+      alert(error?.response?.data?.message || error.message)
     }
   }
 }
@@ -163,7 +215,7 @@ async function handleSave() {
       <!-- Odontólogo -->
       <div class="flex items-center gap-4 mb-4">
         <label for="odontologo" class="font-semibold w-24">Odontólogo</label>
-        <Dropdown
+        <Select
           id="odontologo"
           v-model="cita.odontologoId"
           :options="odontologos"
@@ -177,7 +229,7 @@ async function handleSave() {
       <!-- Servicio -->
       <div class="flex items-center gap-4 mb-4">
         <label for="servicio" class="font-semibold w-24">Servicio</label>
-        <Dropdown
+        <Select
           id="servicio"
           v-model="cita.servicioId"
           :options="servicios"
@@ -191,7 +243,7 @@ async function handleSave() {
       <!-- Fecha de inicio -->
       <div class="flex items-center gap-4 mb-4">
         <label for="fechaInicio" class="font-semibold w-24">Fecha Inicio</label>
-        <Calendar
+        <DatePicker
           id="fechaInicio"
           v-model="cita.fechaHoraInicio"
           class="flex-auto"

@@ -120,8 +120,13 @@ const userMenuItems = [
               <li v-if="authStore.token && authStore.role === 'odontologo'">
                 <router-link to="/citas">Ver Citas</router-link>
               </li>
-              <li v-if="authStore.token && authStore.role === 'odontologo'">
+              <!--<li v-if="authStore.token && authStore.role === 'odontologo'">
                 <router-link to="/odontologos">Odontólogos</router-link>
+              </li>-->
+              <li>
+                <router-link to="/odontologo-cards"
+                  >Odontos</router-link
+                >
               </li>
               <li v-if="authStore.token && authStore.role === 'odontologo'">
                 <router-link to="/odontologo_servicios">Servicios</router-link>

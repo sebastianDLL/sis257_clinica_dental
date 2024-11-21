@@ -3,5 +3,5 @@ export interface Servicios {
   nombre: string
   descripcion: string
   precio: number
-  duracion: string
+  duracion: number
 }
