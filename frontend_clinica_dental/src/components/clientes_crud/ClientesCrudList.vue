@@ -44,19 +44,19 @@ defineExpose({ obtenerLista })
       <table class="dentists-table">
         <thead>
           <tr>
-            <th>Nro.</th>
+            <th class="th-number">Nro.</th>
             <th>Nombre</th>
             <th>Primer Apellido</th>
             <th>Segundo Apellido</th>
             <th>Correo</th>
             <th>Teléfono</th>
             <th>Dirección</th>
-            <th>Acciones</th>
+            <th class="th-actions">Acciones</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(cliente, index) in clientes" :key="cliente.id">
-            <td>{{ index + 1 }}</td>
+            <td class="td-number">{{ index + 1 }}</td>
             <td>{{ cliente.nombre }}</td>
             <td>{{ cliente.primerApellido }}</td>
             <td>{{ cliente.segundoApellido }}</td>
@@ -66,10 +66,12 @@ defineExpose({ obtenerLista })
             </td>
             <td>{{ cliente.direccion }}</td>
             <td class="actions-column">
-              <Button icon="pi pi-pencil" aria-label="Editar" text class="edit-button"
-                @click="emitirEdicion(cliente)" />
-              <Button icon="pi pi-trash" aria-label="Eliminar" text class="delete-button"
-                @click="mostrarEliminarConfirm(cliente)" />
+              <div class="actions-wrapper">
+                <Button icon="pi pi-pencil" aria-label="Editar" text class="edit-button"
+                  @click="emitirEdicion(cliente)" />
+                <Button icon="pi pi-trash" aria-label="Eliminar" text class="delete-button"
+                  @click="mostrarEliminarConfirm(cliente)" />
+              </div>
             </td>
           </tr>
         </tbody>
@@ -78,7 +80,10 @@ defineExpose({ obtenerLista })
 
     <Dialog v-model:visible="mostrarConfirmDialog" header="Confirmar Eliminación" :style="{ width: '25rem' }"
       class="delete-dialog">
-      <p>¿Estás seguro de que deseas eliminar este registro?</p>
+      <div class="dialog-content">
+        <i class="pi pi-exclamation-triangle" style="font-size: 2rem; color: #ff9800;"></i>
+        <p>¿Estás seguro de que deseas eliminar este registro?</p>
+      </div>
       <div class="dialog-footer">
         <Button type="button" label="Cancelar" severity="secondary" @click="mostrarConfirmDialog = false"
           class="cancel-button" />
@@ -90,59 +95,81 @@ defineExpose({ obtenerLista })
 
 <style scoped>
 .dentists-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
 }
 
 .table-wrapper {
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   overflow-x: auto;
+  max-height: calc(100vh - 300px);
 }
 
 .dentists-table {
   width: 100%;
-  border-collapse: collapse;
-  min-width: 800px;
+  border-collapse: separate;
+  border-spacing: 0;
+  min-width: 1000px;
 }
 
 .dentists-table th {
   background-color: #240090;
-  /* Color morado/índigo */
   color: white;
   padding: 1rem;
   text-align: left;
   font-weight: 600;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.th-number {
+  width: 70px;
+}
+
+.th-actions {
+  width: 120px;
 }
 
 .dentists-table td {
-  padding: 0.75rem 1rem;
-  border-bottom: 1px solid #e2e8f0;
+  padding: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+  transition: background-color 0.2s;
 }
 
-.dentists-table tbody tr:hover {
-  background-color: #f8f9fa;
-}
-
-.specialty-tag {
-  background-color: #e8f5e9;
-  color: #008000;
-  padding: 0.25rem 0.75rem;
-  border-radius: 9999px;
-  font-size: 0.875rem;
+.td-number {
+  color: #6b7280;
   font-weight: 500;
 }
 
+
+.dentists-table tbody tr:hover {
+  background-color: #f8fafc;
+}
+
+.specialty-tag {
+  background-color: #ecfdf5;
+  color: #047857;
+  padding: 0.375rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  display: inline-block;
+}
+
 .actions-column {
-  white-space: nowrap;
-  width: 100px;
+  padding: 0.5rem !important;
+}
+
+.actions-wrapper {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
 }
 
 .edit-button {
-  color: #008000 !important;
-  /* Verde para coincidir con tu marca */
+  color: #047857 !important;
 }
 
 .delete-button {
@@ -151,8 +178,7 @@ defineExpose({ obtenerLista })
 
 .edit-button:hover,
 .delete-button:hover {
-  background-color: #f3f4f6 !important;
-  border-radius: 4px;
+  background-color: #f1f5f9 !important;
 }
 
 /* Estilos para el diálogo de confirmación */
@@ -160,21 +186,21 @@ defineExpose({ obtenerLista })
   border-radius: 8px;
 }
 
+.dialog-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 0;
+  text-align: center;
+}
+
 .dialog-footer {
   display: flex;
   justify-content: flex-end;
   gap: 0.75rem;
-  margin-top: 1.5rem;
-}
-
-.cancel-button {
-  background-color: #e5e7eb !important;
-  color: #374151 !important;
-}
-
-.confirm-delete-button {
-  background-color: #dc2626 !important;
-  color: white !important;
+  padding-top: 1rem;
+  border-top: 1px solid #e5e7eb;
 }
 
 /* Responsive adjustments */

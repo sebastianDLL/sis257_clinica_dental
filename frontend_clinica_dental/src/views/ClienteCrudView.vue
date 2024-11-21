@@ -30,12 +30,20 @@ function handleGuardar() {
   <div class="page-container">
     <div class="content-wrapper">
       <div class="header-section">
-        <h1 class="page-title">Gestión de Clientes</h1>
-        <Button label="Crear Nuevo" icon="pi pi-plus" @click="handleCreate" class="create-button" />
+        <div class="header-content">
+          <h1 class="page-title">
+            <i class="pi pi-users" style="margin-right: 0.5rem;"></i>
+            Gestión de Clientes
+          </h1>
+          <Button label="Agregar Cliente" icon="pi pi-plus" @click="handleCreate" class="create-button"
+            severity="success" />
+        </div>
       </div>
-      <div class="list-container">
+
+      <div class="list-section">
         <ClienteCrudList ref="ClienteCrudListRef" @edit="handleEdit" />
       </div>
+
       <ClienteCrudSave :mostrar="mostrarDialog" :cliente="clienteEdit" :modoEdicion="!!clienteEdit"
         @guardar="handleGuardar" @close="handleCloseDialog" />
     </div>
@@ -44,73 +52,80 @@ function handleGuardar() {
 
 <style scoped>
 .page-container {
+  background: linear-gradient(rgba(36, 0, 144, 0.1), rgba(36, 0, 144, 0.2)),
+    url('@/assets/images/slider/slider-1.png');
+  background-size: cover;
+  background-position: center;
   min-height: 100vh;
-  background-color: #f8f9fa;
-  margin-top: 10%;
+  padding: 2rem 1rem;
 }
 
 .content-wrapper {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem;
+  max-width: 1400px;
+  margin: 12% auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
 .header-section {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.header-content {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
-  background-color: white;
-  padding: 1.5rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .page-title {
   font-size: 1.75rem;
   font-weight: 600;
   color: #240090;
-  /* Color morado/índigo para coincidir con tu tema */
   margin: 0;
+  display: flex;
+  align-items: center;
 }
 
 .create-button {
-  background-color: #008000 !important;
-  /* Verde para coincidir con tu marca */
-  border: none !important;
-  padding: 0.75rem 1.5rem !important;
-  border-radius: 6px !important;
-}
-
-.create-button:hover {
-  background-color: #006400 !important;
-  transform: translateY(-1px);
+  padding: 0.75rem 1.5rem;
+  font-weight: 500;
   transition: all 0.2s ease;
 }
 
-.list-container {
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  overflow: hidden;
+.create-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
-/* Responsive adjustments */
+.list-section {
+  flex-grow: 1;
+}
+
+/* Responsive styles */
 @media (max-width: 768px) {
-  .content-wrapper {
-    padding: 1rem;
+  .page-container {
+    padding: 1rem 0.5rem;
   }
 
   .header-section {
+    border-radius: 0;
+    margin: -1rem -0.5rem 1rem;
+  }
+
+  .header-content {
     flex-direction: column;
     gap: 1rem;
-    align-items: stretch;
     text-align: center;
-    padding: 1rem;
   }
 
   .page-title {
     font-size: 1.5rem;
+    justify-content: center;
   }
 
   .create-button {
@@ -119,10 +134,10 @@ function handleGuardar() {
 }
 
 /* Animations */
-@keyframes fadeIn {
+@keyframes slideDown {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(-20px);
   }
 
   to {
@@ -131,7 +146,7 @@ function handleGuardar() {
   }
 }
 
-.page-container {
-  animation: fadeIn 0.3s ease-out;
+.header-section {
+  animation: slideDown 0.3s ease-out;
 }
 </style>
