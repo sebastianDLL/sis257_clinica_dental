@@ -1,40 +1,57 @@
 <script setup lang="ts">
-import Button from 'primevue/button'
-import { useAuthStore } from '@/stores' // Aseguramos la ruta correcta
-import { useRoute } from 'vue-router'
-import { ref } from 'vue'
-import router from '@/router'
-import Menu from 'primevue/menu'
-import Dialog from 'primevue/dialog'
+import Button from 'primevue/button';
+import { useAuthStore } from '@/stores'; // Aseguramos la ruta correcta
+import { ref, computed } from 'vue';
+import router from '@/router';
+import Menu from 'primevue/menu';
+import Dialog from 'primevue/dialog';
 
-const authStore = useAuthStore()
-const location = useRoute()
-const showLogoutMessage = ref(false) // Controla la visibilidad del mensaje flotante
-const userMenu = ref<InstanceType<typeof Menu> | null>(null)
-const showConfirmLogout = ref(false) // Estado para mostrar el diálogo de confirmación
+const authStore = useAuthStore();
+const showLogoutMessage = ref(false); // Controla la visibilidad del mensaje flotante
+const userMenu = ref<InstanceType<typeof Menu> | null>(null);
+const showConfirmLogout = ref(false); // Estado para mostrar el diálogo de confirmación
 
 async function handleLogout() {
-  showConfirmLogout.value = false // Oculta el diálogo
-  showLogoutMessage.value = true // Muestra el mensaje flotante
+  showConfirmLogout.value = false; // Oculta el diálogo
+  showLogoutMessage.value = true; // Muestra el mensaje flotante
   setTimeout(() => {
-    authStore.logout() // Llama al método de cierre de sesión
-    showLogoutMessage.value = false // Oculta el mensaje flotante
-    router.push('/') // Redirige al inicio
-  }, 1000) // Espera 1 segundo antes de redirigir
+    authStore.logout(); // Llama al método de cierre de sesión
+    showLogoutMessage.value = false; // Oculta el mensaje flotante
+    router.push('/'); // Redirige al inicio
+  }, 1000); // Espera 1 segundo antes de redirigir
 }
-// Opciones del menú del usuario
-const userMenuItems = [
-  {
-    label: 'Ver Perfil',
-    icon: 'pi pi-user',
-    command: () => router.push('/cliente-perfil'),
-  },
-  {
-    label: 'Salir',
-    icon: 'pi pi-sign-out',
-    command: () => (showConfirmLogout.value = true), // Abre el cuadro de diálogo
-  },
-]
+
+// Opciones dinámicas del menú del usuario según el rol
+const userMenuItems = computed(() => {
+  if (authStore.role === 'cliente') {
+    return [
+      {
+        label: 'Ver Perfil',
+        icon: 'pi pi-user',
+        command: () => router.push('/cliente-perfil'),
+      },
+      {
+        label: 'Salir',
+        icon: 'pi pi-sign-out',
+        command: () => (showConfirmLogout.value = true),
+      },
+    ];
+  } else if (authStore.role === 'odontologo') {
+    return [
+      {
+        label: 'Ver Perfil',
+        icon: 'pi pi-user',
+        command: () => router.push('/odontologo-perfil'),
+      },
+      {
+        label: 'Salir',
+        icon: 'pi pi-sign-out',
+        command: () => (showConfirmLogout.value = true),
+      },
+    ];
+  }
+  return []; // Menú vacío para otros roles o usuarios no autenticados
+});
 </script>
 
 <template>

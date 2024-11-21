@@ -49,6 +49,11 @@ export class OdontologosService {
     return odontologo;
   }
 
+  async findAuthenticatedUser(id: number): Promise<Odontologo> {
+    // Reutilizamos findOne para obtener al odontologo autenticado
+    return this.findOne(id);
+  }
+
   async update(
     id: number,
     updateOdontologoDto: UpdateOdontologoDto,
@@ -83,5 +88,28 @@ export class OdontologosService {
   
     return emailOk; // Devuelve el odontólogo con el rol cargado
   }
-  
+
+  async cambiarPassword(
+    userId: number,
+    passwordActual: string,
+    nuevaPassword: string,
+  ): Promise<string> {
+    // 1. Buscar al odontologo por ID
+    const odontologo = await this.findOne(userId);
+    if (!odontologo) {
+      throw new NotFoundException('Odontologo no encontrado.');
+    }
+
+    // 2. Validar la contraseña actual
+    const isPasswordValid = await odontologo.validatePassword(passwordActual);
+    if (!isPasswordValid) {
+      throw new UnauthorizedException('La contraseña actual es incorrecta.');
+    }
+
+    // 3. Actualizar la contraseña
+    odontologo.password = nuevaPassword; // Asignar la nueva contraseña
+    await this.odontologosRepository.save(odontologo); // Guardar cambios (se hashea automáticamente en `hashPassword`)
+
+    return 'La contraseña ha sido actualizada correctamente.';
+  } 
 }

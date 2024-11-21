@@ -34,7 +34,7 @@ export class Odontologo {
   @Column('varchar', { length: 50 })
   email: string;
 
-  @Column('varchar', { length: 150, select: false })
+  @Column('varchar', { length: 250, select: false })
   password: string;
 
   @Column('varchar', { length: 15 })
@@ -58,6 +58,7 @@ export class Odontologo {
   @DeleteDateColumn({ name: 'fecha_eliminacion', select: false })
   fechaEliminacion: Date;
 
+  //Bug correcion al actualizar, ahora se puede actualizar la contraseña
   @BeforeInsert()
   @BeforeUpdate()
   async hashPassword() {
@@ -68,10 +69,11 @@ export class Odontologo {
     }
   }
 
-  // Implementación de la validación de la contraseña
-  async validatePassword(plainPassword: string): Promise<boolean> {
+   // Implementación de la validación de la contraseña
+   async validatePassword(plainPassword: string): Promise<boolean> {
     return bcrypt.compare(plainPassword, this.password);
   }
+
 
   @OneToMany(
     () => OdontologoServicio,

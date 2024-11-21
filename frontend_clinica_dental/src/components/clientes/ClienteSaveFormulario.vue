@@ -4,6 +4,7 @@ import type { Cliente } from '@/models/Cliente';
 import http from '../../plugins/axios';
 import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
+import Password from 'primevue/password';
 import { useRouter } from 'vue-router';
 
 const ENDPOINT = 'clientes';
@@ -18,7 +19,6 @@ const cliente = ref<Cliente>({
   direccion: '',
 });
 
-const showPassword = ref(false); // Estado para alternar visibilidad de la contraseña
 
 const router = useRouter();
 
@@ -57,23 +57,23 @@ async function handleSave() {
       <label for="segundo_apellido">Segundo Apellido</label>
       <InputText id="segundo_apellido" v-model="cliente.segundoApellido" />
     </div>
-    <div class="form-group password-group">
-      <label for="password">Contraseña</label>
-      <div class="password-wrapper">
-        <InputText
-          id="password"
-          :type="showPassword ? 'text' : 'password'"
-          v-model="cliente.password"
-        />
-        <Button
-          icon="pi pi-eye"
-          class="password-toggle"
-          @click="showPassword = !showPassword"
-          :class="{ 'pi-eye': !showPassword, 'pi-eye-slash': showPassword }"
-          text
-        />
-      </div>
+    <div class="form-group">
+      <label for="contraseña">Contraseña</label>
+      <Password id="contraseña" v-model="cliente.password" required toggleMask
+        weakLabel="Débil" mediumLabel="Media" strongLabel="Fuerte" maxlength="50">
+        <template #footer>
+          <Divider />
+          <p class="mt-1 suggestions">Sugerencias</p>
+          <ul>
+            <li>Al menos una minúscula</li>
+            <li>Al menos una mayúscula</li>
+            <li>Un número</li>
+            <li>Mínimo 8 caracteres</li>
+          </ul>
+        </template>
+      </Password>
     </div>
+
     <div class="form-group">
       <label for="email">Correo</label>
       <InputText id="email" v-model="cliente.email" />
@@ -118,6 +118,13 @@ label {
 }
 
 input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+#contraseña{
   width: 100%;
   padding: 8px;
   border: 1px solid #ccc;
