@@ -13,45 +13,46 @@ const router = createRouter({
       meta: { requireMainJs: true, roles: [] }, // Accesible por cualquier rol
     },
     {
-      path: '/about',
-      name: 'about',
-      component: () => import('../views/AboutView.vue'),
-      meta: { roles: [] }, // Sin restricción de rol
-    },
-    {
       path: '/citas',
       name: 'citas',
-      component: () => import('../views/CitaView.vue'),  // Componente predeterminado
+      component: () => import('../views/CitaView.vue'),
       meta: { roles: ['cliente', 'odontologo'] }, // Accesible por ambos roles
     },
     {
       path: '/citas-cliente',
       name: 'citas-cliente',
       component: () => import('../views/CitaView.vue'),  // Componente predeterminado
-      meta: { roles: ['cliente'] }, // Accesible por ambos roles
+      meta: { roles: ['cliente'] }, // Solo accesible por clientes
     }, 
     {
       path: '/citas-odontologo',
       name: 'citas-odontologo',
       component: () => import('../views/CitaOdontologoView.vue'),  // Componente predeterminado
-      meta: { roles: ['odontologo'] }, // Accesible por ambos roles
+      meta: { roles: ['odontologo'] }, // Solo accesible por odontólogos
     },  
     {
       path: '/clientes',
       name: 'clientes',
-      component: () => import('../views/ClienteView.vue'),
-      meta: { roles: ['odontologo'] }, // Solo accesible por odontólogos
+      component: () => import('../views/ClienteCrudView.vue'),
+      meta: { roles: ['odontologo'] },
     },
     {
       path: '/cliente-crear-cuenta',
       name: 'cliente-crear-cuenta',
       component: () => import('../views/ClienteCrearCuentaView.vue'),
-      meta: { roles: [] }, // Sin restricción de rol
+      meta: { roles: [] },
     },
     {
       path: '/cliente-perfil',
       name: 'cliente-perfil',
       component: () => import('../views/ClienteView.vue'),
+      meta: { roles: ['cliente'] },
+    },
+    {
+      path: '/odontologo-perfil',
+      name: 'odontologo-perfil',
+      component: () => import('../views/OdontologoPerfilView.vue'),
+      meta: { roles: ['odontologo'] },
     },
     {
       path: '/odontologos',

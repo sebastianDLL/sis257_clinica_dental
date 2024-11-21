@@ -47,7 +47,7 @@ export class CreateClienteDto {
   @ApiProperty()
   @IsNotEmpty({ message: 'El campo password es obligatorio' })
   @IsString({ message: 'El campo password debe ser un string o cadena' })
-  @MaxLength(50, {
+  @MaxLength(250, {
      message: 'El campo password debe tener un máximo de 50 caracteres',
    })
    readonly password: string;
