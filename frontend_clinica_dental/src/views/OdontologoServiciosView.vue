@@ -1,73 +1,122 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import OdontologoServicioSave from '@/components/odontologo_servicios/OdontologoServicioSave.vue'
-import OdontologoServicioList from '@/components/odontologo_servicios/OdontologoServicioList.vue'
-//import OdontologoServicioEdit from '@/components/odontologo_servicios/OdontologoServicioEdit.vue'
-import Button from 'primevue/button'
-import type { Odontologo_servicio } from '../models/Odontologo_servicio'
+import { ref } from 'vue';
+import OdontologoServicioSave from '@/components/odontologo_servicios/OdontologoServicioSave.vue';
+import OdontologoServicioList from '@/components/odontologo_servicios/OdontologoServicioList.vue';
+import Button from 'primevue/button';
+import type { Odontologo_servicio } from '../models/Odontologo_servicio';
 
-const mostrarDialogCreate = ref(false) // Para el modo creación
-const mostrarDialogEdit = ref(false) // Para el modo edición
-const relacionEdit = ref<Odontologo_servicio | null>(null)
-const OdontologoServicioListRef = ref<typeof OdontologoServicioList | null>(
-  null,
-)
+const mostrarDialogCreate = ref(false);
+const OdontologoServicioListRef = ref<InstanceType<typeof OdontologoServicioList> | null>(null);
 
 // Función para manejar la creación
 function handleCreate() {
-  relacionEdit.value = { id: 0, odontologo_id: 0, servicio_id: 0 }
-  mostrarDialogCreate.value = true // Solo mostrar el diálogo de creación
+  mostrarDialogCreate.value = true;
 }
 
-// Función para manejar la edición
-function handleEdit(relacion: Odontologo_servicio) {
-  relacionEdit.value = { ...relacion }
-  mostrarDialogEdit.value = true // Solo mostrar el diálogo de edición
-}
-
-// Función para cerrar ambos diálogos
+// Función para cerrar el diálogo
 function handleCloseDialog() {
-  mostrarDialogCreate.value = false
-  mostrarDialogEdit.value = false
+  mostrarDialogCreate.value = false;
 }
 
 // Función para actualizar la lista después de guardar
 function handleGuardar() {
-  OdontologoServicioListRef.value?.obtenerLista()
+  if (OdontologoServicioListRef.value) {
+    OdontologoServicioListRef.value.obtenerLista(); // Asegúrate de que este método exista en la lista
+  }
+  mostrarDialogCreate.value = false;
 }
 </script>
 
 <template>
-  <div class="m-8">
-    <h1>Relaciones Odontólogo-Servicios</h1>
-    <Button
-      label="Crear Nueva Relación"
-      icon="pi pi-plus"
-      @click="handleCreate"
-    />
+  <div class="container">
+    <div class="content-wrapper">
+      <h1 class="header">MIS SERVICIOS</h1>
+      <Button
+        label="Añadir servicio"
+        icon="pi pi-plus"
+        class="create-button"
+        @click="handleCreate"
+      />
 
-    <!-- Lista de relaciones -->
-    <OdontologoServicioList
-      ref="OdontologoServicioListRef"
-      @edit="handleEdit"
-    />
+      <!-- Lista de relaciones -->
+      <OdontologoServicioList
+        ref="OdontologoServicioListRef"
+        class="list-container"
+      />
 
-    <!-- Diálogo de creación -->
-    <OdontologoServicioSave
-      :mostrar="mostrarDialogCreate"
-      :modoEdicion="false"
-      :relacion="relacionEdit || { id: 0, odontologo_id: 0, servicio_id: 0 }"
-      @guardar="handleGuardar"
-      @close="handleCloseDialog"
-    />
-
-    <!-- Diálogo de edición 
-    <OdontologoServicioEdit
-      :mostrar="mostrarDialogEdit"
-      :relacion="relacionEdit || { id: 0, odontologo_id: 0, servicio_id: 0 }"
-      @guardar="handleGuardar"
-      @close="handleCloseDialog"/> -->
+      <!-- Diálogo de creación -->
+      <OdontologoServicioSave
+        :mostrar="mostrarDialogCreate"
+        @guardar="handleGuardar"
+        @close="handleCloseDialog"
+        class="dialog-container"
+      />
+    </div>
   </div>
 </template>
 
-<style scoped></style>
+
+<style scoped>
+/* Contenedor principal */
+.container {
+  background-color: #2700c1; /* Fondo sólido */
+  display: flex; /* Flexbox para centrar el contenido */
+  justify-content: center; /* Centra el contenido horizontalmente */
+  align-items: flex-start; /* Alinea el contenido al inicio vertical */
+  padding-top: 200px;
+  min-height: 100vh;
+  max-width: 100%;
+}
+
+/* Contenedor interno */
+.content-wrapper {
+  background-color: #ffffff; /* Fondo blanco para el contenido */
+  border-radius: 12px; /* Bordes redondeados */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra ligera */
+  padding: 2rem;
+  max-width: 1200px;
+  width: 100%;
+  text-align: center;
+}
+
+/* Título */
+.header {
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  color: #2c3e50; /* Texto oscuro */
+}
+
+/* Botón de creación */
+.create-button {
+  background-color: #37810c; /* Verde */
+  color: #ffffff; /* Texto blanco */
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-bottom: 1.5rem;
+}
+
+.create-button:hover {
+  background-color: #0056b3; /* Azul más oscuro al pasar el mouse */
+}
+
+/* Contenedor de la lista */
+.list-container {
+  margin-top: 2rem;
+}
+
+/* Diálogo animado */
+.dialog-container-enter-active,
+.dialog-container-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.dialog-container-enter-from,
+.dialog-container-leave-to {
+  opacity: 0;
+}
+</style>

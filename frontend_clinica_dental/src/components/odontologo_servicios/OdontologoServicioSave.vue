@@ -1,81 +1,71 @@
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import http from '../../plugins/axios'
 import Dialog from 'primevue/dialog'
-import Dropdown from 'primevue/dropdown'
 import Checkbox from 'primevue/checkbox'
 import Button from 'primevue/button'
-import type { Odontologo_servicio } from '../../models/Odontologo_servicio'
-import type { Odontologo } from '../../models/Odontologo'
 import type { Servicios } from '../../models/Servicios'
-import { useOdontologoSeleccionado } from '@/stores/useOdontologoSeleccionado'
+import type { Odontologo_servicio } from '../../models/Odontologo_servicio'
+import { useAuthStore } from '@/stores' // Store para autenticación
 
-const store = useOdontologoSeleccionado()
+// Obtener el odontólogo autenticado
+const authStore = useAuthStore()
+const odontologoLogueado = computed(() => authStore.user)
 
+// Props y eventos
 const props = defineProps({
   mostrar: Boolean,
-  relacion: {
-    type: Object as () => Odontologo_servicio,
-    default: () => ({ id: 0, odontologo_id: 0, servicio_id: 0 }),
-  },
-  modoEdicion: Boolean,
 })
 const emit = defineEmits(['guardar', 'close'])
 
+// Estado reactivo
+const servicios = ref<Servicios[]>([])
+const serviciosAsignados = ref<number[]>([]) // IDs de servicios ya asignados
+const serviciosSeleccionados = ref<number[]>([]) // IDs de servicios seleccionados
+
+// Computed para el estado del diálogo
 const dialogVisible = computed({
   get: () => props.mostrar,
   set: value => {
-    if (!value) emit('close')
-  },
-})
-
-const odontologos = ref<Odontologo[]>([])
-const servicios = ref<Servicios[]>([])
-const relacion = ref({
-  id: props.relacion.id,
-  odontologo_id: props.relacion.odontologo_id,
-  servicio_ids: [] as number[], // Array temporal para múltiples IDs
-})
-
-const serviciosAsignados = ref<number[]>([]) // Aquí se almacenan los servicios ya asignados al odontólogo
-
-// Sincronizar el objeto `relacion` con `props.relacion`
-watch(
-  () => props.relacion,
-  newVal => {
-    relacion.value = {
-      id: newVal.id,
-      odontologo_id: newVal.odontologo_id,
-      servicio_ids: newVal.servicio_id !== 0 ? [newVal.servicio_id] : [],
-    }
-
-    // Actualizamos el store.nombreBusqueda con el nombre del odontólogo seleccionado sin funcionar !!!
-    const odontologoSeleccionado = odontologos.value.find(
-      o => o.id === newVal.odontologo_id,
-    )
-    if (odontologoSeleccionado) {
-      store.nombreBusqueda = odontologoSeleccionado.nombre
+    if (!value) {
+      resetFormulario() // Limpia el formulario al cerrar
+      emit('close')
     }
   },
-  { immediate: true },
-)
-
-// Cargar odontólogos y servicios
-async function cargarDatos() {
-  const [odontologoResponse, servicioResponse] = await Promise.all([
-    http.get('odontologos'),
-    http.get('servicios'),
-  ])
-  odontologos.value = odontologoResponse.data
-  servicios.value = servicioResponse.data
+})
+// Reiniciar el formulario
+function resetFormulario() {
+  serviciosSeleccionados.value = [] // Limpia los servicios seleccionados
+}
+// Cargar servicios disponibles
+async function cargarServicios() {
+  try {
+    const response = await http.get('servicios')
+    servicios.value = response.data
+  } catch (error) {
+    console.error('Error al cargar servicios:', error)
+    alert('Hubo un problema al cargar los servicios.')
+  }
 }
 
-// Cargar los servicios ya asignados para el odontólogo seleccionado
+// Cargar servicios ya asignados al odontólogo autenticado
 async function cargarServiciosAsignados() {
-  const response = await http.get(
-    `odontologos_servicios/${relacion.value.odontologo_id}`,
-  )
-  serviciosAsignados.value = response.data.map((item: any) => item.servicio_id) // Asumimos que la respuesta contiene los IDs de los servicios
+  try {
+    if (!odontologoLogueado.value?.id) return
+
+    const response = await http.get('odontologos_servicios/mis-servicios')
+    if (Array.isArray(response.data)) {
+      serviciosAsignados.value = response.data.map(
+        (item: Odontologo_servicio) => item.servicio_id,
+      )
+    } else {
+      console.error('Respuesta inesperada del servidor:', response.data)
+      serviciosAsignados.value = []
+    }
+  } catch (error) {
+    console.error('Error al cargar servicios asignados:', error)
+    alert('Hubo un problema al cargar los servicios asignados.')
+  }
 }
 
 // Verificar si un servicio ya está asignado al odontólogo
@@ -83,64 +73,62 @@ function isServicioAsignado(servicioId: number) {
   return serviciosAsignados.value.includes(servicioId)
 }
 
+// Guardar relaciones
 async function handleSave() {
   try {
-    if (
-      !relacion.value.odontologo_id ||
-      relacion.value.servicio_ids.length === 0
-    ) {
-      alert('Debe seleccionar un odontólogo y al menos un servicio')
+    if (serviciosSeleccionados.value.length === 0) {
+      alert('Debe seleccionar al menos un servicio.')
       return
     }
 
-    // Enviar múltiples solicitudes con cada `servicioId` individual
-    const requests = relacion.value.servicio_ids.map(servicioId => {
-      const body = {
-        odontologoId: relacion.value.odontologo_id,
-        servicioId: servicioId, // Enviar un solo `servicioId` aquí
-      }
-      return http.post('odontologos_servicios', body)
-    })
+    // Crear relaciones para cada servicio seleccionado
+    await Promise.all(
+      serviciosSeleccionados.value.map(servicioId =>
+        http.post('odontologos_servicios', {
+          odontologoId: odontologoLogueado.value?.id ?? 0,
+          servicioId,
+        }),
+      ),
+    )
 
-    // Espera a que todas las solicitudes se completen
-    await Promise.all(requests)
-
-    // Emitir evento para que LIST recargue la lista
+    // Si todo se guarda correctamente
+    await cargarServiciosAsignados() // Actualizar los servicios locales
     emit('guardar')
-
+    emit('close')
     dialogVisible.value = false
   } catch (error: any) {
-    console.error(error)
-    const errorMessage = error?.response?.data?.message || 'Error desconocido'
-    alert(errorMessage)
-
-    // Emitir evento para que LIST recargue la lista también si hay error
+    // Manejo básico de errores
+    const errorMessage =
+      error?.response?.data?.message || error?.message || 'Error desconocido'
+    console.error('Error al guardar relaciones:', errorMessage)
+    alert(`Hubo un problema al guardar las relaciones: ${errorMessage}`)
     emit('guardar')
   }
 }
 
+// Montar datos iniciales
 onMounted(() => {
-  cargarDatos()
+  if (odontologoLogueado.value?.id) {
+    cargarServicios()
+    cargarServiciosAsignados()
+  }
 })
 </script>
 
 <template>
   <Dialog
     v-model:visible="dialogVisible"
-    header="Relacionar Odontólogo y Servicio"
+    header="Relacionar Servicios"
     style="width: 30rem"
   >
     <div class="mb-4">
       <label class="font-semibold mb-2">Odontólogo</label>
-      <Dropdown
-        v-model="relacion.odontologo_id"
-        :options="odontologos"
-        option-label="nombre"
-        option-value="id"
-        class="w-full"
-        @change="cargarServiciosAsignados()"
-      />
+      <p v-if="odontologoLogueado" class="font-semibold text-blue-500">
+        {{ odontologoLogueado.name || 'Nombre no disponible' }}
+      </p>
+      <p v-else class="font-semibold text-red-500">Odontólogo no autenticado</p>
     </div>
+
     <div class="mb-4">
       <label class="font-semibold mb-2">Servicios</label>
       <div
@@ -149,7 +137,7 @@ onMounted(() => {
         class="flex items-center"
       >
         <Checkbox
-          v-model="relacion.servicio_ids"
+          v-model="serviciosSeleccionados"
           :value="servicio.id"
           :disabled="isServicioAsignado(servicio.id)"
         />
@@ -162,7 +150,7 @@ onMounted(() => {
         label="Cancelar"
         icon="pi pi-times"
         severity="secondary"
-        @click="dialogVisible = false"
+        @click="emit('close')"
       />
       <Button label="Guardar" icon="pi pi-save" @click="handleSave" />
     </div>

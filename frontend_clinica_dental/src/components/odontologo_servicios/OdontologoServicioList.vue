@@ -1,101 +1,78 @@
 <script setup lang="ts">
-import type { Odontologo_servicio } from '@/models/Odontologo_servicio'
 import http from '../../plugins/axios'
 import { onMounted, ref, computed } from 'vue'
-import type { Odontologo } from '../../models/Odontologo'
 import type { Servicios } from '../../models/Servicios'
 import Button from 'primevue/button'
 import Dialog from 'primevue/dialog'
-import { useOdontologoSeleccionado } from '@/stores/useOdontologoSeleccionado'
+import { useAuthStore } from '@/stores' // Store de autenticación
 
-const store = useOdontologoSeleccionado()
-
-// Interfaz para definir el tipo de odontologo con sus servicios
-interface OdontologoConServicios extends Odontologo {
-  servicios: Servicios[]
-}
-
-// Definir la constante del endpoint
-const ENDPOINT = 'odontologos_servicios/odontologos-con-servicios'
-const ENDPOINT_DELETE = 'odontologos_servicios'
+// Obtener el odontólogo autenticado
+const authStore = useAuthStore()
+const odontologoLogueado = computed(() => authStore.user)
 
 // Definir las variables reactivas
-const odontologos = ref<OdontologoConServicios[]>([])
+const servicios = ref<Servicios[]>([])
 const nombreBusqueda = ref('')
 const emit = defineEmits(['edit'])
-const odontologo_serviciosDelete = ref<Odontologo_servicio | null>(null)
+const servicioDelete = ref<number | null>(null)
 const mostrarConfirmDialog = ref<boolean>(false)
 
-// Función para obtener todos los odontólogos con sus servicios
-async function obtenerLista() {
+// Obtener la lista de servicios
+const obtenerLista = async () => {
   try {
-    const response = await http.get(ENDPOINT)
-    odontologos.value = response.data
-    console.log('Datos obtenidos:', odontologos.value)
+    const response = await http.get('odontologos_servicios/mis-servicios');
+    servicios.value = response.data;
   } catch (error) {
-    console.error('Error obteniendo los datos:', error)
+    console.error('Error obteniendo los datos:', error);
   }
-}
+};
 
-// Computed para filtrar los odontólogos por nombre en frontend
-const odontologosFiltrados = computed(() => {
-  return odontologos.value.filter(odontologo =>
-    odontologo.nombre
-      .toLowerCase()
-      .includes(nombreBusqueda.value.toLowerCase()),
-  )
-})
-
-// Función para emitir la edición de un odontólogo y servicio
-function emitirEdicion(odontologoId: number, servicioId: number) {
-  const odontologo_servicio: Odontologo_servicio = {
-    id: servicioId, // Esto puede variar dependiendo de tu estructura
-    odontologo_id: odontologoId,
-    servicio_id: servicioId,
-  }
-  emit('edit', odontologo_servicio)
-}
+// Computed para filtrar servicios por nombre
+const serviciosFiltrados = computed(() =>
+  servicios.value.filter(servicio =>
+    servicio.nombre.toLowerCase().includes(nombreBusqueda.value.toLowerCase()),
+  ),
+)
 
 // Función para mostrar el diálogo de confirmación de eliminación
-function mostrarEliminarConfirm(odontologoId: number, servicioId: number) {
-  const odontologo_servicio = odontologos.value
-    .flatMap(odontologo => odontologo.servicios)
-    .find(servicio => servicio.id === servicioId)
-
-  if (odontologo_servicio) {
-    odontologo_serviciosDelete.value = {
-      id: odontologo_servicio.id,
-      odontologo_id: odontologoId,
-      servicio_id: servicioId,
-    }
-    mostrarConfirmDialog.value = true
-  } else {
-    console.error('Servicio no encontrado')
-  }
+function mostrarEliminarConfirm(servicioId: number) {
+  servicioDelete.value = servicioId
+  mostrarConfirmDialog.value = true
 }
 
 // Función para eliminar un servicio
-async function eliminar() {
-  if (odontologo_serviciosDelete.value) {
-    console.log(
-      'Eliminando la relación entre OdontologoID:',
-      odontologo_serviciosDelete.value.odontologo_id,
-      'y ServicioID:',
-      odontologo_serviciosDelete.value.servicio_id,
-    )
 
+async function eliminar() {
+  if (!odontologoLogueado.value) {
+    console.error('Odontólogo no autenticado.')
+    alert('No puedes realizar esta acción. Odontólogo no autenticado.')
+    return
+  }
+
+  if (servicioDelete.value) {
     try {
-      // Llamada al nuevo endpoint para eliminar la relación
-      const response = await http.delete(
-        `${ENDPOINT_DELETE}/eliminar-relacion/${odontologo_serviciosDelete.value.odontologo_id}/${odontologo_serviciosDelete.value.servicio_id}`,
+      console.log('Intentando eliminar:', {
+        odontologoId: odontologoLogueado.value.id,
+        servicioId: servicioDelete.value,
+      })
+
+      await http.delete(
+        `odontologos_servicios/eliminar-relacion/${odontologoLogueado.value.id}/${servicioDelete.value}`,
       )
 
-      console.log('Respuesta del servidor:', response)
-      obtenerLista() // Vuelve a cargar los odontólogos después de eliminar
+      console.log('Servicio eliminado:', servicioDelete.value)
+      obtenerLista() // Actualizar la lista después de eliminar
       mostrarConfirmDialog.value = false
     } catch (error) {
-      console.error('Error al eliminar:', error)
-      alert('Hubo un problema al eliminar la relación.')
+      if (error && typeof error === 'object' && 'response' in error) {
+        console.error(
+          'Error al eliminar el servicio:',
+          (error as any).response.data,
+        )
+      } else {
+        console.error('Error al eliminar el servicio:', error)
+      }
+      alert('Hubo un problema al eliminar el servicio.')
     }
   }
 }
@@ -104,65 +81,42 @@ async function eliminar() {
 onMounted(() => {
   obtenerLista()
 })
-
-defineExpose({ obtenerLista })
+defineExpose({
+  obtenerLista, // Permite acceder a este método desde otros componentes
+});
 </script>
 
 <template>
-  <div>
+  <div class="contenedor-lista">
     <!-- Campo de búsqueda -->
     <input
       v-model="nombreBusqueda"
-      placeholder="Buscar odontólogo por nombre"
+      placeholder="Buscar servicio por nombre"
+      class="busqueda"
     />
 
-    <!-- Mostrar lista de odontólogos filtrada -->
-    <div
-      v-for="odontologo in odontologosFiltrados"
-      :key="odontologo.id"
-      class="odontologo"
-    >
-      <h2>
-        {{ odontologo.nombre }} {{ odontologo.primerApellido }}
-        {{ odontologo.segundoApellido }}
-      </h2>
-      <p><strong>Especialidad:</strong> {{ odontologo.especialidad }}</p>
-      <p><strong>Correo:</strong> {{ odontologo.email }}</p>
-      <p><strong>Teléfono:</strong> {{ odontologo.telefono }}</p>
+    <!-- Contenedor de tarjetas -->
+    <div class="tarjetas-grid">
+      <div
+        v-for="servicio in serviciosFiltrados"
+        :key="servicio.id"
+        class="tarjeta-servicio"
+      >
+        <h3>{{ servicio.nombre }}</h3>
+        <p><strong>Descripción:</strong> {{ servicio.descripcion }}</p>
+        <p><strong>Precio:</strong> {{ servicio.precio }} Bs.</p>
+        <p><strong>Duración:</strong> {{ servicio.duracion }} min</p>
 
-      <!-- Tabla de servicios -->
-      <table>
-        <thead>
-          <tr>
-            <th>Nombre del Servicio</th>
-            <th>Descripción</th>
-            <th>Precio</th>
-            <th>Duración</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="servicio in odontologo.servicios" :key="servicio.id">
-            <td>{{ servicio.nombre }}</td>
-            <td>{{ servicio.descripcion }}</td>
-            <td>{{ servicio.precio }}</td>
-            <td>{{ servicio.duracion }}</td>
-            <td>
-              <!-- <Button
-                icon="pi pi-pencil"
-                aria-label="Editar"
-                text
-                @click="emitirEdicion(odontologo.id, servicio.id)"
-              />-->
-              <Button
-                icon="pi pi-trash"
-                aria-label="Eliminar"
-                text
-                @click="mostrarEliminarConfirm(odontologo.id, servicio.id)"
-              />
-            </td>
-          </tr>
-        </tbody>
-      </table>
+        <!-- Botones de acción -->
+        <div class="acciones">
+          <Button
+            icon="pi pi-trash"
+            aria-label="Eliminar"
+            class="boton-eliminar"
+            @click="mostrarEliminarConfirm(servicio.id)"
+          />
+        </div>
+      </div>
     </div>
 
     <!-- Diálogo de confirmación de eliminación -->
@@ -171,7 +125,7 @@ defineExpose({ obtenerLista })
       header="Confirmar Eliminación"
       :style="{ width: '25rem' }"
     >
-      <p>¿Estás seguro de que deseas eliminar este registro?</p>
+      <p>¿Estás seguro de que deseas eliminar este servicio?</p>
       <div class="flex justify-end gap-2">
         <Button
           type="button"
@@ -186,51 +140,97 @@ defineExpose({ obtenerLista })
 </template>
 
 <style scoped>
-table {
-  width: 100%;
-  margin-top: 1rem;
-  border-collapse: collapse;
+.contenedor-lista {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: #f7f9fc;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.odontologo {
-  margin-bottom: 2rem;
-  padding: 1.5rem;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  background-color: #f9f9f9;
-}
-
-h2 {
-  margin-bottom: 0.5rem;
-  color: #333;
-}
-
-p {
-  margin: 0.2rem 0 0.5rem 0;
-  color: #666;
-}
-
-th,
-td {
-  padding: 0.75rem;
-  border: 1px solid #ddd;
-}
-
-th {
-  background-color: #f3f3f3;
-  font-weight: bold;
-  color: #555;
-}
-
-td {
-  color: #333;
-}
-
-input {
+/* Campo de búsqueda */
+.busqueda {
   margin-bottom: 1.5rem;
-  padding: 0.5rem;
+  padding: 0.75rem;
   width: 100%;
-  border-radius: 4px;
-  border: 1px solid #ddd;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.busqueda:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 4px rgba(0, 123, 255, 0.25);
+}
+
+/* Grid para las tarjetas */
+.tarjetas-grid {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(300px, 1fr)
+  ); /* Tres columnas ajustables */
+  gap: 1.5rem; /* Espaciado entre tarjetas */
+}
+
+/* Tarjeta de servicio */
+.tarjeta-servicio {
+  background-color: #ffffff;
+  border: 1px solid #e3e3e3;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  transition:
+    transform 0.2s ease-in-out,
+    box-shadow 0.2s ease-in-out;
+  text-align: start;
+}
+
+.tarjeta-servicio:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Título de la tarjeta */
+.tarjeta-servicio h3 {
+  margin-bottom: 0.5rem;
+  font-size: 1.25rem;
+  color: #2c3e50;
+  font-weight: bold;
+}
+
+/* Información del servicio */
+.tarjeta-servicio p {
+  margin: 0.5rem 0;
+  color: #555;
+  font-size: 1rem;
+}
+
+/* Botones de acción */
+.acciones {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+.boton-editar {
+  background-color: #4caf50;
+  color: #ffffff;
+}
+
+.boton-editar:hover {
+  background-color: #45a049;
+}
+
+.boton-eliminar {
+  background-color: #f44336;
+  color: #ffffff;
+}
+
+.boton-eliminar:hover {
+  background-color: #e53935;
 }
 </style>

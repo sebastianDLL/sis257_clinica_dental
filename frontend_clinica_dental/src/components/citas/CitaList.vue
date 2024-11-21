@@ -110,6 +110,7 @@ defineExpose({ obtenerLista })
 
           <td>
             <Button
+              v-if="cita.estado !== 'Confirmado'"
               icon="pi pi-pencil"
               aria-label="Editar"
               text

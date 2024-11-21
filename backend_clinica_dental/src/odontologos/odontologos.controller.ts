@@ -17,8 +17,6 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @ApiTags('Odontologos')
-@ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
 @Controller('odontologos')
 export class OdontologosController {
   constructor(private readonly odontologosService: OdontologosService) {}
@@ -30,6 +28,7 @@ export class OdontologosController {
     const userId = req.user.id; // Extrae el ID del usuario autenticado desde el token
     return await this.odontologosService.findAuthenticatedUser(userId); // Retorna el odontologo autenticado
   }
+
   @Post('cambiar-password')
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
@@ -58,17 +57,22 @@ export class OdontologosController {
     return this.odontologosService.create(createOdontologoDto);
   }
 
+  // Método público: No tiene @ApiBearerAuth ni @UseGuards
   @Get()
   findAll() {
     return this.odontologosService.findAll();
   }
 
   @Get(':id')
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
   findOne(@Param('id') id: string) {
     return this.odontologosService.findOne(+id);
   }
 
   @Patch(':id')
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
   update(
     @Param('id') id: string,
     @Body() updateOdontologoDto: UpdateOdontologoDto,
@@ -77,6 +81,8 @@ export class OdontologosController {
   }
 
   @Delete(':id')
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
   remove(@Param('id') id: string) {
     return this.odontologosService.remove(+id);
   }
