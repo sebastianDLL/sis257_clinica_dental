@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
+import { useToast } from 'primevue/usetoast';
 import http from '../plugins/axios'
 import ClienteList from '../components/clientes/ClienteList.vue'
 import ClienteSave from '../components/clientes/ClienteSave.vue'
@@ -12,30 +13,34 @@ const cliente = ref<Cliente | null>(null) // Datos del cliente autenticado
 const mostrarDialog = ref(false) // Controla la visibilidad del diálogo
 const mostrarDialogPassword = ref(false) // Controla la visibilidad del diálogo de cambiar contraseña
 
+// Toast Service
+const toast = useToast();
+
 // Cargar datos del cliente autenticado
 async function cargarClienteAutenticado() {
   try {
     cliente.value = await http
-      .get('clientes/mi-perfil')
-      .then(response => response.data)
+    .get('clientes/mi-perfil')
+    .then(response => response.data)
+    toast.add({ severity: 'success', summary: 'Éxito', detail: 'Datos del cliente cargados correctamente.', life: 3000 });
   } catch (error) {
-    console.error('Error al cargar los datos del cliente:', error)
-    alert('No se pudieron cargar los datos del cliente.')
+    console.error('Error al cargar los datos del cliente:', error);
+    toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudieron cargar los datos del cliente.', life: 3000 });
   }
 }
 
 // Cambiar contraseña
 async function cambiarPassword(passwordActual: string, nuevaPassword: string) {
   try {
-    const response = await http.post('clientes/cambiar-password', {
-      passwordActual,
+    const response = await http.post('clientes/cambiar-password', { 
+      passwordActual, 
       nuevaPassword,
     });
-    mostrarDialogPassword.value = false // Cerrar el diálogo
-    alert(response.data);
+    mostrarDialogPassword.value = false; // Cerrar el diálogo
+    toast.add({ severity: 'success', summary: 'Éxito', detail: response.data, life: 3000 });
   } catch (error) {
-    console.error('Error al cambiar la contraseña:', error)
-    alert('No se pudo cambiar la contraseña.')
+    console.error('Error al cambiar la contraseña:', error);
+    toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudo cambiar la contraseña.', life: 3000 });
   }
 }
 
@@ -44,11 +49,11 @@ async function guardarCambios(clienteActualizado: Cliente) {
   try {
     await http.patch(`clientes/${clienteActualizado.id}`, clienteActualizado)
     cliente.value = { ...clienteActualizado } // Actualizar los datos locales
-    mostrarDialog.value = false // Cerrar el diálogo
-    alert('Datos actualizados correctamente.')
+    mostrarDialog.value = false; // Cerrar el diálogo
+    toast.add({ severity: 'success', summary: 'Éxito', detail: 'Datos actualizados correctamente.', life: 3000 });
   } catch (error) {
-    console.error('Error al guardar los cambios:', error)
-    alert('No se pudieron guardar los cambios.')
+    console.error('Error al guardar los cambios:', error);
+    toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudieron guardar los cambios.', life: 3000 });
   }
 }
 
@@ -60,6 +65,8 @@ onMounted(() => {
 
 <template>
   <div class="slider-background">
+    <Toast /> <!-- Componente Toast -->
+
     <div class="content-container">
       <h1 class="title">Mi Perfil</h1>
       <div v-if="cliente">

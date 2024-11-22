@@ -5,8 +5,11 @@ import http from '../../plugins/axios'
 import Button from 'primevue/button'
 import Dialog from 'primevue/dialog'
 import InputText from 'primevue/inputtext'
+import Toast from 'primevue/toast'
+import { useToast } from 'primevue/usetoast'
 import { computed, ref, watch } from 'vue'
 
+const toast = useToast()
 const ENDPOINT = 'clientes'
 const props = defineProps({
   mostrar: Boolean,
@@ -46,114 +49,77 @@ async function handleSave() {
     }
     if (props.modoEdicion) {
       await http.patch(`${ENDPOINT}/${cliente.value.id}`, body)
+      toast.add({
+        severity: 'success',
+        summary: 'Cliente actualizado',
+        detail: 'Los datos del cliente se han actualizado correctamente',
+        life: 3000
+      })
     } else {
       await http.post(ENDPOINT, body)
+      toast.add({
+        severity: 'success',
+        summary: 'Cliente creado',
+        detail: 'El cliente se ha creado correctamente',
+        life: 3000
+      })
     }
     emit('guardar')
     cliente.value = {} as Cliente
     dialogVisible.value = false
   } catch (error: any) {
-    alert(error?.response?.data?.message)
+    toast.add({
+      severity: 'error',
+      summary: 'Error',
+      detail: error?.response?.data?.message || 'Ocurrió un error al procesar la solicitud',
+      life: 5000
+    })
   }
 }
 </script>
 
 <template>
+  <Toast />
   <div class="card flex justify-center">
-    <Dialog
-      v-model:visible="dialogVisible"
-      :header="props.modoEdicion ? 'Editar' : 'Crear'"
-      style="width: 25rem"
-    >
+    <Dialog v-model:visible="dialogVisible" :header="props.modoEdicion ? 'Editar' : 'Crear'" style="width: 25rem">
       <div class="flex items-center gap-4 mb-4">
         <label for="nombre" class="font-semibold w-24">Nombre</label>
-        <InputText
-          id="nombre"
-          v-model="cliente.nombre"
-          class="flex-auto"
-          autocomplete="off"
-          autofocus
-        />
+        <InputText id="nombre" v-model="cliente.nombre" class="flex-auto" autocomplete="off" autofocus />
       </div>
       <div class="flex items-center gap-4 mb-4">
         <label for="primer_apellido" class="font-semibold w-24">Primer Apellido</label>
-        <InputText
-          id="primer_apellido"
-          v-model="cliente.primerApellido"
-          class="flex-auto"
-          autocomplete="off"
-        />
+        <InputText id="primer_apellido" v-model="cliente.primerApellido" class="flex-auto" autocomplete="off" />
       </div>
       <div class="flex items-center gap-4 mb-4">
         <label for="segundo_apellido" class="font-semibold w-24">Segundo Apellido</label>
-        <InputText
-          id="segundo_apellido"
-          v-model="cliente.segundoApellido"
-          class="flex-auto"
-          autocomplete="off"
-        />
+        <InputText id="segundo_apellido" v-model="cliente.segundoApellido" class="flex-auto" autocomplete="off" />
       </div>
       <div class="flex items-center gap-4 mb-4">
         <label for="email" class="font-semibold w-24">Correo</label>
-        <InputText
-          id="email"
-          v-model="cliente.email"
-          class="flex-auto"
-          autocomplete="off"
-        />
+        <InputText id="email" v-model="cliente.email" class="flex-auto" autocomplete="off" />
       </div>
       <div class="flex items-center gap-4 mb-4">
         <label for="password" class="font-semibold w-24">Contraseña</label>
-        <Password
-          id="password"
-          v-model="cliente.password"
-          :disabled="props.modoEdicion"
-          :toggleMask="!props.modoEdicion"
-          :feedback="!props.modoEdicion"
-          class="flex-auto"
-          autocomplete="off"
-          weakLabel="Débil"
-          mediumLabel="Media"
-          strongLabel="Fuerte"
-        />
+        <Password id="password" v-model="cliente.password" :disabled="props.modoEdicion"
+          :toggleMask="!props.modoEdicion" :feedback="!props.modoEdicion" class="flex-auto" autocomplete="off"
+          weakLabel="Débil" mediumLabel="Media" strongLabel="Fuerte" />
       </div>
       <div class="flex items-center gap-4 mb-4">
         <label for="telefono" class="font-semibold w-24">Teléfono</label>
-        <InputText
-          id="telefono"
-          v-model="cliente.telefono"
-          class="flex-auto"
-          autocomplete="off"
-        />
+        <InputText id="telefono" v-model="cliente.telefono" class="flex-auto" autocomplete="off" />
       </div>
       <div class="flex items-center gap-4 mb-4">
         <label for="direccion" class="font-semibold w-24">Dirección</label>
-        <InputText
-          id="direccion"
-          v-model="cliente.direccion"
-          class="flex-auto"
-          autocomplete="off"
-        />
+        <InputText id="direccion" v-model="cliente.direccion" class="flex-auto" autocomplete="off" />
       </div>
       <div class="flex justify-end gap-2">
-        <Button
-          type="button"
-          label="Cancelar"
-          icon="pi pi-times"
-          severity="secondary"
-          @click="dialogVisible = false"
-        ></Button>
-        <Button
-          type="button"
-          label="Guardar"
-          icon="pi pi-save"
-          @click="handleSave"
-        ></Button>
+        <Button type="button" label="Cancelar" icon="pi pi-times" severity="secondary"
+          @click="dialogVisible = false"></Button>
+        <Button type="button" label="Guardar" icon="pi pi-save" @click="handleSave"></Button>
       </div>
     </Dialog>
   </div>
 </template>
-
 
 <style scoped>
 .p-inputtext:disabled {

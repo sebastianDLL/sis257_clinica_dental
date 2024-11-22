@@ -7,6 +7,9 @@ import type { Odontologo_servicio } from '../../models/Odontologo_servicio'
 import type { Odontologo } from '../../models/Odontologo'
 import type { Servicios } from '../../models/Servicios'
 import Dialog from 'primevue/dialog'
+import { useToast } from 'primevue/usetoast'
+
+const toast = useToast()
 
 const props = defineProps({
   mostrar: Boolean,
@@ -61,7 +64,7 @@ async function cargarDatos() {
 async function handleEditSave() {
   try {
     if (!relacion.value.odontologo_id || !relacion.value.servicio_id) {
-      alert('Debe seleccionar un odontólogo y un servicio')
+      toast.add({ severity: 'warn', summary: 'Error', detail: 'Debe seleccionar un odontólogo y un servicio', life: 3000 });
       return
     }
 
@@ -79,7 +82,8 @@ async function handleEditSave() {
     dialogVisible.value = false
   } catch (error: any) {
     console.error(error)
-    alert(error?.response?.data?.message || 'Error desconocido')
+    toast.add({ severity: 'error', summary: 'Error', detail: 'Error desconocido', life: 3000 });
+    
   }
 }
 

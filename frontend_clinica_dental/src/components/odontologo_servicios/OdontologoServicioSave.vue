@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import http from '../../plugins/axios'
 import Dialog from 'primevue/dialog'
 import Checkbox from 'primevue/checkbox'
 import Button from 'primevue/button'
+import Toast from 'primevue/toast'
+import { useToast } from 'primevue/usetoast'
 import type { Servicios } from '../../models/Servicios'
 import type { Odontologo_servicio } from '../../models/Odontologo_servicio'
 import { useAuthStore } from '@/stores' // Store para autenticación
@@ -11,6 +13,9 @@ import { useAuthStore } from '@/stores' // Store para autenticación
 // Obtener el odontólogo autenticado
 const authStore = useAuthStore()
 const odontologoLogueado = computed(() => authStore.user)
+
+// Inicializar Toast
+const toast = useToast()
 
 // Props y eventos
 const props = defineProps({
@@ -33,10 +38,12 @@ const dialogVisible = computed({
     }
   },
 })
+
 // Reiniciar el formulario
 function resetFormulario() {
   serviciosSeleccionados.value = [] // Limpia los servicios seleccionados
 }
+
 // Cargar servicios disponibles
 async function cargarServicios() {
   try {
@@ -44,7 +51,12 @@ async function cargarServicios() {
     servicios.value = response.data
   } catch (error) {
     console.error('Error al cargar servicios:', error)
-    alert('Hubo un problema al cargar los servicios.')
+    toast.add({
+      severity: 'error',
+      summary: 'Error',
+      detail: 'Hubo un problema al cargar los servicios.',
+      life: 3000,
+    })
   }
 }
 
@@ -64,7 +76,12 @@ async function cargarServiciosAsignados() {
     }
   } catch (error) {
     console.error('Error al cargar servicios asignados:', error)
-    alert('Hubo un problema al cargar los servicios asignados.')
+    toast.add({
+      severity: 'error',
+      summary: 'Error',
+      detail: 'Hubo un problema al cargar los servicios asignados.',
+      life: 3000,
+    })
   }
 }
 
@@ -77,7 +94,12 @@ function isServicioAsignado(servicioId: number) {
 async function handleSave() {
   try {
     if (serviciosSeleccionados.value.length === 0) {
-      alert('Debe seleccionar al menos un servicio.')
+      toast.add({
+        severity: 'warn',
+        summary: 'Advertencia',
+        detail: 'Debe seleccionar al menos un servicio.',
+        life: 3000,
+      })
       return
     }
 
@@ -93,16 +115,25 @@ async function handleSave() {
 
     // Si todo se guarda correctamente
     await cargarServiciosAsignados() // Actualizar los servicios locales
+    toast.add({
+      severity: 'success',
+      summary: 'Éxito',
+      detail: 'Relaciones guardadas correctamente.',
+      life: 3000,
+    })
     emit('guardar')
     emit('close')
     dialogVisible.value = false
   } catch (error: any) {
-    // Manejo básico de errores
     const errorMessage =
       error?.response?.data?.message || error?.message || 'Error desconocido'
     console.error('Error al guardar relaciones:', errorMessage)
-    alert(`Hubo un problema al guardar las relaciones: ${errorMessage}`)
-    emit('guardar')
+    toast.add({
+      severity: 'error',
+      summary: 'Error',
+      detail: `Hubo un problema al guardar las relaciones: ${errorMessage}`,
+      life: 3000,
+    })
   }
 }
 
@@ -116,11 +147,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <Dialog
-    v-model:visible="dialogVisible"
-    header="Relacionar Servicios"
-    style="width: 30rem"
-  >
+  <Dialog v-model:visible="dialogVisible" header="Relacionar Servicios" style="width: 30rem">
     <div class="mb-4">
       <label class="font-semibold mb-2">Odontólogo</label>
       <p v-if="odontologoLogueado" class="font-semibold text-blue-500">
@@ -131,27 +158,14 @@ onMounted(() => {
 
     <div class="mb-4">
       <label class="font-semibold mb-2">Servicios</label>
-      <div
-        v-for="servicio in servicios"
-        :key="servicio.id"
-        class="flex items-center"
-      >
-        <Checkbox
-          v-model="serviciosSeleccionados"
-          :value="servicio.id"
-          :disabled="isServicioAsignado(servicio.id)"
-        />
+      <div v-for="servicio in servicios" :key="servicio.id" class="flex items-center">
+        <Checkbox v-model="serviciosSeleccionados" :value="servicio.id" :disabled="isServicioAsignado(servicio.id)" />
         <span class="ml-2">{{ servicio.nombre }}</span>
       </div>
     </div>
 
     <div class="flex justify-end gap-2">
-      <Button
-        label="Cancelar"
-        icon="pi pi-times"
-        severity="secondary"
-        @click="emit('close')"
-      />
+      <Button label="Cancelar" icon="pi pi-times" severity="secondary" @click="emit('close')" />
       <Button label="Guardar" icon="pi pi-save" @click="handleSave" />
     </div>
   </Dialog>

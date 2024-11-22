@@ -10,6 +10,9 @@ import { useAuthStore } from '../../stores'
 import { DatePicker } from 'primevue'
 import Select from 'primevue/select'
 import InputText from 'primevue/inputtext'
+import { useToast } from 'primevue/usetoast'
+
+const toast = useToast()
 
 const ENDPOINT = 'citas'
 const ODONTOLOGOS_ENDPOINT = 'odontologos'
@@ -196,7 +199,7 @@ async function handleSave() {
     dialogVisible.value = false
   } catch (error: any) {
     if (error.response?.status === 409) {
-      alert('Este horario ya está reservado. Por favor, elige otro horario.')
+      toast.add({ severity: 'warn', summary: 'Error', detail: 'Este horario ya está reservado. Por favor, elige otro horario.', life: 3000 });
     } else {
       console.error('Error al guardar:', error)
       alert(error?.response?.data?.message || error.message)
