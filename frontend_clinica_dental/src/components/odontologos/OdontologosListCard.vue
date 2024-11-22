@@ -31,7 +31,7 @@ defineExpose({ obtenerLista })
         <div class="card shadow-sm h-100">
           <div class="card-header">
             <h5 class="card-title">
-              <strong>Dr.</strong> {{ odontologo.nombre }} {{ odontologo.primerApellido }}
+              <strong>Dr. {{ odontologo.nombre }} {{ odontologo.primerApellido }}</strong>
             </h5>
           </div>
           <div class="card-body">
@@ -98,6 +98,7 @@ defineExpose({ obtenerLista })
 }
 
 .card-title {
+  color: white;
   margin: 0;
   font-size: 1.1rem;
   font-weight: 500;
@@ -144,10 +145,6 @@ defineExpose({ obtenerLista })
     grid-template-columns: 1fr;
     gap: 1rem;
     padding: 0.5rem;
-  }
-
-  .card-title {
-    font-size: 1rem;
   }
 }
 </style>

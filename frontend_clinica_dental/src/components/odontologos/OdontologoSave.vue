@@ -4,6 +4,7 @@ import http from '../../plugins/axios'
 import Button from 'primevue/button'
 import Dialog from 'primevue/dialog'
 import InputText from 'primevue/inputtext'
+import Password from 'primevue/password'
 import { computed, ref, watch } from 'vue'
 
 const ENDPOINT = 'odontologos'
@@ -110,11 +111,17 @@ async function handleSave() {
       </div>
       <div class="flex items-center gap-4 mb-4">
         <label for="password" class="font-semibold w-24">Contraseña</label>
-        <InputText
+        <Password
           id="password"
           v-model="odontologo.password"
+          :disabled="props.modoEdicion"
+          :toggleMask="!props.modoEdicion"
+          :feedback="!props.modoEdicion"
           class="flex-auto"
           autocomplete="off"
+          weakLabel="Débil"
+          mediumLabel="Media"
+          strongLabel="Fuerte"
         />
       </div>
       <div class="flex items-center gap-4 mb-4">
