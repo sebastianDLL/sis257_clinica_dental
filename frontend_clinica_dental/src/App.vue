@@ -15,7 +15,7 @@ const authStore = useAuthStore()
 
 onMounted(() => {
   // Inicializa los scripts necesarios después de que el DOM esté renderizado
-  console.log('Document ready - inicializando scripts locales')
+  console.log('Todo ok - inicializando scripts locales')
 
   // Verifica el token al cargar la aplicación
   authStore.validateToken()
@@ -40,6 +40,7 @@ watch(route, async newRoute => {
 <template>
   <MainHeader />
   <div class="main-content">
+    <Toast />
     <RouterView />
   </div>
   <MainFooter />

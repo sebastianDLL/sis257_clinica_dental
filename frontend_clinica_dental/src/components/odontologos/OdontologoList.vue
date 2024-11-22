@@ -4,6 +4,9 @@ import http from '../../plugins/axios'
 import Button from 'primevue/button'
 import Dialog from 'primevue/dialog'
 import { onMounted, ref } from 'vue'
+import { useToast } from 'primevue/usetoast'
+
+const toast = useToast()
 
 const ENDPOINT = 'odontologos'
 let odontologos = ref<Odontologo[]>([])
@@ -14,7 +17,6 @@ const mostrarConfirmDialog = ref<boolean>(false)
 
 async function obtenerLista() {
   odontologos.value = await http.get(ENDPOINT).then(response => response.data)
-  console.log(odontologos.value)
 }
 
 function emitirEdicion(odontologo: Odontologo) {
@@ -28,6 +30,12 @@ function mostrarEliminarConfirm(odontologo: Odontologo) {
 
 async function eliminar() {
   await http.delete(`${ENDPOINT}/${odontologoDelete.value?.id}`)
+  toast.add({
+        severity: 'success',
+        summary: 'Odontologo Eliminado',
+        detail: 'Los datos del Odontologo se han eliminado correctamente',
+        life: 3000
+      })
   obtenerLista()
   mostrarConfirmDialog.value = false
 }

@@ -5,8 +5,11 @@ import http from '../../plugins/axios'
 import Button from 'primevue/button'
 import Dialog from 'primevue/dialog'
 import InputText from 'primevue/inputtext'
+import Toast from 'primevue/toast'
+import { useToast } from 'primevue/usetoast'
 import { computed, ref, watch } from 'vue'
 
+const toast = useToast()
 const ENDPOINT = 'clientes'
 const props = defineProps({
   mostrar: Boolean,
@@ -46,19 +49,37 @@ async function handleSave() {
     }
     if (props.modoEdicion) {
       await http.patch(`${ENDPOINT}/${cliente.value.id}`, body)
+      toast.add({
+        severity: 'success',
+        summary: 'Cliente actualizado',
+        detail: 'Los datos del cliente se han actualizado correctamente',
+        life: 3000
+      })
     } else {
       await http.post(ENDPOINT, body)
+      toast.add({
+        severity: 'success',
+        summary: 'Cliente creado',
+        detail: 'El cliente se ha creado correctamente',
+        life: 3000
+      })
     }
     emit('guardar')
     cliente.value = {} as Cliente
     dialogVisible.value = false
   } catch (error: any) {
-    alert(error?.response?.data?.message)
+    toast.add({
+      severity: 'error',
+      summary: 'Error',
+      detail: error?.response?.data?.message || 'Ocurrió un error al procesar la solicitud',
+      life: 5000
+    })
   }
 }
 </script>
 
 <template>
+  <Toast />
   <div class="card flex justify-center">
     <Dialog
       v-model:visible="dialogVisible"
@@ -163,7 +184,6 @@ async function handleSave() {
     </Dialog>
   </div>
 </template>
-
 
 <style scoped>
 .p-inputtext:disabled {

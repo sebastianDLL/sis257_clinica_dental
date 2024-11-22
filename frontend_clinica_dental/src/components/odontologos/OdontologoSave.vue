@@ -5,7 +5,11 @@ import Button from 'primevue/button'
 import Dialog from 'primevue/dialog'
 import InputText from 'primevue/inputtext'
 import Password from 'primevue/password'
+import Toast from 'primevue/toast'
+import { useToast } from 'primevue/usetoast'
 import { computed, ref, watch } from 'vue'
+
+const toast = useToast()
 
 const ENDPOINT = 'odontologos'
 const props = defineProps({
@@ -47,8 +51,20 @@ async function handleSave() {
     }
     if (props.modoEdicion) {
       await http.patch(`${ENDPOINT}/${odontologo.value.id}`, body)
+      toast.add({
+        severity: 'success',
+        summary: 'Odontologo actualizado',
+        detail: 'Los datos del odontologo se han actualizado correctamente',
+        life: 3000
+      })
     } else {
       await http.post(ENDPOINT, body)
+      toast.add({
+        severity: 'success',
+        summary: 'Odontologo Creado',
+        detail: 'El odontologo se ha creado correctamente',
+        life: 3000
+      })
     }
     emit('guardar')
     odontologo.value = {} as Odontologo
@@ -60,6 +76,7 @@ async function handleSave() {
 </script>
 
 <template>
+  <Toast />
   <div class="card flex justify-center">
     <Dialog
       v-model:visible="dialogVisible"

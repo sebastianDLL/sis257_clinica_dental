@@ -72,11 +72,8 @@ const useAuthStore = defineStore('auth', {
         return;
       }
     
-      console.log('Cerrando sesión...');
       localStorage.clear();
       this.$reset();
-      console.log('Estado del store después del logout:', this.$state);
-      console.log('LocalStorage después del logout:', localStorage);
       router.push('/');
     },
     validateToken() {

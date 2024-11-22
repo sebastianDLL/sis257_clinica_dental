@@ -6,6 +6,7 @@ import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
 import Password from 'primevue/password';
 import { useRouter } from 'vue-router';
+import { useToast } from 'primevue/usetoast'; // Importar el hook de Toast
 
 const ENDPOINT = 'clientes';
 const cliente = ref<Cliente>({
@@ -19,8 +20,8 @@ const cliente = ref<Cliente>({
   direccion: '',
 });
 
-
 const router = useRouter();
+const toast = useToast(); // Instancia de Toast
 
 async function handleSave() {
   try {
@@ -35,10 +36,32 @@ async function handleSave() {
     };
 
     await http.post(ENDPOINT, body);
-    alert('Cuenta creada con éxito.');
+
+    // Mostrar un Toast de éxito
+    toast.add({
+      severity: 'success',
+      summary: 'Cuenta creada',
+      detail: 'La cuenta ha sido creada con éxito.',
+      life: 3000, // Duración del mensaje
+    });
+
+    // Mostrar contraseña por defecto
+    toast.add({
+      severity: 'success',
+      summary: 'Bienvenido',
+      detail: 'Tu contraseña por defecto es "hola123"',
+      life: 10000, // Duración del mensaje
+    });
+
     router.push('/login'); // Redirige al login después de crear la cuenta
   } catch (error: any) {
-    alert(error?.response?.data?.message || 'Error al crear la cuenta.');
+    // Mostrar un Toast de error
+    toast.add({
+      severity: 'error',
+      summary: 'Error',
+      detail: error?.response?.data?.message || 'Error al crear la cuenta.',
+      life: 5000, // Duración del mensaje
+    });
   }
 }
 </script>
@@ -59,8 +82,8 @@ async function handleSave() {
     </div>
     <div class="form-group">
       <label for="contraseña">Contraseña</label>
-      <Password id="contraseña" v-model="cliente.password" required toggleMask
-        weakLabel="Débil" mediumLabel="Media" strongLabel="Fuerte" maxlength="50">
+      <Password id="contraseña" v-model="cliente.password" required toggleMask weakLabel="Débil" mediumLabel="Media"
+        strongLabel="Fuerte" maxlength="50">
         <template #footer>
           <Divider />
           <p class="mt-1 suggestions">Sugerencias</p>
@@ -97,7 +120,6 @@ async function handleSave() {
   max-width: 400px;
   margin: auto;
   padding: 20px;
-  background: #ff0000;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
@@ -124,7 +146,7 @@ input {
   border-radius: 4px;
 }
 
-#contraseña{
+#contraseña {
   width: 100%;
   padding: 8px;
   border: 1px solid #ccc;

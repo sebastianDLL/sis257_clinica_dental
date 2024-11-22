@@ -2,21 +2,37 @@
 import ClienteSave from '@/components/clientes/ClienteSaveFormulario.vue';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { useToast } from 'primevue/usetoast'; // Importar el hook de Toast
 
 const clienteNuevo = ref({}); // Datos iniciales para un nuevo cliente
 const router = useRouter();
+const toast = useToast(); // Instancia de Toast
 
 function handleGuardar() {
-  alert('Cuenta creada con éxito');
+  // Mostrar un mensaje Toast
+  toast.add({
+    severity: 'success', // Nivel de importancia
+    summary: 'Éxito', // Título del Toast
+    detail: 'Cuenta creada con éxito', // Mensaje
+    life: 3000, // Duración en milisegundos
+  });
+
   router.push('/login'); // Redirige al login después de guardar
 }
 
 function handleCloseDialog() {
-  // Lógica si decides cerrar el formulario
-  alert('Formulario cerrado');
+  // Mostrar un mensaje Toast
+  toast.add({
+    severity: 'info', // Nivel de importancia
+    summary: 'Información', // Título del Toast
+    detail: 'Formulario cerrado', // Mensaje
+    life: 3000, // Duración en milisegundos
+  });
+
   router.push('/login'); // Redirige al login si el formulario se cierra
 }
 </script>
+
 
 <template>
     <div class="create-view">

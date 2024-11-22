@@ -5,6 +5,9 @@ import { useAuthStore } from '../../stores' // Acceso al odontologo autenticado
 import http from '../../plugins/axios'
 import Button from 'primevue/button'
 import InputText from 'primevue/inputtext'
+import { useToast } from 'primevue/usetoast'; 
+
+const toast = useToast(); // Servicio de notificaciones
 
 const authStore = useAuthStore() // Obtener el odontologo autenticado
 const odontologo = ref<Odontologo | null>(null) // Especificamos que odontologo puede ser Odontologo o null
@@ -14,15 +17,19 @@ const emit = defineEmits(['editar', 'cambiarPassword']) // Ahora incluye 'cambia
 // Cargar los datos del odontologo autenticado desde el backend
 async function cargarOdontologoAutenticado() {
   try {
-    odontologo.value = await http.get('odontologos/mi-perfil').then(res => res.data)
-    console.log('Datos del odontologo autenticado:', odontologo.value)
+    odontologo.value = await http.get('odontologos/mi-perfil').then(res => res.data);
+    console.log('Datos del odontologo autenticado:', odontologo.value);
   } catch (error) {
-    console.error('Error al cargar los datos del odontologo:', error)
-    alert('No se pudieron cargar los datos del odontologo.')
+    console.error('Error al cargar los datos del odontologo:', error);
+    toast.add({
+      severity: 'error',
+      summary: 'Error al cargar datos',
+      detail: 'No se pudieron cargar los datos del odontólogo.',
+      life: 3000,
+    });
   }
 }
 
-// Eliminar la cuenta del usuario autenticado
 async function eliminarCuenta() {
   if (confirm('¿Estás seguro de que deseas eliminar tu cuenta? Esta acción no se puede deshacer.')) {
     try {
@@ -30,12 +37,22 @@ async function eliminarCuenta() {
       await http.delete(`odontologos/${odontologo.value?.id}`);
       
       // Cerrar sesión y redirigir al inicio
-      authStore.logout(); // Asegúrate de tener un método para cerrar sesión
-      alert('Tu cuenta ha sido eliminada correctamente.');
+      authStore.logout();
+      toast.add({
+        severity: 'success',
+        summary: 'Cuenta eliminada',
+        detail: 'Tu cuenta ha sido eliminada correctamente.',
+        life: 3000,
+      });
       window.location.href = '/'; // Redirige al inicio
     } catch (error) {
       console.error('Error al eliminar la cuenta:', error);
-      alert('No se pudo eliminar la cuenta. Inténtalo de nuevo.');
+      toast.add({
+        severity: 'error',
+        summary: 'Error al eliminar cuenta',
+        detail: 'No se pudo eliminar la cuenta. Inténtalo de nuevo.',
+        life: 3000,
+      });
     }
   }
 }
