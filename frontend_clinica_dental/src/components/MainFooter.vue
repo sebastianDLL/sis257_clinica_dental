@@ -92,7 +92,7 @@
                   <li><i class="ri-phone-fill"></i>  +591 76543210</li>
                   <li><i class="ri-mail-unread-fill"></i> info@clinicadental.com</li>
                   <li>
-                    <i class="ri-map-pin-add-line"></i> 257 Calle Antofagasta Av. Germán Mendoza.
+                    <i class="ri-map-pin-add-line"></i> 257 Calle Audiencia Frente a la plaza 25 de Mayo.
                   </li>
                 </ul>
               </div>

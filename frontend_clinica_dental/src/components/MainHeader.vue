@@ -71,7 +71,7 @@ const userMenuItems = computed(() => {
             <ul>
               <li>
                 <i class="ri-map-pin-add-line"></i>
-                <span>257 Calle Antofagasta Av. Germán Mendoza</span>
+                <span>257 Calle Audiencia Frente a la plaza 25 de Mayo</span>
               </li>
               <li>
                 <i class="ri-mail-unread-fill"></i>
@@ -257,7 +257,7 @@ const userMenuItems = computed(() => {
         <ul>
           <li>
             <i class="ri-map-pin-add-line"></i>
-            <span>257 Calle Antofagasta Av. Germán Mendoza</span>
+            <span>257 Calle Audiencia Frente a la plaza 25 de Mayo</span>
           </li>
           <li>
             <i class="ri-mail-unread-fill"></i>
