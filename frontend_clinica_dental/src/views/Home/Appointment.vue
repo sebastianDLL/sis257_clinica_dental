@@ -11,7 +11,7 @@
                                 <h3 class="sub-title">Contacto</h3>
                                 <h2 class="title">Ponte en contacto</h2>
                                 <p>
-                                    Si tienes preguntas o necesitas más información, no dudes en escribirnos. 
+                                    Si tienes preguntas o necesitas más información, no dudes en escribirnos.
                                     Estamos aquí para ayudarte con cualquier consulta.
                                 </p>
                             </div>
@@ -41,7 +41,7 @@
 
                             <!--  Appointment Form Inner Start -->
                             <div class="appointment-form-inner">
-                                <form id="contact-form" action="assets/contact.php" method="post">
+                                <form @submit.prevent="CambiarBoton">
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <div class="single-form">
@@ -63,7 +63,7 @@
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="single-form">
-                                                <input type="text" id="datepicker" placeholder="Motivo" />
+                                                <input type="text" placeholder="Motivo" />
                                             </div>
                                         </div>
                                         <div class="col-sm-12">
@@ -71,7 +71,11 @@
                                         </div>
 
                                         <div class="col-sm-12">
-                                            <button class="btn" type="submit">Enviar</button>
+                                            <!-- Mostrar botón o mensaje de agradecimiento -->
+                                            <button v-if="!mensajeEnviado" class="btn" type="submit">{{ textoBoton
+                                                }}</button>
+                                            <p v-else class="thank-you-message">Gracias por tu mensaje. Nos pondremos en
+                                                contacto pronto.</p>
                                         </div>
                                     </div>
                                 </form>
@@ -88,4 +92,35 @@
     </div>
 </template>
 
-<style></style>
+<script>
+import { ref, defineComponent } from 'vue';
+
+export default defineComponent({
+    setup() {
+        // Estado reactivo para el botón y el mensaje
+        const textoBoton = ref('Enviar');
+        const mensajeEnviado = ref(false);
+
+        const CambiarBoton = () => {
+            // Cambiar estado para mostrar el mensaje
+            mensajeEnviado.value = true;
+        };
+
+        return {
+            textoBoton,
+            mensajeEnviado,
+            CambiarBoton,
+        };
+    },
+});
+</script>
+
+<style>
+.thank-you-message {
+    text-align: center;
+    font-size: 1.5rem;
+    color: rgb(255, 255, 255);
+    margin-top: 15px;
+    align-content: center;
+}
+</style>
