@@ -97,7 +97,7 @@ async function handleSave() {
   max-width: 400px;
   margin: auto;
   padding: 20px;
-  background: #fff;
+  background: #ff0000;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }

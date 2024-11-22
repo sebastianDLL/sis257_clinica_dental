@@ -136,9 +136,9 @@ function guardar() {
   max-width: 600px; /* Ancho máximo */
   margin: 0 auto; /* Centrar */
   padding: 20px; /* Espaciado interno */
-  border: 1px solid #ddd; /* Borde */
+  border: 1px solid #000000; /* Borde */
   border-radius: 8px; /* Bordes redondeados */
-  background-color: #f9f9f9; /* Fondo claro */
+  background-color: #e2e2ec; /* Fondo claro */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra */
 }
 
@@ -153,20 +153,20 @@ function guardar() {
 label {
   font-size: 1rem; /* Tamaño de texto */
   font-weight: bold; /* Texto en negrita */
-  color: #333; /* Color del texto */
+  color: #000000; /* Color del texto */
   width: 150px; /* Ancho de la etiqueta */
 }
 
 input {
   padding: 10px; /* Espaciado interno */
-  border: 1px solid #ccc; /* Borde */
+  border: 1px solid #000000; /* Borde */
   border-radius: 4px; /* Bordes redondeados */
   font-size: 1rem; /* Tamaño de texto */
   flex: 1; /* Expande para ocupar el espacio disponible */
 }
 
 input:focus {
-  border-color: #4caf50; /* Borde verde al enfocar */
+  border-color: #000000; /* Borde verde al enfocar */
   outline: none; /* Quitar contorno por defecto */
 }
 

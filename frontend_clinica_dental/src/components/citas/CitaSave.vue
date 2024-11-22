@@ -212,77 +212,77 @@ async function handleSave() {
       :header="props.modoEdicion ? 'Editar Cita' : 'Crear Cita'"
       style="width: 30rem"
     >
-      <!-- Odontólogo -->
-      <div class="flex items-center gap-4 mb-4">
-        <label for="odontologo" class="font-semibold w-24">Odontólogo</label>
-        <Select
-          id="odontologo"
-          v-model="cita.odontologoId"
-          :options="odontologos"
-          optionLabel="nombre"
-          optionValue="id"
-          placeholder="Seleccione un odontólogo"
-          class="flex-auto"
-        />
-      </div>
+      <div class="p-fluid">
+        <!-- Odontólogo -->
+        <div class="p-field mb-4">
+          <label for="odontologo" class="font-semibold">Odontólogo</label>
+          <Select
+            id="odontologo"
+            v-model="cita.odontologoId"
+            :options="odontologos"
+            optionLabel="nombre"
+            optionValue="id"
+            placeholder="Seleccione un odontólogo"
+          />
+        </div>
 
-      <!-- Servicio -->
-      <div class="flex items-center gap-4 mb-4">
-        <label for="servicio" class="font-semibold w-24">Servicio</label>
-        <Select
-          id="servicio"
-          v-model="cita.servicioId"
-          :options="servicios"
-          optionLabel="nombre"
-          optionValue="id"
-          placeholder="Seleccione un servicio"
-          class="flex-auto"
-        />
-      </div>
+        <!-- Servicio -->
+        <div class="p-field mb-4">
+          <label for="servicio" class="font-semibold">Servicio</label>
+          <Select
+            id="servicio"
+            v-model="cita.servicioId"
+            :options="servicios"
+            optionLabel="nombre"
+            optionValue="id"
+            placeholder="Seleccione un servicio"
+          />
+        </div>
 
-      <!-- Fecha de inicio -->
-      <div class="flex items-center gap-4 mb-4">
-        <label for="fechaInicio" class="font-semibold w-24">Fecha Inicio</label>
-        <DatePicker
-          id="fechaInicio"
-          v-model="cita.fechaHoraInicio"
-          class="flex-auto"
-          showIcon
-          :showTime="true"
-          dateFormat="yy-mm-dd"
-          placeholder="Selecciona fecha y hora de inicio"
-        />
-      </div>
+        <!-- Fecha de inicio -->
+        <div class="p-field mb-4">
+          <label for="fechaInicio" class="font-semibold">Fecha Inicio</label>
+          <DatePicker
+            id="fechaInicio"
+            v-model="cita.fechaHoraInicio"
+            showIcon
+            :showTime="true"
+            dateFormat="yy-mm-dd"
+            placeholder="Selecciona fecha y hora de inicio"
+          />
+        </div>
 
-      <!-- Fecha de fin (solo lectura) -->
-      <div class="flex items-center gap-4 mb-4">
-        <label for="fechaFin" class="font-semibold w-24">Fecha Fin</label>
-        <InputText
-          id="fechaFin"
-          :value="new Date(cita.fechaHoraFin).toLocaleString()"
-          disabled
-          class="flex-auto"
-        />
-      </div>
+        <!-- Fecha de fin (solo lectura) -->
+        <div class="p-field mb-4">
+          <label for="fechaFin" class="font-semibold">Fecha Fin</label>
+          <InputText
+            id="fechaFin"
+            :value="new Date(cita.fechaHoraFin).toLocaleString()"
+            disabled
+          />
+        </div>
 
-      <div class="flex justify-end gap-2">
-        <Button
-          type="button"
-          label="Cancelar"
-          icon="pi pi-times"
-          severity="secondary"
-          @click="dialogVisible = false"
-        />
-        <Button
-          type="button"
-          label="Guardar"
-          icon="pi pi-save"
-          @click="handleSave"
-        />
+        <!-- Botones -->
+        <div class="flex justify-end gap-2 mt-4">
+          <Button
+            type="button"
+            label="Cancelar"
+            icon="pi pi-times"
+            severity="secondary"
+            @click="dialogVisible = false"
+          />
+          <Button
+            type="button"
+            label="Guardar"
+            icon="pi pi-save"
+            @click="handleSave"
+          />
+        </div>
       </div>
     </Dialog>
   </div>
 </template>
+
 
 <style scoped>
 .card {
