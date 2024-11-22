@@ -196,7 +196,7 @@ async function handleSave() {
     dialogVisible.value = false
   } catch (error: any) {
     if (error.response?.status === 409) {
-      alert('Este horario ya está reservado. Por favor, elige otro horario.')
+      alert('Este horario ya está reservado.O eligio en un horario fuera de lo establecido, elige otro horario.')
     } else {
       console.error('Error al guardar:', error)
       alert(error?.response?.data?.message || error.message)

@@ -57,37 +57,11 @@ export class CitasService {
       );
     }
 
-    // Convertir las fechas a UTC
-    const fechaInicioUTC = new Date(fechaHoraInicio).toISOString();
-    const fechaFinUTC = new Date(fechaHoraFin).toISOString();
-
-    // Verificar traslapes para el odontólogo
-    const traslapeOdontologo = await this.verificarTraslapes(
-      odontologoId,
-      fechaInicioUTC,
-      fechaFinUTC,
-      'odontologoId',
+    // Validar horario permitido
+    this.validarHorarioPermitido(
+      new Date(fechaHoraInicio),
+      new Date(fechaHoraFin),
     );
-
-    if (traslapeOdontologo) {
-      throw new ConflictException(
-        'Ya existe una cita en este intervalo de tiempo con el odontólogo seleccionado.',
-      );
-    }
-
-    // Verificar traslapes para el cliente
-    const traslapeCliente = await this.verificarTraslapes(
-      clienteId,
-      fechaInicioUTC,
-      fechaFinUTC,
-      'clienteId',
-    );
-
-    if (traslapeCliente) {
-      throw new ConflictException(
-        'Ya tienes una cita programada en este intervalo de tiempo.',
-      );
-    }
 
     const nuevaCita = this.citasRepository.create(createCitaDto);
     return this.citasRepository.save(nuevaCita);
@@ -167,44 +141,13 @@ export class CitasService {
       }
     }
 
-    // Validar Fechas y Traslapes
+    // Validar horario permitido y fechas
     if (fechaHoraInicio && fechaHoraFin) {
-      const fechaInicioUTC = new Date(fechaHoraInicio).toISOString();
-      const fechaFinUTC = new Date(fechaHoraFin).toISOString();
+      this.validarHorarioPermitido(
+        new Date(fechaHoraInicio),
+        new Date(fechaHoraFin),
+      );
 
-      // Validar traslape con otras citas del odontólogo
-      if (odontologoId) {
-        const traslapeOdontologo = await this.verificarTraslapes(
-          odontologoId,
-          fechaInicioUTC,
-          fechaFinUTC,
-          'odontologoId',
-          id,
-        );
-        if (traslapeOdontologo) {
-          throw new ConflictException(
-            'Ya existe una cita en este intervalo de tiempo con el odontólogo seleccionado.',
-          );
-        }
-      }
-
-      // Validar traslape con otras citas del cliente
-      if (clienteId) {
-        const traslapeCliente = await this.verificarTraslapes(
-          clienteId,
-          fechaInicioUTC,
-          fechaFinUTC,
-          'clienteId',
-          id,
-        );
-        if (traslapeCliente) {
-          throw new ConflictException(
-            'Ya tienes una cita programada en este intervalo de tiempo.',
-          );
-        }
-      }
-
-      // Actualizar Fechas
       cita.fechaHoraInicio = new Date(fechaHoraInicio);
       cita.fechaHoraFin = new Date(fechaHoraFin);
     }
@@ -219,8 +162,12 @@ export class CitasService {
       id: id, // Mantener el mismo ID
     };
 
-    return this.citasRepository.save(citaActualizada);
+   
+    
+     return this.citasRepository.save(citaActualizada);
     // Guardar Cambios
+
+   
   }
 
   async remove(id: number): Promise<Cita> {
@@ -246,25 +193,34 @@ export class CitasService {
     return servicios;
   }
 
-  async verificarTraslapes(
-    entidadId: number,
-    fechaHoraInicio: string,
-    fechaHoraFin: string,
-    tipo: 'odontologoId' | 'clienteId',
-    citaId?: number,
-  ) {
-    const query = this.citasRepository
-      .createQueryBuilder('cita')
-      .where(`cita.${tipo} = :entidadId`, { entidadId })
-      .andWhere(
-        '(cita.fechaHoraInicio < :fechaHoraFin AND cita.fechaHoraFin > :fechaHoraInicio)',
-        { fechaHoraInicio, fechaHoraFin },
+
+  private validarHorarioPermitido(fechaHoraInicio: Date, fechaHoraFin: Date) {
+    const inicio = new Date(fechaHoraInicio);
+    const fin = new Date(fechaHoraFin);
+
+    const horario1Inicio = new Date(inicio);
+    horario1Inicio.setHours(8, 0, 0, 0);
+
+    const horario1Fin = new Date(inicio);
+    horario1Fin.setHours(12, 30, 0, 0);
+
+    const horario2Inicio = new Date(inicio);
+    horario2Inicio.setHours(14, 0, 0, 0);
+
+    const horario2Fin = new Date(inicio);
+    horario2Fin.setHours(18, 0, 0, 0);
+
+    if (
+      !(
+        (inicio >= horario1Inicio && fin <= horario1Fin) ||
+        (inicio >= horario2Inicio && fin <= horario2Fin)
+      )
+    ) {
+      throw new ConflictException(
+        'Las citas solo se pueden programar entre 8:00-12:30 y 14:00-18:00.',
       );
-
-    if (citaId) {
-      query.andWhere('cita.id != :citaId', { citaId });
     }
-
-    return await query.getOne();
   }
+
+
 }
