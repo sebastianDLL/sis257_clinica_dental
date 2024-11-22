@@ -14,7 +14,6 @@ const mostrarConfirmDialog = ref<boolean>(false)
 
 async function obtenerLista() {
   odontologos.value = await http.get(ENDPOINT).then(response => response.data)
-  console.log(odontologos.value)
 }
 
 function emitirEdicion(odontologo: Odontologo) {
