@@ -97,7 +97,7 @@ watch(
       cita.value.servicioId &&
       (!cita.value.fechaHoraFin ||
         new Date(cita.value.fechaHoraFin).getTime() !==
-          new Date(fechaHoraInicio).getTime())
+        new Date(fechaHoraInicio).getTime())
     ) {
       // Evita recalcular si la fechaHoraFin ya es correcta
       const servicio = servicios.value.find(s => s.id === cita.value.servicioId)
@@ -123,6 +123,10 @@ function calcularFechaHoraFin(duracionMinutos: number) {
     cita.value.fechaHoraInicio = fechaInicio
     cita.value.fechaHoraFin = fechaFin
   }
+}
+
+function getOdontologoLabel(odontologo: Odontologo) {
+  return odontologo ? `${odontologo.nombre} ${odontologo.primerApellido}` : '';
 }
 
 // Función para cargar servicios
@@ -211,74 +215,74 @@ async function handleSave() {
 <template>
   <div class="card flex justify-center">
     <Dialog
-      v-model:visible="dialogVisible"
-      :header="props.modoEdicion ? 'Editar Cita' : 'Crear Cita'"
+     v-model:visible="dialogVisible" 
+     :header="props.modoEdicion ? 'Editar Cita' : 'Crear Cita'"
       style="width: 30rem"
-    >
+      >
       <div class="p-fluid">
         <!-- Odontólogo -->
         <div class="p-field mb-4">
           <label for="odontologo" class="font-semibold">Odontólogo</label>
-          <Select
-            id="odontologo"
-            v-model="cita.odontologoId"
-            :options="odontologos"
-            optionLabel="nombre"
-            optionValue="id"
-            placeholder="Seleccione un odontólogo"
-          />
+          <Select 
+          id="odontologo"
+           v-model="cita.odontologoId"
+           :options="odontologos" 
+           :optionLabel="getOdontologoLabel"
+           optionValue="id" 
+           placeholder="Seleccione un odontólogo"
+           />
         </div>
 
         <!-- Servicio -->
         <div class="p-field mb-4">
           <label for="servicio" class="font-semibold">Servicio</label>
-          <Select
-            id="servicio"
-            v-model="cita.servicioId"
-            :options="servicios"
-            optionLabel="nombre"
-            optionValue="id"
-            placeholder="Seleccione un servicio"
+          <Select 
+          id="servicio" 
+          v-model="cita.servicioId"
+          :options="servicios" 
+          optionLabel="nombre" 
+          optionValue="id"
+          placeholder="Seleccione un servicio" 
           />
         </div>
 
         <!-- Fecha de inicio -->
         <div class="p-field mb-4">
           <label for="fechaInicio" class="font-semibold">Fecha Inicio</label>
-          <DatePicker
-            id="fechaInicio"
-            v-model="cita.fechaHoraInicio"
-            showIcon
-            :showTime="true"
-            dateFormat="yy-mm-dd"
-            placeholder="Selecciona fecha y hora de inicio"
+          <DatePicker 
+          id="fechaInicio" 
+          v-model="cita.fechaHoraInicio" 
+          showIcon 
+          :showTime="true" 
+          dateFormat="yy-mm-dd"
+          placeholder="Selecciona fecha y hora de inicio" 
           />
         </div>
 
         <!-- Fecha de fin (solo lectura) -->
         <div class="p-field mb-4">
           <label for="fechaFin" class="font-semibold">Fecha Fin</label>
-          <InputText
-            id="fechaFin"
-            :value="new Date(cita.fechaHoraFin).toLocaleString()"
-            disabled
+          <InputText 
+          id="fechaFin" 
+          :value="new Date(cita.fechaHoraFin).toLocaleString()" 
+          disabled 
           />
         </div>
 
         <!-- Botones -->
         <div class="flex justify-end gap-2 mt-4">
-          <Button
-            type="button"
-            label="Cancelar"
-            icon="pi pi-times"
-            severity="secondary"
-            @click="dialogVisible = false"
+          <Button 
+          type="button" 
+          label="Cancelar" 
+          icon="pi pi-times" 
+          severity="secondary"
+          @click="dialogVisible = false" 
           />
-          <Button
-            type="button"
-            label="Guardar"
-            icon="pi pi-save"
-            @click="handleSave"
+          <Button 
+          type="button" 
+          label="Guardar" 
+          icon="pi pi-save" 
+          @click="handleSave" 
           />
         </div>
       </div>
