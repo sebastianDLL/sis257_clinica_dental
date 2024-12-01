@@ -6,10 +6,13 @@ import Button from 'primevue/button'
 import Dialog from 'primevue/dialog'
 import { useAuthStore } from '@/stores' // Store de autenticación
 import { useServicios } from '@/composables/useServicios'
+import { useToast } from 'primevue/usetoast';
+import Toast from 'primevue/toast';
 
 
 // Obtener el odontólogo autenticado
 const authStore = useAuthStore()
+const toast = useToast()
 const odontologoLogueado = computed(() => authStore.user)
 
 // Usar el Composable 
@@ -50,7 +53,12 @@ function mostrarEliminarConfirm(servicioId: number) {
 async function eliminar() {
   if (!odontologoLogueado.value) {
     console.error('Odontólogo no autenticado.')
-    alert('No puedes realizar esta acción. Odontólogo no autenticado.')
+    toast.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'No puedes realizar esta acción. Odontólogo no autenticado.',
+        life: 3000
+      })
     return
   }
 
@@ -60,9 +68,14 @@ async function eliminar() {
       await http.delete(
         `odontologos_servicios/eliminar-relacion/${odontologoLogueado.value.id}/${servicioDelete.value}`,
       )
+      toast.add({
+        severity: 'success',
+        summary: 'Servicio eliminado',
+        detail: 'El servicio ha sido eliminado correctamente.',
+        life: 3000
+      })
       await cargarServiciosDisponibles()
 
-      console.log('Servicio eliminado:', servicioDelete.value)
       obtenerLista() // Actualizar la lista después de eliminar
 
       // Emitir evento global de servicio eliminado 
@@ -71,8 +84,12 @@ async function eliminar() {
 
       mostrarConfirmDialog.value = false
     } catch (error) {
-      console.error('Error al eliminar el servicio:', error)
-      alert('Hubo un problema al eliminar el servicio.')
+      toast.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Hubo un problema al eliminar el servicio.',
+        life: 3000
+      })
     }
   }
 }

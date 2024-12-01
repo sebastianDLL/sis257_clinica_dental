@@ -30,7 +30,7 @@ async function cambiarPassword(passwordActual: string, nuevaPassword: string) {
       nuevaPassword,
     });
     mostrarDialogPassword.value = false;
-    toast.add({ severity: 'success', summary: 'Éxito', detail: response.data, life: 3000 });
+    toast.add({ severity: 'success', summary: 'Éxito', detail: 'La contraseña fue cambiada exitosamente.' , life: 3000 });
   } catch (error) {
     console.error('Error al cambiar la contraseña:', error);
     toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudo cambiar la contraseña.', life: 3000 });

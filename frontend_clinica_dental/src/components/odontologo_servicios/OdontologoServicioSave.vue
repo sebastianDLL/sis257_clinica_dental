@@ -72,7 +72,7 @@ async function cargarServiciosDisponibles() {
 
 // Cargar servicios ya asignados al odontólogo autenticado
 async function cargarServiciosAsignados() {
-  if (!odontologoLogueado.value?.id) return // Asegúrate de que el odontólogo esté autenticado
+  if (!odontologoLogueado.value?.id) return
 
   try {
     const response = await http.get('odontologos_servicios/mis-servicios')
@@ -119,7 +119,7 @@ async function handleSave() {
     toast.add({
       severity: 'success',
       summary: 'Éxito',
-      detail: 'Relaciones guardadas correctamente.',
+      detail: 'Servicio añadido correctamente.',
       life: 3000,
     })
     emit('guardar')
@@ -167,38 +167,29 @@ onMounted(async () => {
 </script>
 
 <template>
-  <Dialog
-    v-model:visible="dialogVisible"
-    header="Relacionar Servicios"
-    style="width: 30rem"
-  >
+  <Dialog v-model:visible="dialogVisible" header="Relacionar Servicios" style="width: 30rem">
     <div class="mb-4">
       <label class="font-semibold mb-2">Odontólogo</label>
-      <p v-if="odontologoLogueado" class="font-semibold text-blue-500">
-        {{ odontologoLogueado.name || 'Nombre no disponible' }}
-      </p>
+      <div v-if="odontologoLogueado" class="font-semibold text-blue-500">
+        <p>Nombre: {{ odontologoLogueado.name || 'Nombre no disponible' }}</p>
+        <p>Email: {{ odontologoLogueado.email || 'Email no disponible' }}</p>
+      </div>
       <p v-else class="font-semibold text-red-500">Odontólogo no autenticado</p>
     </div>
 
     <div class="mb-4">
       <label class="font-semibold mb-2">Servicios</label>
-      <div
-        v-for="servicio in servicios"
-        :key="servicio.id"
-        class="flex items-center"
-      >
-        <Checkbox v-model="serviciosSeleccionados" :value="servicio.id" />
-        <span class="ml-2">{{ servicio.nombre }}</span>
+      <div v-if="servicios.length">
+        <div v-for="servicio in servicios" :key="servicio.id" class="flex items-center">
+          <Checkbox v-model="serviciosSeleccionados" :value="servicio.id" />
+          <span class="ml-2">{{ servicio.nombre }}</span>
+        </div>
       </div>
+      <p v-else class="text-red-500">No hay servicios para seleccionar</p>
     </div>
 
     <div class="flex justify-end gap-2">
-      <Button
-        label="Cancelar"
-        icon="pi pi-times"
-        severity="secondary"
-        @click="emit('close')"
-      />
+      <Button label="Cancelar" icon="pi pi-times" severity="secondary" @click="$emit('close')" />
       <Button label="Guardar" icon="pi pi-save" @click="handleSave" />
     </div>
   </Dialog>

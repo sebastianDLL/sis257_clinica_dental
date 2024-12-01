@@ -7,7 +7,10 @@ import InputText from 'primevue/inputtext'
 import InputNumber from 'primevue/inputnumber'
 import { computed, ref, watch } from 'vue'
 import { Textarea } from 'primevue'
+import { useToast } from 'primevue/usetoast';
+import Toast from 'primevue/toast'
 
+const toast = useToast()
 const ENDPOINT = 'servicios'
 const props = defineProps({
   mostrar: Boolean,
@@ -33,15 +36,15 @@ watch(
     if (newVal) {
       servicio.value = props.modoEdicion
         ? {
-            ...props.servicio,
-            precio: Math.round(props.servicio.precio * 100) / 100,
-          }
+          ...props.servicio,
+          precio: Math.round(props.servicio.precio * 100) / 100,
+        }
         : ({
-            nombre: '',
-            descripcion: '',
-            precio: 0,
-            duracion: 0,
-          } as Servicios)
+          nombre: '',
+          descripcion: '',
+          precio: 0,
+          duracion: 0,
+        } as Servicios)
     }
   },
 )
@@ -56,11 +59,13 @@ async function handleSave() {
     }
     if (props.modoEdicion) {
       await http.patch(`${ENDPOINT}/${servicio.value.id}`, body)
+      toast.add({ severity: 'success', summary: 'Éxito', detail: 'Servicio actualizado correctamente.', life: 3000 });
     } else {
       await http.post(ENDPOINT, body)
+      toast.add({ severity: 'success', summary: 'Éxito', detail: 'Servicio creado correctamente.', life: 3000 });
     }
     // Emitir evento global de servicio creado 
-    const event = new CustomEvent('servicioCreado') 
+    const event = new CustomEvent('servicioCreado')
     window.dispatchEvent(event)
 
 
@@ -68,30 +73,23 @@ async function handleSave() {
     servicio.value = {} as Servicios
     dialogVisible.value = false
   } catch (error: any) {
-    alert(error?.response?.data?.message)
+    console.error('Error al guardar el servicio:', error)
+    toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudo guardar el servicio.', life: 3000 })
   }
 }
 </script>
 
 <template>
+  <Toast />
   <div class="card flex justify-center">
-    <Dialog
-      v-model:visible="dialogVisible"
-      :header="props.modoEdicion ? 'Editar' : 'Crear'"
-      style="width: 25rem"
-    >
+    <Dialog v-model:visible="dialogVisible" :header="props.modoEdicion ? 'Editar' : 'Crear'" style="width: 25rem">
       <div class="p-fluid">
         <!-- Nombre del Servicio -->
         <div class="p-field p-grid">
           <label for="nombre" class="p-col-12 p-md-4 font-semibold">Nombre del Servicio</label>
           <div class="p-col-12 p-md-8">
-            <InputText
-              id="nombre"
-              v-model="servicio.nombre"
-              class="p-inputtext-sm w-full"
-              autocomplete="off"
-              autofocus
-            />
+            <InputText id="nombre" v-model="servicio.nombre" class="p-inputtext-sm w-full" autocomplete="off"
+              autofocus />
           </div>
         </div>
 
@@ -99,15 +97,8 @@ async function handleSave() {
         <div class="p-field p-grid">
           <label for="descripcion" class="p-col-12 p-md-4 font-semibold">Descripción</label>
           <div class="p-col-12 p-md-8">
-            <Textarea
-              id="descripcion"
-              v-model="servicio.descripcion"
-              autoResize
-              rows="5"
-              cols="30"
-              class="w-full"
-              autocomplete="off"
-            />
+            <Textarea id="descripcion" v-model="servicio.descripcion" autoResize rows="5" cols="30" class="w-full"
+              autocomplete="off" />
           </div>
         </div>
 
@@ -115,18 +106,8 @@ async function handleSave() {
         <div class="p-field p-grid">
           <label for="precio" class="p-col-12 p-md-4 font-semibold">Precio (Bs)</label>
           <div class="p-col-12 p-md-8">
-            <InputNumber
-              id="precio"
-              v-model="servicio.precio"
-              class="p-inputtext-sm w-full"
-              autocomplete="off"
-              :step="0.01"
-              :min="0"
-              :mode="'decimal'"
-              :locale="'es-BO'"
-              :decimalSeparator="'.'"
-              :useGrouping="false"
-            />
+            <InputNumber id="precio" v-model="servicio.precio" class="p-inputtext-sm w-full" autocomplete="off"
+              :step="0.01" :min="0" :mode="'decimal'" :locale="'es-BO'" :decimalSeparator="'.'" :useGrouping="false" />
           </div>
         </div>
 
@@ -134,32 +115,16 @@ async function handleSave() {
         <div class="p-field p-grid">
           <label for="duracion" class="p-col-12 p-md-4 font-semibold">Duración (Min)</label>
           <div class="p-col-12 p-md-8">
-            <InputNumber
-              id="duracion"
-              v-model="servicio.duracion"
-              class="p-inputtext-sm w-full"
-              autocomplete="off"
-              :step="1"
-              :min="0"
-            />
+            <InputNumber id="duracion" v-model="servicio.duracion" class="p-inputtext-sm w-full" autocomplete="off"
+              :step="1" :min="0" />
           </div>
         </div>
 
         <!-- Botones -->
         <div class="p-dialog-footer p-d-flex p-jc-end">
-          <Button
-            type="button"
-            label="Cancelar"
-            icon="pi pi-times"
-            severity="secondary"
-            @click="dialogVisible = false"
-          />
-          <Button
-            type="button"
-            label="Guardar"
-            icon="pi pi-save"
-            @click="handleSave"
-          />
+          <Button type="button" label="Cancelar" icon="pi pi-times" severity="secondary"
+            @click="dialogVisible = false" />
+          <Button type="button" label="Guardar" icon="pi pi-save" @click="handleSave" />
         </div>
       </div>
     </Dialog>
