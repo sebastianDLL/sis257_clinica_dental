@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import http from '../../plugins/axios'
 import Dialog from 'primevue/dialog'
 import Checkbox from 'primevue/checkbox'
 import Button from 'primevue/button'
-import Toast from 'primevue/toast'
 import { useToast } from 'primevue/usetoast'
 import type { Servicios } from '../../models/Servicios'
 import type { Odontologo_servicio } from '../../models/Odontologo_servicio'
@@ -24,17 +23,25 @@ const props = defineProps({
 const emit = defineEmits(['guardar', 'close'])
 
 // Estado reactivo
-const servicios = ref<Servicios[]>([])
+const servicios = ref<Servicios[]>([]) // Servicios disponibles (no asignados)
 const serviciosAsignados = ref<number[]>([]) // IDs de servicios ya asignados
 const serviciosSeleccionados = ref<number[]>([]) // IDs de servicios seleccionados
 
 // Computed para el estado del diálogo
 const dialogVisible = computed({
   get: () => props.mostrar,
-  set: value => {
+  set: async value => {
     if (!value) {
       resetFormulario() // Limpia el formulario al cerrar
       emit('close')
+    } else {
+      // Recarga los servicios disponibles y asignados al abrir el diálogo
+      if (odontologoLogueado.value?.id) {
+        await Promise.all([
+          cargarServiciosAsignados(),
+          cargarServiciosDisponibles(),
+        ])
+      }
     }
   },
 })
@@ -45,35 +52,33 @@ function resetFormulario() {
 }
 
 // Cargar servicios disponibles
-async function cargarServicios() {
+async function cargarServiciosDisponibles() {
   try {
-    const response = await http.get('servicios')
-    servicios.value = response.data
+    const response = await http.get(
+      'odontologos_servicios/mis-servicios-disponibles',
+    )
+    servicios.value = response.data // Aquí se actualiza con los servicios no asignados
   } catch (error) {
-    console.error('Error al cargar servicios:', error)
+    console.error('Error al cargar servicios disponibles:', error)
     toast.add({
       severity: 'error',
       summary: 'Error',
-      detail: 'Hubo un problema al cargar los servicios.',
+      detail: 'Hubo un problema al cargar los servicios disponibles.',
       life: 3000,
     })
   }
+  return
 }
 
 // Cargar servicios ya asignados al odontólogo autenticado
 async function cargarServiciosAsignados() {
-  try {
-    if (!odontologoLogueado.value?.id) return
+  if (!odontologoLogueado.value?.id) return // Asegúrate de que el odontólogo esté autenticado
 
+  try {
     const response = await http.get('odontologos_servicios/mis-servicios')
-    if (Array.isArray(response.data)) {
-      serviciosAsignados.value = response.data.map(
-        (item: Odontologo_servicio) => item.servicio_id,
-      )
-    } else {
-      console.error('Respuesta inesperada del servidor:', response.data)
-      serviciosAsignados.value = []
-    }
+    serviciosAsignados.value = response.data.map(
+      (item: Odontologo_servicio) => item.servicio_id,
+    )
   } catch (error) {
     console.error('Error al cargar servicios asignados:', error)
     toast.add({
@@ -83,11 +88,6 @@ async function cargarServiciosAsignados() {
       life: 3000,
     })
   }
-}
-
-// Verificar si un servicio ya está asignado al odontólogo
-function isServicioAsignado(servicioId: number) {
-  return serviciosAsignados.value.includes(servicioId)
 }
 
 // Guardar relaciones
@@ -113,8 +113,9 @@ async function handleSave() {
       ),
     )
 
-    // Si todo se guarda correctamente
-    await cargarServiciosAsignados() // Actualizar los servicios locales
+    // Actualizar los servicios disponibles después de guardar
+    await cargarServiciosDisponibles()
+
     toast.add({
       severity: 'success',
       summary: 'Éxito',
@@ -137,17 +138,40 @@ async function handleSave() {
   }
 }
 
-// Montar datos iniciales
+// Escuchar el evento global de servicio eliminado
+const onServicioEliminado = async () => {
+  await cargarServiciosDisponibles()
+}
+// Cargar servicios disponibles y asignados al odontólogo al montar el componente
 onMounted(() => {
+  window.addEventListener('servicioEliminado', onServicioEliminado)
+  window.addEventListener('servicioCreado', onServicioEliminado)
+})
+// Limpiar los eventos al desmontar el componente
+onBeforeUnmount(() => {
+  window.removeEventListener('servicioEliminado', onServicioEliminado)
+  window.removeEventListener('servicioCreado', onServicioEliminado)
+})
+
+// Montar datos iniciales
+onMounted(async () => {
   if (odontologoLogueado.value?.id) {
-    cargarServicios()
-    cargarServiciosAsignados()
+    // Cargar los servicios disponibles y los asignados al odontólogo
+    await Promise.all([
+      cargarServiciosAsignados(),
+      cargarServiciosDisponibles(),
+    ])
   }
 })
+
 </script>
 
 <template>
-  <Dialog v-model:visible="dialogVisible" header="Relacionar Servicios" style="width: 30rem">
+  <Dialog
+    v-model:visible="dialogVisible"
+    header="Relacionar Servicios"
+    style="width: 30rem"
+  >
     <div class="mb-4">
       <label class="font-semibold mb-2">Odontólogo</label>
       <p v-if="odontologoLogueado" class="font-semibold text-blue-500">
@@ -158,14 +182,23 @@ onMounted(() => {
 
     <div class="mb-4">
       <label class="font-semibold mb-2">Servicios</label>
-      <div v-for="servicio in servicios" :key="servicio.id" class="flex items-center">
-        <Checkbox v-model="serviciosSeleccionados" :value="servicio.id" :disabled="isServicioAsignado(servicio.id)" />
+      <div
+        v-for="servicio in servicios"
+        :key="servicio.id"
+        class="flex items-center"
+      >
+        <Checkbox v-model="serviciosSeleccionados" :value="servicio.id" />
         <span class="ml-2">{{ servicio.nombre }}</span>
       </div>
     </div>
 
     <div class="flex justify-end gap-2">
-      <Button label="Cancelar" icon="pi pi-times" severity="secondary" @click="emit('close')" />
+      <Button
+        label="Cancelar"
+        icon="pi pi-times"
+        severity="secondary"
+        @click="emit('close')"
+      />
       <Button label="Guardar" icon="pi pi-save" @click="handleSave" />
     </div>
   </Dialog>

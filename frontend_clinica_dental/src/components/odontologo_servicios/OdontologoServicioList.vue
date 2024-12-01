@@ -5,10 +5,15 @@ import type { Servicios } from '../../models/Servicios'
 import Button from 'primevue/button'
 import Dialog from 'primevue/dialog'
 import { useAuthStore } from '@/stores' // Store de autenticación
+import { useServicios } from '@/composables/useServicios'
+
 
 // Obtener el odontólogo autenticado
 const authStore = useAuthStore()
 const odontologoLogueado = computed(() => authStore.user)
+
+// Usar el Composable 
+const { cargarServiciosDisponibles } = useServicios()
 
 // Definir las variables reactivas
 const servicios = ref<Servicios[]>([])
@@ -20,12 +25,12 @@ const mostrarConfirmDialog = ref<boolean>(false)
 // Obtener la lista de servicios
 const obtenerLista = async () => {
   try {
-    const response = await http.get('odontologos_servicios/mis-servicios');
-    servicios.value = response.data;
+    const response = await http.get('odontologos_servicios/mis-servicios')
+    servicios.value = response.data
   } catch (error) {
-    console.error('Error obteniendo los datos:', error);
+    console.error('Error obteniendo los datos:', error)
   }
-};
+}
 
 // Computed para filtrar servicios por nombre
 const serviciosFiltrados = computed(() =>
@@ -51,39 +56,33 @@ async function eliminar() {
 
   if (servicioDelete.value) {
     try {
-      console.log('Intentando eliminar:', {
-        odontologoId: odontologoLogueado.value.id,
-        servicioId: servicioDelete.value,
-      })
 
       await http.delete(
         `odontologos_servicios/eliminar-relacion/${odontologoLogueado.value.id}/${servicioDelete.value}`,
       )
+      await cargarServiciosDisponibles()
 
       console.log('Servicio eliminado:', servicioDelete.value)
       obtenerLista() // Actualizar la lista después de eliminar
+
+      // Emitir evento global de servicio eliminado 
+      const event = new CustomEvent('servicioEliminado') 
+      window.dispatchEvent(event)
+
       mostrarConfirmDialog.value = false
     } catch (error) {
-      if (error && typeof error === 'object' && 'response' in error) {
-        console.error(
-          'Error al eliminar el servicio:',
-          (error as any).response.data,
-        )
-      } else {
-        console.error('Error al eliminar el servicio:', error)
-      }
+      console.error('Error al eliminar el servicio:', error)
       alert('Hubo un problema al eliminar el servicio.')
     }
   }
 }
-
 // Llamar obtenerLista al montar el componente
 onMounted(() => {
   obtenerLista()
 })
 defineExpose({
   obtenerLista, // Permite acceder a este método desde otros componentes
-});
+})
 </script>
 
 <template>

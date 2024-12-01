@@ -42,7 +42,12 @@ export class OdontologosServiciosController {
     const odontologoId = req.user.id; // Extraer el ID del usuario autenticado
     return this.odontologoServiciosService.findByOdontologoId(odontologoId);
   }
-
+  @Get('mis-servicios-disponibles')
+  async findServiciosDisponibles(@Req() req: any) {
+    const odontologoId = req.user.id;
+    return this.odontologoServiciosService.findServiciosDisponibles(odontologoId);
+  }
+  
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<OdontologoServicio> {
     const parsedId = parseInt(id, 10);

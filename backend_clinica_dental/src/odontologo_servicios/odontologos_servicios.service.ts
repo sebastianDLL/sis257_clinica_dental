@@ -8,7 +8,7 @@ import { CreateOdontologoServicioDto } from './dto/create-odontologo_servicio.dt
 import { UpdateOdontologoServicioDto } from './dto/update-odontologo_servicio.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { OdontologoServicio } from './entities/odontologo_servicio.entity';
-import { Repository } from 'typeorm';
+import { In, Not, Repository } from 'typeorm';
 import { Odontologo } from 'src/odontologos/entities/odontologo.entity';
 import { Servicio } from 'src/servicios/entities/servicio.entity';
 
@@ -154,6 +154,26 @@ export class OdontologosServiciosService {
       precio: item.servicio.precio,
       duracion: item.servicio.duracion,
     }));
+  }
+  
+
+  async findServiciosDisponibles(odontologoId: number): Promise<any> {
+    // Obtener los IDs de los servicios ya asignados
+    const serviciosAsignados = await this.odontologoServicioRepository.find({
+      where: { odontologoId },
+      relations: ['servicio'],
+    });
+  
+    const serviciosAsignadosIds = serviciosAsignados.map(item => item.servicio.id);
+  
+    // Obtener todos los servicios que NO están asignados
+    const serviciosDisponibles = await this.servicioRepository.find({
+      where: {
+        id: Not(In(serviciosAsignadosIds)), // Excluir los servicios asignados
+      },
+    });
+  
+    return serviciosDisponibles;
   }
   
 }
