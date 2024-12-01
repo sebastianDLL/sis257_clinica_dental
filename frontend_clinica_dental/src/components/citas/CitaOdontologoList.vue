@@ -7,10 +7,8 @@ import { onMounted, ref, computed } from 'vue'
 import { useAuthStore } from '../../stores'
 import { useToast } from 'primevue/usetoast';
 
-
 const authStore = useAuthStore() // Para obtener el odontólogo logueado
 const ENDPOINT = 'citas'
-const toast = useToast();
 
 let citas = ref<Cita[]>([]) // Todas las citas
 let citasFiltradas = computed(
@@ -25,7 +23,7 @@ const totalCobrar = computed(() =>
   }, 0),
 );
 
-
+const toast = useToast(); // Instancia de Toast
 
 const emit = defineEmits(['edit'])
 const citaDelete = ref<Cita | null>(null)
@@ -34,22 +32,20 @@ const mostrarConfirmDialog = ref<boolean>(false)
 // Obtener todas las citas desde el backend
 async function obtenerLista() {
   citas.value = await http.get(ENDPOINT).then(response => response.data)
-  console.log(citas.value)
 }
 
 // Función para cambiar el estado a "Confirmado"
 async function confirmarCita(cita: Cita) {
   try {
-    await http.patch(`${ENDPOINT}/${cita.id}`, { estado: 'Confirmado' });
+    await http.patch(`${ENDPOINT}/${cita.id}`, { estado: 'Confirmado' })
     toast.add({
       severity: 'success',
-      summary: 'Cita Confirmada',
-      detail: `La cita con ${cita.cliente.nombre} ha sido confirmada.`,
+      summary: 'Cita confirmada',
+      detail: 'La cita ha sido confirmada con éxito.',
       life: 3000,
     });
-    obtenerLista(); // Actualiza la lista de citas
+    obtenerLista()
   } catch (error) {
-    console.error('Error al confirmar la cita:', error);
     toast.add({
       severity: 'error',
       summary: 'Error',
@@ -58,20 +54,18 @@ async function confirmarCita(cita: Cita) {
     });
   }
 }
-
 // Función para cambiar el estado a "Rechazado"
 async function rechazarCita(cita: Cita) {
   try {
-    await http.patch(`${ENDPOINT}/${cita.id}`, { estado: 'Rechazado' });
+    await http.patch(`${ENDPOINT}/${cita.id}`, { estado: 'Rechazado' })
     toast.add({
-      severity: 'warn',
+      severity: 'success',
       summary: 'Cita Rechazada',
-      detail: `La cita con ${cita.cliente.nombre} ha sido rechazada.`,
+      detail: 'La cita ha sido rechazada con éxito.',
       life: 3000,
     });
-    obtenerLista(); // Actualiza la lista de citas
+    obtenerLista()
   } catch (error) {
-    console.error('Error al rechazar la cita:', error);
     toast.add({
       severity: 'error',
       summary: 'Error',
@@ -90,25 +84,15 @@ function mostrarEliminarConfirm(cita: Cita) {
 // Eliminar cita seleccionada
 async function eliminar() {
   if (citaDelete.value?.id) {
-    try {
-      await http.delete(`${ENDPOINT}/${citaDelete.value.id}`);
-      toast.add({
-        severity: 'success',
-        summary: 'Cita Eliminada',
-        detail: 'La cita fue eliminada correctamente.',
-        life: 3000,
-      });
-      obtenerLista();
-      mostrarConfirmDialog.value = false;
-    } catch (error) {
-      console.error('Error al eliminar la cita:', error);
-      toast.add({
-        severity: 'error',
-        summary: 'Error',
-        detail: 'No se pudo eliminar la cita. Intente nuevamente.',
-        life: 3000,
-      });
-    }
+    await http.delete(`${ENDPOINT}/${citaDelete.value.id}`)
+    toast.add({
+      severity: 'success',
+      summary: 'Cita eliminada',
+      detail: 'La cita ha sido eliminada con éxito.',
+      life: 3000,
+    });
+    obtenerLista()
+    mostrarConfirmDialog.value = false
   }
 }
 

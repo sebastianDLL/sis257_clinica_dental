@@ -110,13 +110,14 @@ defineExpose({ obtenerLista })
 
           <td>
             <Button
-              v-if="cita.estado !== 'Confirmado'"
+              v-if="cita.estado !== 'Confirmado' && cita.estado !== 'Rechazado'"
               icon="pi pi-pencil"
               aria-label="Editar"
               text
               @click="emitirEdicion(cita)"
             />
             <Button
+              v-if="cita.estado !== 'Confirmado'"
               icon="pi pi-trash"
               aria-label="Eliminar"
               text

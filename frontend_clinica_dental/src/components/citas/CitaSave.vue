@@ -97,7 +97,7 @@ watch(
       cita.value.servicioId &&
       (!cita.value.fechaHoraFin ||
         new Date(cita.value.fechaHoraFin).getTime() !==
-          new Date(fechaHoraInicio).getTime())
+        new Date(fechaHoraInicio).getTime())
     ) {
       // Evita recalcular si la fechaHoraFin ya es correcta
       const servicio = servicios.value.find(s => s.id === cita.value.servicioId)
@@ -123,6 +123,10 @@ function calcularFechaHoraFin(duracionMinutos: number) {
     cita.value.fechaHoraInicio = fechaInicio
     cita.value.fechaHoraFin = fechaFin
   }
+}
+
+function getOdontologoLabel(odontologo: Odontologo) {
+  return odontologo ? `${odontologo.nombre} ${odontologo.primerApellido}` : '';
 }
 
 // Función para cargar servicios
@@ -199,7 +203,7 @@ async function handleSave() {
     dialogVisible.value = false
   } catch (error: any) {
     if (error.response?.status === 409) {
-      toast.add({ severity: 'warn', summary: 'Error', detail: 'Este horario ya está reservado. Por favor, elige otro horario.', life: 3000 });
+      toast.add({ severity: 'warn', summary: 'Error', detail: 'Horario no disponible', life: 3000 });
     } else {
       console.error('Error al guardar:', error)
       alert(error?.response?.data?.message || error.message)
@@ -211,81 +215,81 @@ async function handleSave() {
 <template>
   <div class="card flex justify-center">
     <Dialog
-      v-model:visible="dialogVisible"
-      :header="props.modoEdicion ? 'Editar Cita' : 'Crear Cita'"
+     v-model:visible="dialogVisible" 
+     :header="props.modoEdicion ? 'Editar Cita' : 'Crear Cita'"
       style="width: 30rem"
-    >
-      <!-- Odontólogo -->
-      <div class="flex items-center gap-4 mb-4">
-        <label for="odontologo" class="font-semibold w-24">Odontólogo</label>
-        <Select
+      >
+      <div class="p-fluid">
+        <!-- Odontólogo -->
+        <div class="p-field mb-4">
+          <label for="odontologo" class="font-semibold">Odontólogo</label>
+          <Select 
           id="odontologo"
-          v-model="cita.odontologoId"
-          :options="odontologos"
-          optionLabel="nombre"
-          optionValue="id"
-          placeholder="Seleccione un odontólogo"
-          class="flex-auto"
-        />
-      </div>
+           v-model="cita.odontologoId"
+           :options="odontologos" 
+           :optionLabel="getOdontologoLabel"
+           optionValue="id" 
+           placeholder="Seleccione un odontólogo"
+           />
+        </div>
 
-      <!-- Servicio -->
-      <div class="flex items-center gap-4 mb-4">
-        <label for="servicio" class="font-semibold w-24">Servicio</label>
-        <Select
-          id="servicio"
+        <!-- Servicio -->
+        <div class="p-field mb-4">
+          <label for="servicio" class="font-semibold">Servicio</label>
+          <Select 
+          id="servicio" 
           v-model="cita.servicioId"
-          :options="servicios"
-          optionLabel="nombre"
+          :options="servicios" 
+          optionLabel="nombre" 
           optionValue="id"
-          placeholder="Seleccione un servicio"
-          class="flex-auto"
-        />
-      </div>
+          placeholder="Seleccione un servicio" 
+          />
+        </div>
 
-      <!-- Fecha de inicio -->
-      <div class="flex items-center gap-4 mb-4">
-        <label for="fechaInicio" class="font-semibold w-24">Fecha Inicio</label>
-        <DatePicker
-          id="fechaInicio"
-          v-model="cita.fechaHoraInicio"
-          class="flex-auto"
-          showIcon
-          :showTime="true"
+        <!-- Fecha de inicio -->
+        <div class="p-field mb-4">
+          <label for="fechaInicio" class="font-semibold">Fecha Inicio</label>
+          <DatePicker 
+          id="fechaInicio" 
+          v-model="cita.fechaHoraInicio" 
+          showIcon 
+          :showTime="true" 
           dateFormat="yy-mm-dd"
-          placeholder="Selecciona fecha y hora de inicio"
-        />
-      </div>
+          placeholder="Selecciona fecha y hora de inicio" 
+          />
+        </div>
 
-      <!-- Fecha de fin (solo lectura) -->
-      <div class="flex items-center gap-4 mb-4">
-        <label for="fechaFin" class="font-semibold w-24">Fecha Fin</label>
-        <InputText
-          id="fechaFin"
-          :value="new Date(cita.fechaHoraFin).toLocaleString()"
-          disabled
-          class="flex-auto"
-        />
-      </div>
+        <!-- Fecha de fin (solo lectura) -->
+        <div class="p-field mb-4">
+          <label for="fechaFin" class="font-semibold">Fecha Fin</label>
+          <InputText 
+          id="fechaFin" 
+          :value="new Date(cita.fechaHoraFin).toLocaleString()" 
+          disabled 
+          />
+        </div>
 
-      <div class="flex justify-end gap-2">
-        <Button
-          type="button"
-          label="Cancelar"
-          icon="pi pi-times"
+        <!-- Botones -->
+        <div class="flex justify-end gap-2 mt-4">
+          <Button 
+          type="button" 
+          label="Cancelar" 
+          icon="pi pi-times" 
           severity="secondary"
-          @click="dialogVisible = false"
-        />
-        <Button
-          type="button"
-          label="Guardar"
-          icon="pi pi-save"
-          @click="handleSave"
-        />
+          @click="dialogVisible = false" 
+          />
+          <Button 
+          type="button" 
+          label="Guardar" 
+          icon="pi pi-save" 
+          @click="handleSave" 
+          />
+        </div>
       </div>
     </Dialog>
   </div>
 </template>
+
 
 <style scoped>
 .card {

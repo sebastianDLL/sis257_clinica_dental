@@ -78,45 +78,115 @@ async function handleSave() {
 <template>
   <Toast />
   <div class="card flex justify-center">
-    <Dialog v-model:visible="dialogVisible" :header="props.modoEdicion ? 'Editar' : 'Crear'" style="width: 25rem">
-      <div class="flex items-center gap-4 mb-4">
-        <label for="nombre" class="font-semibold w-24">Nombre</label>
-        <InputText id="nombre" v-model="odontologo.nombre" class="flex-auto" autocomplete="off" autofocus />
-      </div>
-      <div class="flex items-center gap-4 mb-4">
-        <label for="primer_apellido" class="font-semibold w-24">Primer Apellido</label>
-        <InputText id="primer_apellido" v-model="odontologo.primerApellido" class="flex-auto" autocomplete="off" />
-      </div>
-      <div class="flex items-center gap-4 mb-4">
-        <label for="segundo_apellido" class="font-semibold w-24">Segundo Apellido</label>
-        <InputText id="segundo_apellido" v-model="odontologo.segundoApellido" class="flex-auto" autocomplete="off" />
-      </div>
-      <div class="flex items-center gap-4 mb-4">
-        <label for="especialidad" class="font-semibold w-24">Especialidad</label>
-        <InputText id="especialidad" v-model="odontologo.especialidad" class="flex-auto" autocomplete="off" />
-      </div>
-      <div class="flex items-center gap-4 mb-4">
-        <label for="password" class="font-semibold w-24">Contraseña</label>
-        <Password id="password" v-model="odontologo.password" :disabled="props.modoEdicion"
-          :toggleMask="!props.modoEdicion" :feedback="!props.modoEdicion" class="flex-auto" autocomplete="off"
-          weakLabel="Débil" mediumLabel="Media" strongLabel="Fuerte" />
-      </div>
-      <div class="flex items-center gap-4 mb-4">
-        <label for="email" class="font-semibold w-24">Correo</label>
-        <InputText id="email" v-model="odontologo.email" class="flex-auto" autocomplete="off" />
-      </div>
-      <div class="flex items-center gap-4 mb-4">
-        <label for="telefono" class="font-semibold w-24">Teléfono</label>
-        <InputText id="telefono" v-model="odontologo.telefono" class="flex-auto" autocomplete="off" />
-      </div>
-      <div class="flex items-center gap-4 mb-4">
-        <label for="direccion" class="font-semibold w-24">Dirección</label>
-        <InputText id="direccion" v-model="odontologo.direccion" class="flex-auto" autocomplete="off" />
-      </div>
-      <div class="flex justify-end gap-2">
-        <Button type="button" label="Cancelar" icon="pi pi-times" severity="secondary"
-          @click="dialogVisible = false"></Button>
-        <Button type="button" label="Guardar" icon="pi pi-save" @click="handleSave"></Button>
+    <Dialog
+      v-model:visible="dialogVisible"
+      :header="props.modoEdicion ? 'Editar' : 'Crear'"
+      style="width: 25rem"
+    >
+      <div class="p-fluid">
+        <!-- Nombre -->
+        <div class="p-field mb-4">
+          <label for="nombre" class="font-semibold">Nombre</label>
+          <InputText
+            id="nombre"
+            v-model="odontologo.nombre"
+            autocomplete="off"
+            autofocus
+          />
+        </div>
+
+        <!-- Primer Apellido -->
+        <div class="p-field mb-4">
+          <label for="primer_apellido" class="font-semibold">Primer Apellido</label>
+          <InputText
+            id="primer_apellido"
+            v-model="odontologo.primerApellido"
+            autocomplete="off"
+          />
+        </div>
+
+        <!-- Segundo Apellido -->
+        <div class="p-field mb-4">
+          <label for="segundo_apellido" class="font-semibold">Segundo Apellido</label>
+          <InputText
+            id="segundo_apellido"
+            v-model="odontologo.segundoApellido"
+            autocomplete="off"
+          />
+        </div>
+
+        <!-- Especialidad -->
+        <div class="p-field mb-4">
+          <label for="especialidad" class="font-semibold">Especialidad</label>
+          <InputText
+            id="especialidad"
+            v-model="odontologo.especialidad"
+            autocomplete="off"
+          />
+        </div>
+
+        <!-- Contraseña -->
+        <div class="p-field mb-4">
+          <label for="password" class="font-semibold">Contraseña</label>
+          <Password
+            id="password"
+            v-model="odontologo.password"
+            :disabled="props.modoEdicion"
+            :toggleMask="!props.modoEdicion"
+            :feedback="!props.modoEdicion"
+            autocomplete="off"
+            weakLabel="Débil"
+            mediumLabel="Media"
+            strongLabel="Fuerte"
+          />
+        </div>
+
+        <!-- Correo -->
+        <div class="p-field mb-4">
+          <label for="email" class="font-semibold">Correo</label>
+          <InputText
+            id="email"
+            v-model="odontologo.email"
+            autocomplete="off"
+          />
+        </div>
+
+        <!-- Teléfono -->
+        <div class="p-field mb-4">
+          <label for="telefono" class="font-semibold">Teléfono</label>
+          <InputText
+            id="telefono"
+            v-model="odontologo.telefono"
+            autocomplete="off"
+          />
+        </div>
+
+        <!-- Dirección -->
+        <div class="p-field mb-4">
+          <label for="direccion" class="font-semibold">Dirección</label>
+          <InputText
+            id="direccion"
+            v-model="odontologo.direccion"
+            autocomplete="off"
+          />
+        </div>
+
+        <!-- Botones -->
+        <div class="flex justify-end gap-2">
+          <Button
+            type="button"
+            label="Cancelar"
+            icon="pi pi-times"
+            severity="secondary"
+            @click="dialogVisible = false"
+          ></Button>
+          <Button
+            type="button"
+            label="Guardar"
+            icon="pi pi-save"
+            @click="handleSave"
+          ></Button>
+        </div>
       </div>
     </Dialog>
   </div>
