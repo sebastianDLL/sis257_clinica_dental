@@ -40,7 +40,7 @@ watch(
             nombre: '',
             descripcion: '',
             precio: 0,
-            duracion: '',
+            duracion: 0,
           } as Servicios)
     }
   },
@@ -59,6 +59,11 @@ async function handleSave() {
     } else {
       await http.post(ENDPOINT, body)
     }
+    // Emitir evento global de servicio creado 
+    const event = new CustomEvent('servicioCreado') 
+    window.dispatchEvent(event)
+
+
     emit('guardar')
     servicio.value = {} as Servicios
     dialogVisible.value = false
@@ -75,66 +80,87 @@ async function handleSave() {
       :header="props.modoEdicion ? 'Editar' : 'Crear'"
       style="width: 25rem"
     >
-      <div class="flex items-center gap-4 mb-4">
-        <label for="nombre" class="font-semibold w-4">Nombre</label>
-        <InputText
-          id="nombre"
-          v-model="servicio.nombre"
-          class="flex-auto"
-          autocomplete="off"
-          autofocus
-        />
-      </div>
-      <div class="flex items-center gap-4 mb-4">
-        <label for="descripcion" class="font-semibold w-4">Descripción</label>
-        <Textarea
-          id="descripcion"
-          v-model="servicio.descripcion"
-          autoResize
-          rows="5"
-          cols="30"
-          class="flex-auto"
-          autocomplete="off"
-        />
-      </div>
-      <div class="flex items-center gap-4 mb-4">
-        <label for="precio" class="font-semibold w-4">Precio</label>
-        <InputNumber
-          id="precio"
-          v-model="servicio.precio"
-          class="flex-auto"
-          autocomplete="off"
-          :step="0.01"
-          :min="0"
-          :mode="'decimal'"
-          :locale="'es-BO'"
-          :decimalSeparator="'.'"
-          :useGrouping="false"
-        />
-      </div>
-      <div class="flex items-center gap-4 mb-4">
-        <label for="duracion" class="font-semibold w-4">Duración</label>
-        <InputText
-          id="duracion"
-          v-model="servicio.duracion"
-          class="flex-auto"
-          autocomplete="off"
-        />
-      </div>
-      <div class="flex justify-end gap-2">
-        <Button
-          type="button"
-          label="Cancelar"
-          icon="pi pi-times"
-          severity="secondary"
-          @click="dialogVisible = false"
-        />
-        <Button
-          type="button"
-          label="Guardar"
-          icon="pi pi-save"
-          @click="handleSave"
-        />
+      <div class="p-fluid">
+        <!-- Nombre del Servicio -->
+        <div class="p-field p-grid">
+          <label for="nombre" class="p-col-12 p-md-4 font-semibold">Nombre del Servicio</label>
+          <div class="p-col-12 p-md-8">
+            <InputText
+              id="nombre"
+              v-model="servicio.nombre"
+              class="p-inputtext-sm w-full"
+              autocomplete="off"
+              autofocus
+            />
+          </div>
+        </div>
+
+        <!-- Descripción -->
+        <div class="p-field p-grid">
+          <label for="descripcion" class="p-col-12 p-md-4 font-semibold">Descripción</label>
+          <div class="p-col-12 p-md-8">
+            <Textarea
+              id="descripcion"
+              v-model="servicio.descripcion"
+              autoResize
+              rows="5"
+              cols="30"
+              class="w-full"
+              autocomplete="off"
+            />
+          </div>
+        </div>
+
+        <!-- Precio -->
+        <div class="p-field p-grid">
+          <label for="precio" class="p-col-12 p-md-4 font-semibold">Precio (Bs)</label>
+          <div class="p-col-12 p-md-8">
+            <InputNumber
+              id="precio"
+              v-model="servicio.precio"
+              class="p-inputtext-sm w-full"
+              autocomplete="off"
+              :step="0.01"
+              :min="0"
+              :mode="'decimal'"
+              :locale="'es-BO'"
+              :decimalSeparator="'.'"
+              :useGrouping="false"
+            />
+          </div>
+        </div>
+
+        <!-- Duración -->
+        <div class="p-field p-grid">
+          <label for="duracion" class="p-col-12 p-md-4 font-semibold">Duración (Min)</label>
+          <div class="p-col-12 p-md-8">
+            <InputNumber
+              id="duracion"
+              v-model="servicio.duracion"
+              class="p-inputtext-sm w-full"
+              autocomplete="off"
+              :step="1"
+              :min="0"
+            />
+          </div>
+        </div>
+
+        <!-- Botones -->
+        <div class="p-dialog-footer p-d-flex p-jc-end">
+          <Button
+            type="button"
+            label="Cancelar"
+            icon="pi pi-times"
+            severity="secondary"
+            @click="dialogVisible = false"
+          />
+          <Button
+            type="button"
+            label="Guardar"
+            icon="pi pi-save"
+            @click="handleSave"
+          />
+        </div>
       </div>
     </Dialog>
   </div>
